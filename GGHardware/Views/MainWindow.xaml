@@ -1,0 +1,27 @@
+﻿<Window x:Class="GGHardware.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GGHardware"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid Margin="0,-12,10,-6">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="414*"/>
+            <ColumnDefinition Width="197*"/>
+            <ColumnDefinition Width="78*"/>
+            <ColumnDefinition Width="64*"/>
+            <ColumnDefinition Width="13*"/>
+            <ColumnDefinition Width="24*"/>
+        </Grid.ColumnDefinitions>
+        <Menu Grid.ColumnSpan="6" Margin="113,378,-10,0" Background="#FF388E0A">
+            <Label Content="para acceder a los modulos/secciones" Width="527"/>
+        </Menu>
+        <TreeView Margin="0,10,302,0" Background="#FFAD3B35">
+            <Label Content="para navegar&#xD;&#xA;entre&#xD;&#xA;modulos&#xD;&#xA;" VerticalAlignment="Center" Height="86" Width="86" Background="White"/>
+        </TreeView>
+        <ContentControl Content="Va cambiando depende en que seccion estamos" HorizontalAlignment="Left" Margin="113,10,0,0" VerticalAlignment="Top" Height="368" Width="687" Grid.ColumnSpan="6" Foreground="#FFFF0B0B"/>
+
+    </Grid>
+</Window>
