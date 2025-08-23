@@ -21,7 +21,7 @@
         <TreeView Margin="0,10,302,0" Background="#FFAD3B35">
             <Label Content="para navegar&#xD;&#xA;entre&#xD;&#xA;modulos&#xD;&#xA;" VerticalAlignment="Center" Height="86" Width="86" Background="White"/>
         </TreeView>
-        <ContentControl Content="Va cambiando depende en que seccion estamos" HorizontalAlignment="Left" Margin="113,10,0,0" VerticalAlignment="Top" Height="368" Width="687" Grid.ColumnSpan="6" Foreground="#FFFF0B0B"/>
+        <ContentControl Content="Va cambiando depende en que seccion estamos,*probando mi git*" HorizontalAlignment="Left" Margin="113,10,0,0" VerticalAlignment="Top" Height="368" Width="687" Grid.ColumnSpan="6" Foreground="#FFFF0B0B"/>
 
     </Grid>
 </Window>
