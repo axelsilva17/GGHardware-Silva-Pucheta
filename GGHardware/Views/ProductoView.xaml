@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="GGHardware.Views.ProductoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             Background="#F3F4F6" Height="122" Width="330">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Título -->
+            <RowDefinition Height="*"/>
+            <!-- DataGrid -->
+            <RowDefinition Height="60"/>
+            <!-- Botones -->
+        </Grid.RowDefinitions>
+        <!-- TÍTULO -->
+        <TextBlock Text="Gestión de Productos" 
+                   FontSize="22" FontWeight="Bold" 
+                   Foreground="#1F2937" 
+                   Margin="10,0,0,10"/>
+        <!-- DATA GRID -->
+        <DataGrid x:Name="dgProductos" Grid.Row="1" 
+                  AutoGenerateColumns="False" 
+                  CanUserAddRows="False" 
+                  SelectionMode="Single" 
+                  HeadersVisibility="Column" 
+                  Margin="0,0,0,10" 
+                  Background="White" 
+                  BorderBrush="#E5E7EB" 
+                  RowBackground="#F9FAFB" 
+                  AlternatingRowBackground="#E5E7EB">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
+                <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="*"/>
+                <DataGridTextColumn Header="Precio" Binding="{Binding Precio}" Width="100"/>
+                <DataGridTextColumn Header="Stock" Binding="{Binding Stock}" Width="80"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <!-- BOTONES -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" 
+                    HorizontalAlignment="Right" VerticalAlignment="Center" 
+                   Margin= "10">
+            <Button Content="Alta" Width="90" Height="35" 
+                    Background="#2563EB" Foreground="White" 
+                    BorderBrush="Transparent" FontWeight="SemiBold" 
+                    Cursor="Hand"/>
+            <Button Content="Baja" Width="90" Height="35" 
+                    Background="#EF4444" Foreground="White" 
+                    BorderBrush="Transparent" FontWeight="SemiBold" 
+                    Cursor="Hand"/>
+            <Button Content="Modificar" Width="110" Height="35" 
+                    Background="#10B981" Foreground="White" 
+                    BorderBrush="Transparent" FontWeight="SemiBold" 
+                    Cursor="Hand"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

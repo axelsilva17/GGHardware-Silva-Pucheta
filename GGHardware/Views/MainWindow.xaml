@@ -69,7 +69,7 @@
                         BorderBrush="Transparent"
                         FontSize="14"
                         HorizontalContentAlignment="Left"
-                        Cursor="Hand"/>
+                        Cursor="Hand" Click="btnProductos_Click"/>
 
                 <Button x:Name="btnVentas" Content="🛒  Ventas"
                         Margin="10,5"
@@ -94,15 +94,17 @@
         </Border>
 
         <!-- CONTENIDO CENTRAL -->
-        <Border Grid.Row="1" Grid.Column="1" Background="White" CornerRadius="10" Margin="15"
-                BorderBrush="#E5E7EB" BorderThickness="1" 
-                Effect="{StaticResource DropShadow}">
+        <!-- CONTENIDO CENTRAL -->
+        <Border x:Name="MainContentBorder" Grid.Row="1" Grid.Column="1" Background="White" CornerRadius="10" Margin="15"
+        BorderBrush="#E5E7EB" BorderThickness="1" 
+        Effect="{StaticResource DropShadow}">
             <TextBlock Text="Aquí va el contenido dinámico"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center"
-                       FontSize="18"
-                       Foreground="#374151"/>
+               VerticalAlignment="Center"
+               HorizontalAlignment="Center"
+               FontSize="18"
+               Foreground="#374151"/>
         </Border>
+
 
         <!-- FOOTER -->
         <DockPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Background="#2563EB">
@@ -112,4 +114,6 @@
                        Margin="20,0"/>
         </DockPanel>
     </Grid>
+    
+    
 </Window>

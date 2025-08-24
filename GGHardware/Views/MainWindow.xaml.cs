@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using GGHardware.Views;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -19,6 +20,16 @@ namespace GGHardware
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void btnProductos_Click(object sender, RoutedEventArgs e)
+        {
+            // Limpiar el contenido previo
+            MainContentBorder.Child = null;
+
+            // Crear la vista de Producto y mostrarla
+            ProductoView productoView = new ProductoView();
+            MainContentBorder.Child = productoView;
         }
     }
 }
