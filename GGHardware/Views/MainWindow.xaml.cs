@@ -31,5 +31,23 @@ namespace GGHardware
             ProductoView productoView = new ProductoView();
             MainContentBorder.Child = productoView;
         }
+        private void btnUsuarios_Click(object sender, RoutedEventArgs e)
+        {
+            // Limpiar el contenido previo
+            MainContentBorder.Child = null;
+
+            // Crear la vista de Usuarios y mostrarla
+            Usuarios usuariosView = new Usuarios();
+            MainContentBorder.Child = usuariosView;
+        }
+        private void btnVentas_Click(object sender, RoutedEventArgs e)
+        {
+            // Limpia el contenido previo (opcional, pero buena práctica)
+            MainContentBorder.Child = null;
+
+            // Crea una nueva instancia de la vista de ventas y la muestra
+            VentasView ventasView = new VentasView();
+            MainContentBorder.Child = ventasView;
+        }
     }
 }

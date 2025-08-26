@@ -4,55 +4,80 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             Background="#F3F4F6" Height="122" Width="330">
+             Background="#F3F4F6" Height="119" Width="223">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- Título -->
-            <RowDefinition Height="*"/>
-            <!-- DataGrid -->
-            <RowDefinition Height="60"/>
-            <!-- Botones -->
+            <RowDefinition/>
+            <RowDefinition Height="Auto" MinHeight="20"/>
         </Grid.RowDefinitions>
-        <!-- TÍTULO -->
-        <TextBlock Text="Gestión de Productos" 
-                   FontSize="22" FontWeight="Bold" 
-                   Foreground="#1F2937" 
-                   Margin="10,0,0,10"/>
-        <!-- DATA GRID -->
-        <DataGrid x:Name="dgProductos" Grid.Row="1" 
-                  AutoGenerateColumns="False" 
-                  CanUserAddRows="False" 
-                  SelectionMode="Single" 
-                  HeadersVisibility="Column" 
-                  Margin="0,0,0,10" 
-                  Background="White" 
-                  BorderBrush="#E5E7EB" 
-                  RowBackground="#F9FAFB" 
-                  AlternatingRowBackground="#E5E7EB">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
-                <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="*"/>
-                <DataGridTextColumn Header="Precio" Binding="{Binding Precio}" Width="100"/>
-                <DataGridTextColumn Header="Stock" Binding="{Binding Stock}" Width="80"/>
-            </DataGrid.Columns>
-        </DataGrid>
-        <!-- BOTONES -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal" 
-                    HorizontalAlignment="Right" VerticalAlignment="Center" 
-                   Margin= "10">
-            <Button Content="Alta" Width="90" Height="35" 
-                    Background="#2563EB" Foreground="White" 
-                    BorderBrush="Transparent" FontWeight="SemiBold" 
-                    Cursor="Hand"/>
-            <Button Content="Baja" Width="90" Height="35" 
-                    Background="#EF4444" Foreground="White" 
-                    BorderBrush="Transparent" FontWeight="SemiBold" 
-                    Cursor="Hand"/>
-            <Button Content="Modificar" Width="110" Height="35" 
-                    Background="#10B981" Foreground="White" 
-                    BorderBrush="Transparent" FontWeight="SemiBold" 
-                    Cursor="Hand"/>
+
+        <TextBlock Grid.Row="0"
+                   Text="Gestión de Productos"
+                   FontSize="16"
+                   FontWeight="SemiBold"
+                   Foreground="#1F2937"
+                   Margin="0,0,0,10"
+                   HorizontalAlignment="Center" Width="156" />
+
+        <Border
+                Background="White"
+                BorderBrush="#E5E7EB"
+                BorderThickness="1"
+                CornerRadius="5"
+                Margin="7,31,13,4" Grid.RowSpan="2">
+            <DataGrid x:Name="dgProductos"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      SelectionMode="Single"
+                      HeadersVisibility="Column"
+                      GridLinesVisibility="None"
+                      IsReadOnly="True"
+                      Background="Transparent"
+                      BorderBrush="Transparent"
+                      RowBackground="#F9FAFB"
+                      AlternatingRowBackground="#E5E7EB"
+                      Margin="0,5,0,5" HorizontalAlignment="Center" FontSize="6" Width="156">
+                <DataGrid.Resources>
+                    <Style TargetType="{x:Type DataGridColumnHeader}">
+                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                    </Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="HorizontalAlignment" Value="Center" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                    </Style>
+                </DataGrid.Resources>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto" />
+                    <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="*" />
+                    <DataGridTextColumn Header="Precio" Binding="{Binding Precio}" Width="Auto" />
+                    <DataGridTextColumn Header="Stock" Binding="{Binding Stock}" Width="Auto" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center" Height="20" Width="188">
+            <Button Content="Alta"
+                    Width="55" Height="20"
+                    FontSize="12"
+                    Background="#2563EB" Foreground="White"
+                    BorderBrush="Transparent" FontWeight="SemiBold"
+                    Cursor="Hand" Margin="0,0,10,0" />
+            <Button Content="Baja"
+                    Width="55" Height="20"
+                    FontSize="12"
+                    Background="#EF4444" Foreground="White"
+                    BorderBrush="Transparent" FontWeight="SemiBold"
+                    Cursor="Hand" Margin="0,0,10,0" />
+            <Button Content="Modificar"
+                    Width="58" Height="20"
+                    FontSize="12"
+                    Background="#10B981" Foreground="White"
+                    BorderBrush="Transparent" FontWeight="SemiBold"
+                    Cursor="Hand" />
         </StackPanel>
     </Grid>
 </UserControl>

@@ -43,6 +43,7 @@
 
         <!-- SIDEBAR -->
         <Border Grid.Row="1" Grid.Column="0" Background="#111827">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
             <StackPanel>
                 <TextBlock Text="Navegación" 
                            Foreground="#9CA3AF"
@@ -90,7 +91,19 @@
                         FontSize="14"
                         HorizontalContentAlignment="Left"
                         Cursor="Hand"/>
+                <Button x:Name="btnUsuarios" Content="👤  Usuarios"
+                        Margin="10,5"
+                        Padding="10"
+                        Background="Transparent"
+                        Foreground="White"
+                        BorderBrush="Transparent"
+                        FontSize="14"
+                        HorizontalContentAlignment="Left"
+                        Cursor="Hand"
+                        Click="btnUsuarios_Click"/>
+
             </StackPanel>
+            </ScrollViewer>
         </Border>
 
         <!-- CONTENIDO CENTRAL -->
