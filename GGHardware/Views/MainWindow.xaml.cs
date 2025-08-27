@@ -12,14 +12,22 @@ using System.Windows.Shapes;
 
 namespace GGHardware
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+   
     public partial class MainWindow : Window
     {
+
         public MainWindow()
         {
             InitializeComponent();
+            
+            MainContentBorder.Child = new InicioView();
+
+            // Deshabilitar los botones de navegación hasta que el usuario inicie sesión
+            /**btnInicio.IsEnabled = false;
+            btnProductos.IsEnabled = false;
+            btnVentas.IsEnabled = false;
+            btnConfiguracion.IsEnabled = false;
+            btnUsuarios.IsEnabled = false;*/
         }
 
         private void btnProductos_Click(object sender, RoutedEventArgs e)
@@ -49,5 +57,17 @@ namespace GGHardware
             VentasView ventasView = new VentasView();
             MainContentBorder.Child = ventasView;
         }
+
+      private void btnInicio_Click(object sender, RoutedEventArgs e)
+{
+    // Limpia el contenido actual para asegurar que no haya nada residual.
+    MainContentBorder.Child = null;
+
+    // Crea una nueva instancia de InicioView.
+    InicioView inicioView = new InicioView();
+    
+    // Asigna la nueva vista al borde de contenido principal.
+    MainContentBorder.Child = inicioView;
+}
     }
 }

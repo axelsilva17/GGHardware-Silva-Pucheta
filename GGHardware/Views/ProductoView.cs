@@ -9,8 +9,7 @@ namespace GGHardware.Views
         {
             InitializeComponent();
 
-            // Para verificar que se carga correctamente
-            MessageBox.Show("ProductoView cargado");
+         
         }
     }
 }
