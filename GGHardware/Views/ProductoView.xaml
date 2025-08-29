@@ -4,34 +4,28 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             Background="#F3F4F6">
-
-    <Grid Margin="20">
+             Background="#F3F4F6" Height="119" Width="223">
+    <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- Título -->
-            <RowDefinition Height="*"/>
-            <!-- DataGrid ocupa todo el espacio -->
-            <RowDefinition Height="Auto"/>
-            <!-- Botones -->
+            <RowDefinition/>
+            <RowDefinition Height="Auto" MinHeight="20"/>
         </Grid.RowDefinitions>
 
-        <!-- Título -->
         <TextBlock Grid.Row="0"
                    Text="Gestión de Productos"
-                   FontSize="28"
-                   FontWeight="Bold"
+                   FontSize="16"
+                   FontWeight="SemiBold"
                    Foreground="#1F2937"
-                   Margin="0,0,0,20"
-                   HorizontalAlignment="Center" />
+                   Margin="0,0,0,10"
+                   HorizontalAlignment="Center" Width="156" />
 
-        <!-- Tabla -->
-        <Border Grid.Row="1"
+        <Border
                 Background="White"
                 BorderBrush="#E5E7EB"
                 BorderThickness="1"
-                CornerRadius="8"
-                Padding="10">
+                CornerRadius="5"
+                Margin="7,31,13,4" Grid.RowSpan="2">
             <DataGrid x:Name="dgProductos"
                       AutoGenerateColumns="False"
                       CanUserAddRows="False"
@@ -43,12 +37,14 @@
                       BorderBrush="Transparent"
                       RowBackground="#F9FAFB"
                       AlternatingRowBackground="#E5E7EB"
-                      FontSize="14">
+                      Margin="0,5,0,5" HorizontalAlignment="Center" FontSize="6" Width="156">
                 <DataGrid.Resources>
                     <Style TargetType="{x:Type DataGridColumnHeader}">
                         <Setter Property="HorizontalContentAlignment" Value="Center" />
-                        <Setter Property="FontWeight" Value="SemiBold"/>
-                        <Setter Property="FontSize" Value="14"/>
+                    </Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="HorizontalAlignment" Value="Center" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
                     </Style>
                 </DataGrid.Resources>
                 <DataGrid.Columns>
@@ -60,46 +56,28 @@
             </DataGrid>
         </Border>
 
-        <!-- Botones -->
         <StackPanel Grid.Row="2"
                     Orientation="Horizontal"
                     HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Margin="0,20,0,0">
-            <!-- Estilo base -->
-            <StackPanel.Resources>
-                <Style TargetType="Button">
-                    <Setter Property="Width" Value="120"/>
-                    <Setter Property="Height" Value="40"/>
-                    <Setter Property="FontSize" Value="14"/>
-                    <Setter Property="FontWeight" Value="SemiBold"/>
-                    <Setter Property="BorderBrush" Value="Transparent"/>
-                    <Setter Property="Cursor" Value="Hand"/>
-                    <Setter Property="Foreground" Value="White"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="Button">
-                                <Border x:Name="PART_Border" 
-                                        Background="{TemplateBinding Background}" 
-                                        CornerRadius="8"
-                                        Padding="10,5">
-                                    <ContentPresenter HorizontalAlignment="Center" 
-                                                      VerticalAlignment="Center"/>
-                                </Border>
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter TargetName="PART_Border" Property="Opacity" Value="0.85"/>
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </StackPanel.Resources>
-
-            <Button Content="Alta" Background="#2563EB" Margin="0,0,20,0"/>
-            <Button Content="Baja" Background="#EF4444" Margin="0,0,20,0"/>
-            <Button Content="Modificar" Background="#10B981"/>
+                    VerticalAlignment="Center" Height="20" Width="188">
+            <Button Content="Alta"
+                    Width="55" Height="20"
+                    FontSize="12"
+                    Background="#2563EB" Foreground="White"
+                    BorderBrush="Transparent" FontWeight="SemiBold"
+                    Cursor="Hand" Margin="0,0,10,0" />
+            <Button Content="Baja"
+                    Width="55" Height="20"
+                    FontSize="12"
+                    Background="#EF4444" Foreground="White"
+                    BorderBrush="Transparent" FontWeight="SemiBold"
+                    Cursor="Hand" Margin="0,0,10,0" />
+            <Button Content="Modificar"
+                    Width="58" Height="20"
+                    FontSize="12"
+                    Background="#10B981" Foreground="White"
+                    BorderBrush="Transparent" FontWeight="SemiBold"
+                    Cursor="Hand" />
         </StackPanel>
     </Grid>
 </UserControl>

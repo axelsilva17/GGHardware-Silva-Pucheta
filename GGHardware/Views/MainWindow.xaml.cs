@@ -13,8 +13,17 @@ using System.Windows.Shapes;
 namespace GGHardware
 {
    
+
     public partial class MainWindow : Window
     {
+        public void HabilitarMenu()
+        {
+            btnInicio.IsEnabled = true;
+            btnProductos.IsEnabled = true;
+            btnVentas.IsEnabled = true;
+            btnConfiguracion.IsEnabled = true;
+            btnUsuarios.IsEnabled = true;
+        }
 
         public MainWindow()
         {
@@ -23,11 +32,11 @@ namespace GGHardware
             MainContentBorder.Child = new InicioView();
 
             // Deshabilitar los botones de navegación hasta que el usuario inicie sesión
-            /**btnInicio.IsEnabled = false;
-            btnProductos.IsEnabled = false;
-            btnVentas.IsEnabled = false;
-            btnConfiguracion.IsEnabled = false;
-            btnUsuarios.IsEnabled = false;*/
+            btnInicio.IsEnabled = true;
+            btnProductos.IsEnabled = true;
+            btnVentas.IsEnabled = true;
+            btnConfiguracion.IsEnabled = true;
+            btnUsuarios.IsEnabled = true;
         }
 
         private void btnProductos_Click(object sender, RoutedEventArgs e)
@@ -58,16 +67,16 @@ namespace GGHardware
             MainContentBorder.Child = ventasView;
         }
 
-      private void btnInicio_Click(object sender, RoutedEventArgs e)
-{
-    // Limpia el contenido actual para asegurar que no haya nada residual.
-    MainContentBorder.Child = null;
+        private void btnInicio_Click(object sender, RoutedEventArgs e)
+        {
+            // Limpia el contenido actual para asegurar que no haya nada residual.
+            MainContentBorder.Child = null;
 
-    // Crea una nueva instancia de InicioView.
-    InicioView inicioView = new InicioView();
+            // Crea una nueva instancia de InicioView.
+            InicioView inicioView = new InicioView();
     
-    // Asigna la nueva vista al borde de contenido principal.
-    MainContentBorder.Child = inicioView;
-}
+            // Asigna la nueva vista al borde de contenido principal.
+            MainContentBorder.Child = inicioView;
+        }
     }
 }
