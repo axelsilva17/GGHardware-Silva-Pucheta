@@ -10,8 +10,8 @@
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0"
@@ -22,58 +22,104 @@
                    Margin="0,0,0,20"
                    HorizontalAlignment="Center"/>
 
-        <ScrollViewer Grid.Row="1"
-                      VerticalScrollBarVisibility="Auto">
+        <Border Grid.Row="1"
+                Background="White"
+                CornerRadius="5"
+                Padding="20"
+                Margin="0,0,0,20">
             <StackPanel>
-                <Border Background="White"
-                        CornerRadius="5"
-                        Padding="20"
-                        Margin="0,0,0,20">
-                    <StackPanel>
-                        <TextBlock Text="DNI:" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                        <TextBox x:Name="txtDni" Padding="5" Margin="0,0,0,10"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                        <TextBlock Text="Nombre:" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                        <TextBox x:Name="txtNombre" Padding="5" Margin="0,0,0,10"/>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="DNI:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,10"/>
+                    <TextBox x:Name="txtDNI" Grid.Row="0" Grid.Column="1" Padding="5" Margin="0,0,20,10"/>
 
-                        <TextBlock Text="Apellido:" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                        <TextBox x:Name="txtApellido" Padding="5" Margin="0,0,0,10"/>
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Nombre:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,10"/>
+                    <TextBox x:Name="txtNombre" Grid.Row="0" Grid.Column="3" Padding="5" Margin="0,0,0,10"/>
 
-                        <TextBlock Text="Contraseña:" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                        <PasswordBox x:Name="pbContrasena" Padding="5" Margin="0,0,0,10"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Apellido:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,10"/>
+                    <TextBox x:Name="txtApellido" Grid.Row="1" Grid.Column="1" Padding="5" Margin="0,0,20,10"/>
 
-                        <TextBlock Text="Teléfono:" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                        <TextBox x:Name="txtTelefono" Padding="5" Margin="0,0,0,10"/>
+                    <TextBlock Grid.Row="1" Grid.Column="2" Text="Correo:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,10"/>
+                    <TextBox x:Name="txtCorreo" Grid.Row="1" Grid.Column="3" Padding="5" Margin="0,0,0,10"/>
 
-                        <TextBlock Text="Rol:" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                        <ComboBox x:Name="cmbRol" Padding="5" Margin="0,0,0,10">
-                            <ComboBoxItem Content="Cliente"/>
-                            <ComboBoxItem Content="Usuario"/>
-                            <ComboBoxItem Content="Supervisor"/>
-                        </ComboBox>
-                    </StackPanel>
-                </Border>
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Contraseña:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,10"/>
+                    <PasswordBox x:Name="pbContrasena" Grid.Row="2" Grid.Column="1" Padding="5" Margin="0,0,20,10"/>
 
-                <Grid/>
+                    <TextBlock Grid.Row="2" Grid.Column="2" Text="Fecha Nacimiento:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,10"/>
+                    <DatePicker x:Name="dpFechaNacimiento" Grid.Row="2" Grid.Column="3" Padding="5" Margin="0,0,0,10"/>
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Rol:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,10"/>
+                    <ComboBox x:Name="cmbRol" Grid.Row="3" Grid.Column="1" Padding="5" Margin="0,0,20,10">
+                        <ComboBoxItem Content="Cliente"/>
+                        <ComboBoxItem Content="Usuario"/>
+                        <ComboBoxItem Content="Supervisor"/>
+                    </ComboBox>
+                </Grid>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                    <Button Content="Limpiar" Width="80" Height="35" 
+                            FontSize="12" 
+                            Background="#9CA3AF" 
+                            Foreground="White" 
+                            BorderBrush="Transparent"
+                            FontWeight="SemiBold" 
+                            Cursor="Hand" Margin="0,0,10,0"
+                            Click="btnLimpiar_Click"/>
+                    <Button Content="Guardar" Width="80" Height="35" 
+                            FontSize="12" 
+                            Background="#10B981" 
+                            Foreground="White"
+                            BorderBrush="Transparent"
+                            FontWeight="SemiBold" Cursor="Hand"
+                            Click="btnGuardar_Click"/>
+                </StackPanel>
             </StackPanel>
-        </ScrollViewer>
+        </Border>
 
-        <StackPanel Grid.Row="2"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Center"
-                    Margin="0,10,0,0">
-            <Button Content="Limpiar"
-                    Width="80" Height="35"
-                    FontSize="12"
-                    Background="#E5E7EB" Foreground="#374151"
-                    BorderBrush="Transparent" FontWeight="SemiBold"
-                    Cursor="Hand" Margin="0,0,10,0"/>
-            <Button Content="Guardar"
-                    Width="80" Height="35"
-                    FontSize="12"
-                    Background="#10B981" Foreground="White"
-                    BorderBrush="Transparent" FontWeight="SemiBold"
-                    Cursor="Hand"/>
-        </StackPanel>
+        <Border Grid.Row="2"
+                Background="White"
+                BorderBrush="#E5E7EB"
+                BorderThickness="1"
+                CornerRadius="5"
+                Padding="10">
+            <DataGrid x:Name="dgUsuarios"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      HeadersVisibility="Column"
+                      GridLinesVisibility="None">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding id_usuario}" Width="Auto"/>
+                    <DataGridTextColumn Header="DNI" Binding="{Binding DNI}" Width="Auto"/>
+                    <DataGridTextColumn Header="Nombre" Binding="{Binding nombre}" Width="*"/>
+                    <DataGridTextColumn Header="Apellido" Binding="{Binding apellido}" Width="*"/>
+                    <DataGridTextColumn Header="Rol" Binding="{Binding rol}" Width="Auto"/>
+                    <DataGridTemplateColumn Header="Acciones" Width="Auto">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="Editar" Background="#2563EB" Foreground="White" 
+                                            BorderBrush="Transparent" Padding="5" Margin="0,0,5,0"/>
+                                    <Button Content="Eliminar" Background="#EF4444" Foreground="White" 
+                                            BorderBrush="Transparent" Padding="5"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
     </Grid>
 </UserControl>

@@ -25,11 +25,6 @@
                     Inicio Sesion
                 </Button>
 
-                <Button Margin="0,10,0,0" Padding="10" Background="#1E293B" Foreground="White"
-        Click="BtnRegistrarse_Click">
-                    Registrarse
-                </Button>
-
             </StackPanel>
 
             <TextBlock Grid.Row="2" Text="2025 GGHardware"
