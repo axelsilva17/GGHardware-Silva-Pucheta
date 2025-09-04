@@ -1,0 +1,81 @@
+﻿<UserControl x:Class="GGHardware.Views.Reportes"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#F3F4F6">
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Título -->
+        <TextBlock Text="📊 Reportes"
+                   FontSize="24"
+                   FontWeight="Bold"
+                   Foreground="#1F2937"
+                   Margin="0,0,0,20"/>
+
+        <!-- Contenido -->
+        <StackPanel Grid.Row="1" Orientation="Vertical" >
+
+            <!-- Tarjetas de métricas -->
+            <UniformGrid Columns="3" Margin="0,0,0,20">
+                <Border Background="White" CornerRadius="12" Padding="20" Margin="10"
+                        Effect="{DynamicResource DropShadow}">
+                    <StackPanel>
+                        <TextBlock Text="Ventas del día" FontWeight="SemiBold" Foreground="#6B7280"/>
+                        <TextBlock Text="$15.200" FontSize="22" FontWeight="Bold" Foreground="#2563EB"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Background="White" CornerRadius="12" Padding="20" Margin="10"
+                        Effect="{DynamicResource DropShadow}">
+                    <StackPanel>
+                        <TextBlock Text="Productos vendidos" FontWeight="SemiBold" Foreground="#6B7280"/>
+                        <TextBlock Text="124" FontSize="22" FontWeight="Bold" Foreground="#2563EB"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Background="White" CornerRadius="12" Padding="20" Margin="10"
+                        Effect="{DynamicResource DropShadow}">
+                    <StackPanel>
+                        <TextBlock Text="Clientes nuevos" FontWeight="SemiBold" Foreground="#6B7280"/>
+                        <TextBlock Text="8" FontSize="22" FontWeight="Bold" Foreground="#2563EB"/>
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <!-- Filtros -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,15">
+                <TextBlock Text="Filtrar por fecha:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <DatePicker x:Name="dpFechaInicio" Width="140" Margin="0,0,10,0"/>
+                <DatePicker x:Name="dpFechaFin" Width="140" Margin="0,0,10,0"/>
+                <Border CornerRadius="6" Background="#2563EB">
+                    <Button Content="Aplicar" 
+            Background="Transparent" Foreground="White" 
+            Padding="10,5" BorderBrush="Transparent" Cursor="Hand"/>
+                </Border>
+
+            </StackPanel>
+
+            <!-- Tabla de ventas -->
+            <DataGrid AutoGenerateColumns="False" IsReadOnly="True"
+                      HeadersVisibility="Column"
+                      AlternatingRowBackground="#E5E7EB"
+                      RowBackground="White"
+                      BorderThickness="0"
+                      GridLinesVisibility="None"
+                      FontSize="14">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Fecha" Binding="{Binding Fecha}" Width="*"/>
+                    <DataGridTextColumn Header="Cliente" Binding="{Binding Cliente}" Width="*"/>
+                    <DataGridTextColumn Header="Producto" Binding="{Binding Producto}" Width="*"/>
+                    <DataGridTextColumn Header="Cantidad" Binding="{Binding Cantidad}" Width="*"/>
+                    <DataGridTextColumn Header="Total" Binding="{Binding Total}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+        </StackPanel>
+    </Grid>
+</UserControl>

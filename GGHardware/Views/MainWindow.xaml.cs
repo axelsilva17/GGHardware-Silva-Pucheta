@@ -79,6 +79,14 @@ namespace GGHardware
             MainContentBorder.Child = inicioView;
         }
 
+        private void btnReportes_Click(object sender, RoutedEventArgs e)
+        {
+            MainContentBorder.Child = new Reportes();
+        }
+        private void btnBackup_Click(object sender, RoutedEventArgs e)
+        {
+            MainContentBorder.Child = new GGHardware.Views.Backup();
+        }
         // Agregado para futuras implementaciones
         private void btnConfiguracion_Click(object sender, RoutedEventArgs e)
         {
