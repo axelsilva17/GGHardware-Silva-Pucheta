@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace GGHardware.Views
 {
@@ -11,15 +12,34 @@ namespace GGHardware.Views
         {
             InitializeComponent();
         }
+        private void btnVolver_Click(object sender, RoutedEventArgs e)
+        {
+            // Obtener la ventana principal
+            var mainWindow = Window.GetWindow(this) as MainWindow;
 
+            if (mainWindow != null)
+            {
+                // Cargar la vista de registro dentro del MainContentBorder
+                mainWindow.MainContentBorder.Child = new RegistroView(mainWindow);
+            }
+        }
+
+        private void txtDNI_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            // Solo permitir números (0-9)
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        // método para permitir solo letras en Nombre y Apellido
+        private void txtLetras_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            // Permite letras (mayúsculas, minúsculas), letras acentuadas (áéíóúÁÉÍÓÚ), ñÑ y espacios.
+            Regex regex = new Regex("[^a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
         private void btnGuardar_Click(object sender, RoutedEventArgs e)
         {
-            // Validar DNI: solo números
-            if (!Regex.IsMatch(txtDNI.Text, @"^\d+$"))
-            {
-                MessageBox.Show("El DNI debe contener solo números.", "Error de Validación", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
 
             // Validar Nombre y Apellido: solo letras
             if (!Regex.IsMatch(txtNombre.Text, @"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$"))
@@ -67,7 +87,7 @@ namespace GGHardware.Views
             txtCorreo.Text = string.Empty;
             pbContrasena.Password = string.Empty;
             cmbRol.SelectedIndex = -1; // Deselecciona el ítem
-            txtDNI.Focus(); // Opcional: enfoca el cursor en el primer campo
+            txtDNI.Focus(); 
         }
     }
 }

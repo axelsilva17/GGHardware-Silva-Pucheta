@@ -88,10 +88,10 @@
                         <Button x:Name="btnInicio" Content="🏠 Inicio" Style="{StaticResource MenuButtonStyle}" Click="btnInicio_Click"/>
                         <Button x:Name="btnProductos" Content="📦 Productos" Style="{StaticResource MenuButtonStyle}" Click="btnProductos_Click"/>
                         <Button x:Name="btnVentas" Content="🛒 Ventas" Style="{StaticResource MenuButtonStyle}" Click="btnVentas_Click"/>
-                        <Button x:Name="btnConfiguracion" Content="⚙️ Configuración" Style="{StaticResource MenuButtonStyle}"/>
                         <Button x:Name="btnRegistro" Content="👤 Registro" Style="{StaticResource MenuButtonStyle}" Click="BtnRegistro_Click"/>
                         <Button x:Name="btnReportes" Content="📊 Reportes" Style="{StaticResource MenuButtonStyle}" Click="btnReportes_Click"/>
                         <Button x:Name="btnBackup" Content="💾 Backup" Style="{StaticResource MenuButtonStyle}" Click="btnBackup_Click"/>
+                        <Button x:Name="btnConfiguracion" Content="⚙️ Configuración" Style="{StaticResource MenuButtonStyle}"/>
                     </StackPanel>
                 </ScrollViewer>
             </Border>

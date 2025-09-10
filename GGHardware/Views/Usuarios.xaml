@@ -14,13 +14,26 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0"
-                   Text="Gestión de Usuarios"
-                   FontSize="24"
-                   FontWeight="SemiBold"
-                   Foreground="#1F2937"
-                   Margin="0,0,0,20"
-                   HorizontalAlignment="Center"/>
+        <!-- Barra superior con botón volver y título -->
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,20">
+            <Button x:Name="btnVolver"
+            Content="←"
+            FontSize="18"
+            Width="40" Height="40"
+            Background="Transparent"
+            BorderBrush="Transparent"
+            Foreground="#1F2937"
+            Cursor="Hand"
+            Click="btnVolver_Click"/>
+
+            <TextBlock Text="Gestión de Usuarios"
+               FontSize="24"
+               FontWeight="SemiBold"
+               Foreground="#1F2937"
+               VerticalAlignment="Center"
+               Margin="10,0,0,0"/>
+        </StackPanel>
+
 
         <Border Grid.Row="1"
                 Background="White"
@@ -44,13 +57,13 @@
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="DNI:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,10"/>
-                    <TextBox x:Name="txtDNI" Grid.Row="0" Grid.Column="1" Padding="5" Margin="0,0,20,10"/>
+                    <TextBox x:Name="txtDNI" Grid.Row="0" Grid.Column="1" Padding="5" Margin="0,0,20,10" PreviewTextInput="txtDNI_PreviewTextInput"/>
 
                     <TextBlock Grid.Row="0" Grid.Column="2" Text="Nombre:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,10"/>
-                    <TextBox x:Name="txtNombre" Grid.Row="0" Grid.Column="3" Padding="5" Margin="0,0,0,10"/>
+                    <TextBox x:Name="txtNombre" Grid.Row="0" Grid.Column="3" Padding="5" Margin="0,0,0,10" PreviewTextInput="txtLetras_PreviewTextInput"/>
 
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="Apellido:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,10"/>
-                    <TextBox x:Name="txtApellido" Grid.Row="1" Grid.Column="1" Padding="5" Margin="0,0,20,10"/>
+                        <TextBox x:Name="txtApellido" Grid.Row="1" Grid.Column="1" Padding="5" Margin="0,0,20,10" PreviewTextInput="txtLetras_PreviewTextInput"/>
 
                     <TextBlock Grid.Row="1" Grid.Column="2" Text="Correo:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,10"/>
                     <TextBox x:Name="txtCorreo" Grid.Row="1" Grid.Column="3" Padding="5" Margin="0,0,0,10"/>

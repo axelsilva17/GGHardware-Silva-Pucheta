@@ -15,22 +15,22 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Text="Gestión de Backup" 
+                <TextBlock Text="Gestion de Backup" 
                            FontSize="24" FontWeight="Bold" 
                            Foreground="#2a4d7c" Margin="0 0 0 20"/>
 
                 <!-- Contenido -->
                 <StackPanel Grid.Row="1" VerticalAlignment="Top">
-                    <!-- Selección de carpeta -->
+                    <!-- Seleccion de carpeta -->
                     <StackPanel Orientation="Horizontal" Margin="0 0 0 15">
                         <TextBox x:Name="txtRuta" Width="350" Margin="0 0 10 0"
                                  IsReadOnly="True" 
-                                 Text="Seleccione una ubicación para guardar"/>
+                                 Text="Seleccione una ubicacion para guardar"/>
                         <Button x:Name="btnSeleccionarRuta" Content="Buscar..." Width="100" 
                                 Click="btnSeleccionarRuta_Click"/>
                     </StackPanel>
 
-                    <!-- Botón Backup -->
+                    <!-- Boton Backup -->
                     <Button x:Name="btnBackup" Content="Realizar Backup" Width="150" Height="40"
                             Background="#2a4d7c" Foreground="White" FontWeight="Bold"
                             Click="btnBackup_Click" Margin="0 0 0 15"/>
