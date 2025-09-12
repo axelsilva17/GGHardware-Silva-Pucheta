@@ -73,10 +73,11 @@
             </DockPanel>
 
             <!-- Menú lateral -->
-            <Border Grid.Row="1" Grid.Column="0" Background="#111827">
+            <Border Grid.Row="1" Grid.Column="0" Background="#111827" x:Name="mainMenuBorder">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <StackPanel>
+                    <StackPanel x:Name="mainMenu">
                         <TextBlock Text="Navegación" 
+                                   
                                    Foreground="#9CA3AF"
                                    FontWeight="Bold"
                                    FontSize="14"

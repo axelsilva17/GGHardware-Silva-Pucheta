@@ -19,11 +19,8 @@ namespace GGHardware
     {
         public void HabilitarMenu()
         {
-            btnInicio.IsEnabled = true;
-            btnProductos.IsEnabled = true;
-            btnVentas.IsEnabled = true;
-            btnConfiguracion.IsEnabled = true;
-            btnRegistro.IsEnabled = true;
+            mainMenu.IsEnabled = true;
+            mainMenu.Opacity = 1.0;
         }
 
         public MainWindow()
@@ -34,41 +31,9 @@ namespace GGHardware
             MainContentBorder.Child = new InicioView();
 
             // Deshabilitar los botones de navegación hasta que el usuario inicie sesión
-            btnInicio.IsEnabled = true;
-            btnProductos.IsEnabled = true;
-            btnVentas.IsEnabled = true;
-            btnConfiguracion.IsEnabled = true;
-            btnRegistro.IsEnabled = true;
-
-            // ✅ Probar conexión a la base y a la tabla Usuarios
-            ProbarConexionBD();
-        }
-
-        private void ProbarConexionBD()
-        {
-            try
-            {
-                using (var context = new ApplicationDbContext())
-                {
-                    var usuario = context.Usuarios.FirstOrDefault();
-
-                    if (usuario != null)
-                    {
-                        MessageBox.Show($"Conectado correctamente ✅\nPrimer usuario: {usuario.Nombre} {usuario.apellido}",
-                                        "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
-                    else
-                    {
-                        MessageBox.Show("Conexión OK ✅ pero la tabla Usuarios está vacía.",
-                                        "Información", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"❌ Error al conectar con la base de datos:\n{ex.Message}",
-                                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            // Deshabilita los botones y haz el menú semitransparente
+            mainMenu.IsEnabled = false; // mainMenu es el nombre de tu panel de navegación
+            mainMenu.Opacity = 0.5; // El valor 0.5 lo hace semitransparente
         }
 
         private void btnProductos_Click(object sender, RoutedEventArgs e)

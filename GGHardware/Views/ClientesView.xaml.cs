@@ -1,15 +1,18 @@
-﻿using System.Text.RegularExpressions;
+﻿using GGHardware.Data;
+using GGHardware.Models;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace GGHardware.Views
-{
+{ 
     public partial class ClientesView : UserControl
     {
         public ClientesView()
         {
             InitializeComponent();
+            CargarClientes();
         }
 
 
@@ -42,8 +45,25 @@ namespace GGHardware.Views
             e.Handled = regex.IsMatch(e.Text);
         }
 
+        private void CargarClientes()
+        {
+            try
+            {
+                using (var context = new ApplicationDbContext())
+                {
+                    dgClientes.ItemsSource = context.Clientes.ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("❌ Error al cargar usuarios: " + ex.Message);
+            }
+        }
+
+
         private void btnGuardar_Click(object sender, RoutedEventArgs e)
-        {// Validaciones al hacer clic en Guardar
+        {
+            // Validaciones
             if (!Regex.IsMatch(txtNombre.Text, @"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$"))
             {
                 MessageBox.Show("El nombre solo debe contener letras.", "Error de Validación", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -80,8 +100,36 @@ namespace GGHardware.Views
                 return;
             }
 
-            // Si todas las validaciones pasan, mostrar mensaje de éxito
-            MessageBox.Show("Cliente guardado con éxito.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+            // Crear objeto Cliente a partir de los campos
+            var cliente = new GGHardware.Models.Cliente
+            {
+                nombre = txtNombre.Text,
+                apellido = txtApellido.Text,
+                cuit = int.TryParse(txtCUIT.Text, out int cuitVal) ? cuitVal : 0,
+                telefono = int.TryParse(txtTelefono.Text, out int telVal) ? telVal : 0,
+                direccion = txtDireccion.Text,
+                provincia = txtProvincia.Text,
+                localidad = txtLocalidad.Text,
+                condicion_fiscal = (cmbCondicionFiscal.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "SinCondicion",
+            };
+
+            try
+            {
+                using (var context = new ApplicationDbContext())
+                {
+                    context.Clientes.Add(cliente);
+                    context.SaveChanges();
+                }
+
+                MessageBox.Show("Cliente guardado con éxito.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                LimpiarCampos();
+                CargarClientes(); // Actualiza el DataGrid
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("❌ Error al guardar cliente: " + ex.Message);
+            }
         }
 
         private void btnLimpiar_Click(object sender, RoutedEventArgs e)

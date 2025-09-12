@@ -12,6 +12,7 @@ namespace GGHardware.Views
         public Usuarios()
         {
             InitializeComponent();
+            CargarUsuarios();
         }
         private void btnVolver_Click(object sender, RoutedEventArgs e)
         {
@@ -82,19 +83,31 @@ namespace GGHardware.Views
                 return;
             }
 
+            if (cmbRol.SelectedIndex == -1)
+            {
+                MessageBox.Show("Por favor, selecciona un rol.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return; // Detiene el método si la validación falla
+            }
+
+            if (dpFechaNacimiento.SelectedDate == null)
+            {
+                MessageBox.Show("Por favor, selecciona una fecha de nacimiento.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return; // Detiene el método si la validación falla
+            }
+
             try
             {
                 using (var context = new ApplicationDbContext())
                 {
                     var usuario = new GGHardware.Models.Usuario
                     {
-                        dni = txtDNI.Text,
+                        dni = int.Parse(txtDNI.Text),
                         Nombre = txtNombre.Text,
                         apellido = txtApellido.Text,
                         correo = txtCorreo.Text,
-                        contraseña = pbContrasena.Password, // ⚠️ en producción conviene encriptar
-                        Fecha_Nacimiento = dpFechaNacimiento.SelectedDate,
-                        rol = (cmbRol.SelectedItem as ComboBoxItem)?.Content.ToString()
+                        contraseña = pbContrasena.Password,
+                        fecha_Nacimiento = dpFechaNacimiento.SelectedDate,
+                        rol = (cmbRol.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "SinRol",
                     };
 
                     context.Usuarios.Add(usuario);
@@ -104,11 +117,12 @@ namespace GGHardware.Views
                 MessageBox.Show("✅ Usuario guardado con éxito.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 LimpiarCampos();
-                CargarUsuarios(); // refrescar la grilla
+                CargarUsuarios();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("❌ Error al guardar: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                // Esta es la clave. Muestra el error más específico.
+                MessageBox.Show($"❌ Error al guardar. Detalles: {ex.InnerException?.Message ?? ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

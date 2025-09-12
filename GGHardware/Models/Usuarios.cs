@@ -30,13 +30,13 @@ namespace GGHardware.Models
 
         [Required]
         [MaxLength(100)]
-        public required int contraseña { get; set; }
+        public required string contraseña { get; set; }
 
         [Required]
         [MaxLength(20)]
         public required string rol { get; set; }
 
         [Column(TypeName = "date")]
-        public DateTime Fecha_Nacimiento { get; set; } 
+        public DateTime? fecha_Nacimiento { get; set; } 
     }
 }
