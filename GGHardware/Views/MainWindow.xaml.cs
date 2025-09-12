@@ -9,6 +9,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using GGHardware.Data;
+using GGHardware.Models;
+using System.Linq;
 
 namespace GGHardware
 {
@@ -36,46 +39,63 @@ namespace GGHardware
             btnVentas.IsEnabled = true;
             btnConfiguracion.IsEnabled = true;
             btnRegistro.IsEnabled = true;
+
+            // ✅ Probar conexión a la base y a la tabla Usuarios
+            ProbarConexionBD();
+        }
+
+        private void ProbarConexionBD()
+        {
+            try
+            {
+                using (var context = new ApplicationDbContext())
+                {
+                    var usuario = context.Usuarios.FirstOrDefault();
+
+                    if (usuario != null)
+                    {
+                        MessageBox.Show($"Conectado correctamente ✅\nPrimer usuario: {usuario.Nombre} {usuario.apellido}",
+                                        "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Conexión OK ✅ pero la tabla Usuarios está vacía.",
+                                        "Información", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"❌ Error al conectar con la base de datos:\n{ex.Message}",
+                                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void btnProductos_Click(object sender, RoutedEventArgs e)
         {
-            // Limpiar el contenido previo
             MainContentBorder.Child = null;
-
-            // Crear la vista de Producto y mostrarla
             ProductoView productoView = new ProductoView();
             MainContentBorder.Child = productoView;
         }
+
         private void BtnRegistro_Click(object sender, RoutedEventArgs e)
         {
-            // Limpiar el contenido previo
             MainContentBorder.Child = null;
-
-            /// Crear la vista de registro y pasar una referencia de esta ventana
             RegistroView registroView = new RegistroView(this);
             MainContentBorder.Child = registroView;
         }
+
         private void btnVentas_Click(object sender, RoutedEventArgs e)
         {
-            // Limpia el contenido previo (opcional, pero buena práctica)
             MainContentBorder.Child = null;
-
-            // Crea una nueva instancia de la vista de ventas y la muestra
             VentasView ventasView = new VentasView();
-
             MainContentBorder.Child = ventasView;
         }
 
         private void btnInicio_Click(object sender, RoutedEventArgs e)
         {
-            // Limpia el contenido actual para asegurar que no haya nada residual.
             MainContentBorder.Child = null;
-
-            // Crea una nueva instancia de InicioView.
             InicioView inicioView = new InicioView();
-
-            // Asigna la nueva vista al borde de contenido principal.
             MainContentBorder.Child = inicioView;
         }
 
@@ -83,11 +103,12 @@ namespace GGHardware
         {
             MainContentBorder.Child = new Reportes();
         }
+
         private void btnBackup_Click(object sender, RoutedEventArgs e)
         {
             MainContentBorder.Child = new GGHardware.Views.Backup();
         }
-        // Agregado para futuras implementaciones
+
         private void btnConfiguracion_Click(object sender, RoutedEventArgs e)
         {
             // Lógica para la vista de configuración

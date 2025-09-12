@@ -16,7 +16,7 @@
 
             <!-- Encabezado -->
             <StackPanel Grid.Row="0" Margin="10" HorizontalAlignment="Center">
-                <TextBlock Text="GGHardware" FontSize="32" FontWeight="Bold" Foreground="#0EA5E9" TextAlignment="Center"/>
+                <TextBlock Text="GGHardware" FontSize="32" FontWeight="Bold" Foreground="#1F2937" TextAlignment="Center"/>
                 <TextBlock Text="Tu tienda de hardware de confianza" FontSize="16" Foreground="Gray" TextAlignment="Center"/>
             </StackPanel>
 
@@ -37,7 +37,7 @@
                              LostFocus="PasswordBox_LostFocus"/>
 
                 <!-- Boton Iniciar Sesion -->
-                <Button Margin="0,20,0,0" Padding="10" Background="#0EA5E9" Foreground="White"
+                <Button Margin="0,20,0,0" Padding="10" Background="#1F2937" Foreground="White"
                         Click="BtnInicioSesion_Click">
                     Inicio Sesion
                 </Button>

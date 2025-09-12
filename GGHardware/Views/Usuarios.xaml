@@ -10,12 +10,13 @@
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="231"/>
+            <RowDefinition Height="25.88"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <!-- Barra superior con botón volver y título -->
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,20">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
             <Button x:Name="btnVolver"
             Content="←"
             FontSize="18"
@@ -39,7 +40,7 @@
                 Background="White"
                 CornerRadius="5"
                 Padding="20"
-                Margin="0,0,0,20">
+                Margin="0,0,0,20" Grid.RowSpan="2">
             <StackPanel>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -63,7 +64,7 @@
                     <TextBox x:Name="txtNombre" Grid.Row="0" Grid.Column="3" Padding="5" Margin="0,0,0,10" PreviewTextInput="txtLetras_PreviewTextInput"/>
 
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="Apellido:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,10"/>
-                        <TextBox x:Name="txtApellido" Grid.Row="1" Grid.Column="1" Padding="5" Margin="0,0,20,10" PreviewTextInput="txtLetras_PreviewTextInput"/>
+                    <TextBox x:Name="txtApellido" Grid.Row="1" Grid.Column="1" Padding="5" Margin="0,0,20,10" PreviewTextInput="txtLetras_PreviewTextInput"/>
 
                     <TextBlock Grid.Row="1" Grid.Column="2" Text="Correo:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,10"/>
                     <TextBox x:Name="txtCorreo" Grid.Row="1" Grid.Column="3" Padding="5" Margin="0,0,0,10"/>
@@ -102,7 +103,7 @@
             </StackPanel>
         </Border>
 
-        <Border Grid.Row="2"
+        <Border Grid.Row="3"
                 Background="White"
                 BorderBrush="#E5E7EB"
                 BorderThickness="1"

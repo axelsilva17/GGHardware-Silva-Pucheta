@@ -102,5 +102,10 @@ namespace GGHardware.Views
             cmbCondicionFiscal.SelectedIndex = -1; // Deselecciona la opción
             txtNombre.Focus();
         }
+
+        private void dgClientes_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

@@ -10,10 +10,13 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="239*"/>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="9*"/>
+            <RowDefinition Height="12*"/>
         </Grid.RowDefinitions>
         <!-- Botón volver + título -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,20">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
             <Button x:Name="btnVolver"
                 Content="←"
                 FontSize="18"
@@ -52,33 +55,33 @@
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="Nombre:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,10"/>
-                        <TextBox x:Name="txtNombre" Grid.Row="0" Grid.Column="1" Padding="5" Margin="0,0,20,10" PreviewTextInput="txtLetras_PreviewTextInput"/>
-                    
+                    <TextBox x:Name="txtNombre" Grid.Row="0" Grid.Column="1" Padding="5" Margin="0,0,20,10" PreviewTextInput="txtLetras_PreviewTextInput"/>
+
                     <TextBlock Grid.Row="0" Grid.Column="2" Text="Apellido:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,10"/>
-                        <TextBox x:Name="txtApellido" Grid.Row="0" Grid.Column="3" Padding="5" Margin="0,0,0,10" PreviewTextInput="txtLetras_PreviewTextInput"/>
+                    <TextBox x:Name="txtApellido" Grid.Row="0" Grid.Column="3" Padding="5" Margin="0,0,0,10" PreviewTextInput="txtLetras_PreviewTextInput"/>
 
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="CUIT:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,10"/>
                     <TextBox x:Name="txtCUIT" Grid.Row="1" Grid.Column="1" Padding="5" Margin="0,0,20,10" PreviewTextInput="txtNumeros_PreviewTextInput"/>
-                    
+
                     <TextBlock Grid.Row="1" Grid.Column="2" Text="Teléfono:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,10"/>
-                        <TextBox x:Name="txtTelefono" Grid.Row="1" Grid.Column="3" Padding="5" Margin="0,0,0,10" PreviewTextInput="txtNumeros_PreviewTextInput"/>
+                    <TextBox x:Name="txtTelefono" Grid.Row="1" Grid.Column="3" Padding="5" Margin="0,0,0,10" PreviewTextInput="txtNumeros_PreviewTextInput"/>
 
                     <TextBlock Grid.Row="2" Grid.Column="0" Text="Dirección:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,10"/>
-                        <TextBox x:Name="txtDireccion" Grid.Row="2" Grid.Column="1" Padding="5" Margin="0,0,20,10"/>
-                        
+                    <TextBox x:Name="txtDireccion" Grid.Row="2" Grid.Column="1" Padding="5" Margin="0,0,20,10"/>
+
                     <TextBlock Grid.Row="2" Grid.Column="2" Text="Condición Fiscal:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,10"/>
-                        <ComboBox x:Name="cmbCondicionFiscal" Grid.Row="2" Grid.Column="3" Padding="5" Margin="0,0,0,10">
-                            <ComboBoxItem Content="Responsable Inscripto"/>
-                            <ComboBoxItem Content="Monotributista"/>
-                            <ComboBoxItem Content="Exento"/>
-                            <ComboBoxItem Content="Consumidor Final"/>
-                        </ComboBox>
+                    <ComboBox x:Name="cmbCondicionFiscal" Grid.Row="2" Grid.Column="3" Padding="5" Margin="0,0,0,10">
+                        <ComboBoxItem Content="Responsable Inscripto"/>
+                        <ComboBoxItem Content="Monotributista"/>
+                        <ComboBoxItem Content="Exento"/>
+                        <ComboBoxItem Content="Consumidor Final"/>
+                    </ComboBox>
 
                     <TextBlock Grid.Row="3" Grid.Column="0" Text="Provincia:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,10"/>
-                        <TextBox x:Name="txtProvincia" Grid.Row="3" Grid.Column="1" Padding="5" Margin="0,0,20,10" PreviewTextInput="txtLetras_PreviewTextInput"/>
-                    
+                    <TextBox x:Name="txtProvincia" Grid.Row="3" Grid.Column="1" Padding="5" Margin="0,0,20,10" PreviewTextInput="txtLetras_PreviewTextInput"/>
+
                     <TextBlock Grid.Row="3" Grid.Column="2" Text="Localidad:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,10"/>
-                        <TextBox x:Name="txtLocalidad" Grid.Row="3" Grid.Column="3" Padding="5" Margin="0,0,0,10" PreviewTextInput="txtLetras_PreviewTextInput"/>
+                    <TextBox x:Name="txtLocalidad" Grid.Row="3" Grid.Column="3" Padding="5" Margin="0,0,0,10" PreviewTextInput="txtLetras_PreviewTextInput"/>
                 </Grid>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
@@ -106,12 +109,12 @@
                 BorderBrush="#E5E7EB"
                 BorderThickness="1"
                 CornerRadius="8"
-                Padding="10">
+                Padding="10" Grid.RowSpan="4">
             <DataGrid x:Name="dgClientes"
                       AutoGenerateColumns="False"
                       IsReadOnly="True"
                       HeadersVisibility="Column"
-                      GridLinesVisibility="None">
+                      GridLinesVisibility="None" SelectionChanged="dgClientes_SelectionChanged">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding id_cliente}" Width="Auto"/>
                     <DataGridTextColumn Header="Nombre" Binding="{Binding nombre}" Width="*"/>

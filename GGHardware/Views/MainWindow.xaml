@@ -47,11 +47,7 @@
     </Window.Resources>
 
     <Grid>
-        <!-- Imagen de fondo común -->
-        <Image Source="/GGHardware;component/Resources/logo_fondo.png"
-               Stretch="UniformToFill"
-               Opacity="0.05"
-               Panel.ZIndex="0"/>
+      
 
         <!-- Contenido principal encima -->
         <Grid Panel.ZIndex="1">

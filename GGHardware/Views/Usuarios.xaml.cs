@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GGHardware.Data;
+using System;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -38,40 +39,79 @@ namespace GGHardware.Views
             Regex regex = new Regex("[^a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+");
             e.Handled = regex.IsMatch(e.Text);
         }
+
+        private void CargarUsuarios()
+        {
+            try
+            {
+                using (var context = new ApplicationDbContext())
+                {
+                    dgUsuarios.ItemsSource = context.Usuarios.ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("❌ Error al cargar usuarios: " + ex.Message);
+            }
+        }
+
         private void btnGuardar_Click(object sender, RoutedEventArgs e)
         {
-
-            // Validar Nombre y Apellido: solo letras
+            // Validaciones
             if (!Regex.IsMatch(txtNombre.Text, @"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$"))
             {
-                MessageBox.Show("El nombre solo debe contener letras.", "Error de Validación", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("El nombre solo debe contener letras.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (!Regex.IsMatch(txtApellido.Text, @"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$"))
             {
-                MessageBox.Show("El apellido solo debe contener letras.", "Error de Validación", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("El apellido solo debe contener letras.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            // Validar Correo: debe contener un @
             if (!txtCorreo.Text.Contains("@"))
             {
-                MessageBox.Show("El correo electrónico no es válido. Debe contener un '@'.", "Error de Validación", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("El correo electrónico no es válido.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            // Validar Contraseña: mínimo 6 caracteres
             if (pbContrasena.Password.Length < 6)
             {
-                MessageBox.Show("La contraseña debe tener un mínimo de 6 caracteres.", "Error de Validación", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("La contraseña debe tener un mínimo de 6 caracteres.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            // Si todas las validaciones pasan, mostrar mensaje de éxito y limpiar los campos.
-            MessageBox.Show("Usuario guardado con éxito.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
-            LimpiarCampos();
+            try
+            {
+                using (var context = new ApplicationDbContext())
+                {
+                    var usuario = new GGHardware.Models.Usuario
+                    {
+                        dni = txtDNI.Text,
+                        Nombre = txtNombre.Text,
+                        apellido = txtApellido.Text,
+                        correo = txtCorreo.Text,
+                        contraseña = pbContrasena.Password, // ⚠️ en producción conviene encriptar
+                        Fecha_Nacimiento = dpFechaNacimiento.SelectedDate,
+                        rol = (cmbRol.SelectedItem as ComboBoxItem)?.Content.ToString()
+                    };
+
+                    context.Usuarios.Add(usuario);
+                    context.SaveChanges();
+                }
+
+                MessageBox.Show("✅ Usuario guardado con éxito.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                LimpiarCampos();
+                CargarUsuarios(); // refrescar la grilla
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("❌ Error al guardar: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
+
 
         private void btnLimpiar_Click(object sender, RoutedEventArgs e)
         {
@@ -90,4 +130,5 @@ namespace GGHardware.Views
             txtDNI.Focus(); 
         }
     }
+    
 }
