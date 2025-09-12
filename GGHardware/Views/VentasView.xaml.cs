@@ -12,17 +12,34 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using GGHardware.Models;
+
+using GGHardware.ViewModels;
+
 
 namespace GGHardware.Views
 {
-    /// <summary>
-    /// Lógica de interacción para VentasView.xaml
-    /// </summary>
     public partial class VentasView : UserControl
     {
+        public VentasViewModel ViewModel { get; set; }
+
         public VentasView()
         {
             InitializeComponent();
+            ViewModel = new VentasViewModel();
+            this.DataContext = ViewModel;
+
+            // Ejemplo: mostrar clientes en txtBuscarCliente
+            txtBuscarCliente.TextChanged += (s, e) =>
+            {
+                // Podés filtrar aquí
+            };
+        }
+
+        private void Agregar_Click(object sender, RoutedEventArgs e)
+        {
+            var producto = (Producto)dgProductos.SelectedItem;
+            ViewModel.AgregarProducto(producto);
         }
     }
 }

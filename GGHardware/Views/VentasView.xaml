@@ -9,7 +9,6 @@
 
     <!-- 🎨 Recursos de estilo -->
     <UserControl.Resources>
-        <!-- Botón base -->
         <Style x:Key="PrimaryButton" TargetType="Button">
             <Setter Property="Background" Value="#2563EB"/>
             <Setter Property="Foreground" Value="White"/>
@@ -20,12 +19,10 @@
             <Setter Property="FontSize" Value="13"/>
         </Style>
 
-        <!-- Botón cancelar (rojo) -->
         <Style x:Key="DangerButton" TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
             <Setter Property="Background" Value="#EF4444"/>
         </Style>
 
-        <!-- Botón confirmar (verde) -->
         <Style x:Key="SuccessButton" TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
             <Setter Property="Background" Value="#10B981"/>
         </Style>
@@ -66,7 +63,7 @@
                           Background="White"
                           BorderBrush="#E5E7EB"
                           RowHeight="30"
-                          AlternatingRowBackground="#F9FAFB">
+                          ItemsSource="{Binding Productos}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="*"/>
                         <DataGridTextColumn Header="Precio" Binding="{Binding Precio}" Width="Auto"/>
@@ -74,7 +71,10 @@
                         <DataGridTemplateColumn Header="Acción" Width="Auto">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Content="Agregar" Style="{StaticResource PrimaryButton}"/>
+                                    <Button Content="Agregar"
+                                            Style="{StaticResource PrimaryButton}"
+                                            Command="{Binding DataContext.AgregarProductoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -117,12 +117,11 @@
                     <TextBlock Text="Productos en Carrito"
                                FontWeight="SemiBold"
                                Margin="0,10,0,5"/>
-
                     <Border BorderBrush="#E5E7EB"
                             BorderThickness="1"
                             CornerRadius="5"
                             Padding="5">
-                        <ListBox x:Name="lstCarrito">
+                        <ListBox x:Name="lstCarrito" ItemsSource="{Binding Carrito}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" Margin="0,2">
@@ -131,7 +130,9 @@
                                         <TextBlock Text="{Binding Precio, StringFormat=C}" Width="70"/>
                                         <Button Content="Quitar"
                                                 Style="{StaticResource DangerButton}"
-                                                Width="60"/>
+                                                Width="60"
+                                                Command="{Binding DataContext.QuitarProductoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
@@ -144,14 +145,15 @@
                             Orientation="Horizontal"
                             HorizontalAlignment="Right"
                             Margin="0,10,0,0">
-                    <TextBlock Text="Total: $0.00"
+                    <TextBlock Text="{Binding Total, StringFormat=C}"
                                FontWeight="Bold"
                                FontSize="16"
                                Foreground="#1F2937"
                                VerticalAlignment="Center"
                                Margin="0,0,20,0"/>
                     <Button Content="Cancelar" Style="{StaticResource DangerButton}" Width="80"/>
-                    <Button Content="Finalizar Venta" Style="{StaticResource SuccessButton}" Width="120"/>
+                    <Button Content="Finalizar Venta" Style="{StaticResource SuccessButton}" Width="120"
+                            Command="{Binding FinalizarVentaCommand}"/>
                 </StackPanel>
             </Grid>
         </Border>

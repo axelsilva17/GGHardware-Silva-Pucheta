@@ -15,9 +15,11 @@ namespace GGHardware.Data
         {
         }
 
-        // 👇 Aquí va tu DbSet
+        // DbSets
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Cliente> Clientes { get; set; }
+        public DbSet<Venta> Venta { get; set; }
+        public DbSet<Producto> Producto { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
