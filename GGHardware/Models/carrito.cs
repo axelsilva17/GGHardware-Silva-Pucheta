@@ -11,8 +11,8 @@ namespace GGHardware.Models
     {
         public int IdProducto { get; set; }
         public string? Nombre { get; set; }
-        public int Precio { get; set; }
-        public int Cantidad { get; set; }
+        public double  Precio { get; set; }
+        public double Cantidad { get; set; }
     }
 
     public class Producto
@@ -21,11 +21,11 @@ namespace GGHardware.Models
         [Key]
         public int Id_Producto { get; set; }
         public string? Nombre { get; set; }
-        public float precio_costo { get; set; }
+        public double precio_costo { get; set; }
 
-        public int precio_venta { get; set; }
+        public double precio_venta { get; set; }
         public char descripcion{ get; set; }
-        public float stock_min { get; set; }
-        public float Stock { get; set; }
+        public double stock_min { get; set; }
+        public double Stock { get; set; }
     }
 }

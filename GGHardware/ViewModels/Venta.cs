@@ -15,7 +15,7 @@ namespace GGHardware.ViewModels
         // Propiedad corregida para manejar la colección de productos
         public ObservableCollection<Producto> Productos { get; set; }
         public ObservableCollection<CarritoItem> Carrito { get; set; }
-        public int Total => Carrito.Sum(c => c.Precio * c.Cantidad);
+        public double Total => Carrito.Sum(c => c.Precio * c.Cantidad);
 
         // Comandos
         public RelayCommand AgregarProductoCommand { get; set; }
@@ -48,7 +48,7 @@ namespace GGHardware.ViewModels
                 {
                     IdProducto = producto.Id_Producto,
                     Nombre = producto.Nombre,
-                    Precio = producto.precio_venta, // Usar Precio_venta para el precio
+                   Precio = producto.precio_venta, // Usar Precio_venta para el precio
                     Cantidad = 1
                 });
             }

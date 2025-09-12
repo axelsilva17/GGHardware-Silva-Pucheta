@@ -15,7 +15,7 @@ namespace GGHardware.Models
         [Key]
         public int id_Venta { get; set; }
         public DateTime Fecha { get; set; }
-        public int Monto { get; set; }
+        public double Monto { get; set; }
 
         // 🔗 Claves foráneas
         public int id_Cliente { get; set; }
