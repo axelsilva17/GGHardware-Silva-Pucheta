@@ -17,6 +17,8 @@ namespace GGHardware
 {
     public partial class MainWindow : Window
     {
+        public static Usuario UsuarioActual { get; set; }
+
         public void HabilitarMenu()
         {
             mainMenu.IsEnabled = true;

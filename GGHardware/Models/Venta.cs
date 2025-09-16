@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,8 +23,11 @@ namespace GGHardware.Models
         public int id_Usuario { get; set; }
 
         // 🚀 Propiedades de navegación (opcionales, pero recomendadas)
-        public Cliente? Clientes { get; set; }
-        public Usuario? Usuarios { get; set; }
+        [ForeignKey("id_Cliente")]
+        public virtual Cliente Cliente { get; set; }
+
+        [ForeignKey("id_Usuario")]
+        public virtual Usuario Usuario { get; set; }
 
     }
 }

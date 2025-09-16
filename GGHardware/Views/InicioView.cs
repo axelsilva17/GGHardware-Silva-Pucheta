@@ -24,6 +24,7 @@ namespace GGHardware.Views
                     // Inicio de sesión exitoso
                     MessageBox.Show("Inicio de sesión exitoso.", "Bienvenido", MessageBoxButton.OK, MessageBoxImage.Information);
 
+                    MainWindow.UsuarioActual = usuario;
                     // Cargar la vista principal
                     var mainWindow = Window.GetWindow(this) as MainWindow;
                     if (mainWindow != null)
@@ -32,7 +33,7 @@ namespace GGHardware.Views
                         mainWindow.HabilitarMenu();
 
                         // Cargar la vista de inicio dentro del MainContentBorder
-                        mainWindow.MainContentBorder.Child = new InicioView();
+                        mainWindow.MainContentBorder.Child = new GGHardware.Views.DashboardView();
                     }
                 }
                 else
