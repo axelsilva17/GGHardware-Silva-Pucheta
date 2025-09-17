@@ -11,6 +11,8 @@ namespace GGHardware.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int id_usuario { get; set; }
 
+        public bool Activo { get; set; } = true;
+
         [Required]
         [MaxLength(11)] // ajusta según el tamaño de tu BD
         public int dni { get; set; } 
@@ -37,6 +39,7 @@ namespace GGHardware.Models
         public required string rol { get; set; }
 
         [Column(TypeName = "date")]
-        public DateTime? fecha_Nacimiento { get; set; } 
-    }
+       public DateTime? fecha_Nacimiento { get; set; } 
+        }
+
 }

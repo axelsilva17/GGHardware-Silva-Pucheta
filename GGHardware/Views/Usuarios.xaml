@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GGHardware.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="492.066" d:DesignWidth="782.911"
              Background="#F3F4F6">
     <Grid Margin="20">
         <Grid.RowDefinitions>
@@ -15,27 +15,29 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Barra superior con botón volver y título -->
+        <!-- Barra superior -->
         <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
             <Button x:Name="btnVolver"
-            Content="←"
-            FontSize="18"
-            Width="40" Height="40"
-            Background="Transparent"
-            BorderBrush="Transparent"
-            Foreground="#1F2937"
-            Cursor="Hand"
-            Click="btnVolver_Click"/>
+                    Content="←"
+                    FontSize="18"
+                    Width="40" Height="40"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    Foreground="#1F2937"
+                    Cursor="Hand"
+                    Click="btnVolver_Click"/>
 
             <TextBlock Text="Gestión de Usuarios"
-               FontSize="24"
-               FontWeight="SemiBold"
-               Foreground="#1F2937"
-               VerticalAlignment="Center"
-               Margin="10,0,0,0"/>
+                       FontSize="24"
+                       FontWeight="SemiBold"
+                       Foreground="#1F2937"
+                       VerticalAlignment="Center"
+                       Margin="10,0,0,0"/>
+            
+            
         </StackPanel>
-
-
+         
+        <!-- Formulario -->
         <Border Grid.Row="1"
                 Background="White"
                 CornerRadius="5"
@@ -103,6 +105,7 @@
             </StackPanel>
         </Border>
 
+        <!-- Tabla usuarios -->
         <Border Grid.Row="3"
                 Background="White"
                 BorderBrush="#E5E7EB"
@@ -116,18 +119,47 @@
                       GridLinesVisibility="None">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding id_usuario}" Width="Auto"/>
-                    <DataGridTextColumn Header="DNI" Binding="{Binding DNI}" Width="Auto"/>
-                    <DataGridTextColumn Header="Nombre" Binding="{Binding nombre}" Width="*"/>
+                    <DataGridTextColumn Header="DNI" Binding="{Binding dni}" Width="Auto"/>
+                    <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="*"/>
                     <DataGridTextColumn Header="Apellido" Binding="{Binding apellido}" Width="*"/>
                     <DataGridTextColumn Header="Rol" Binding="{Binding rol}" Width="Auto"/>
+                    <DataGridTextColumn Header="Activo" Binding="{Binding Activo}" Width="Auto"/>
+
+                    <!-- Acciones -->
                     <DataGridTemplateColumn Header="Acciones" Width="Auto">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Content="Editar" Background="#2563EB" Foreground="White" 
-                                            BorderBrush="Transparent" Padding="5" Margin="0,0,5,0"/>
-                                    <Button Content="Eliminar" Background="#EF4444" Foreground="White" 
-                                            BorderBrush="Transparent" Padding="5"/>
+                                    <!-- Editar -->
+                                     <Button Content="✏ Editar"
+                                                    Click="btnEditar_Click"
+                                                    Background="LightBlue"
+                                                    Margin="2"
+                                                    Padding="4"/>
+
+                                    <!-- Activar / Desactivar -->
+                                    <Button x:Name="btnActivarDesactivar"
+                                            Click="btnActivarDesactivar_Click"
+                                            Foreground="White"
+                                            BorderBrush="Transparent"
+                                            Padding="5">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <!-- Por defecto -->
+                                                <Setter Property="Content" Value="Desactivar"/>
+                                                <Setter Property="Background" Value="#EF4444"/>
+                                                <!-- rojo -->
+                                                <Style.Triggers>
+                                                    <!-- Si Activo = false, cambiar a verde -->
+                                                    <DataTrigger Binding="{Binding Activo}" Value="False">
+                                                        <Setter Property="Content" Value="Activar"/>
+                                                        <Setter Property="Background" Value="#10B981"/>
+                                                        <!-- verde -->
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>

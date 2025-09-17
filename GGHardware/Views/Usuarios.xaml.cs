@@ -1,5 +1,7 @@
 ﻿using GGHardware.Data;
+using GGHardware.Models;
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,29 +16,24 @@ namespace GGHardware.Views
             InitializeComponent();
             CargarUsuarios();
         }
+
         private void btnVolver_Click(object sender, RoutedEventArgs e)
         {
-            // Obtener la ventana principal
             var mainWindow = Window.GetWindow(this) as MainWindow;
-
             if (mainWindow != null)
             {
-                // Cargar la vista de registro dentro del MainContentBorder
                 mainWindow.MainContentBorder.Child = new RegistroView(mainWindow);
             }
         }
 
         private void txtDNI_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            // Solo permitir números (0-9)
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        // método para permitir solo letras en Nombre y Apellido
         private void txtLetras_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            // Permite letras (mayúsculas, minúsculas), letras acentuadas (áéíóúÁÉÍÓÚ), ñÑ y espacios.
             Regex regex = new Regex("[^a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+");
             e.Handled = regex.IsMatch(e.Text);
         }
@@ -58,7 +55,6 @@ namespace GGHardware.Views
 
         private void btnGuardar_Click(object sender, RoutedEventArgs e)
         {
-            // Validaciones
             if (!Regex.IsMatch(txtNombre.Text, @"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$"))
             {
                 MessageBox.Show("El nombre solo debe contener letras.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -86,20 +82,20 @@ namespace GGHardware.Views
             if (cmbRol.SelectedIndex == -1)
             {
                 MessageBox.Show("Por favor, selecciona un rol.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return; // Detiene el método si la validación falla
+                return;
             }
 
             if (dpFechaNacimiento.SelectedDate == null)
             {
                 MessageBox.Show("Por favor, selecciona una fecha de nacimiento.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return; // Detiene el método si la validación falla
+                return;
             }
 
             try
             {
                 using (var context = new ApplicationDbContext())
                 {
-                    var usuario = new GGHardware.Models.Usuario
+                    var usuario = new Usuario
                     {
                         dni = int.Parse(txtDNI.Text),
                         Nombre = txtNombre.Text,
@@ -108,6 +104,7 @@ namespace GGHardware.Views
                         contraseña = pbContrasena.Password,
                         fecha_Nacimiento = dpFechaNacimiento.SelectedDate,
                         rol = (cmbRol.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "SinRol",
+                        Activo = true // 👈 nuevo: los usuarios se crean activos por defecto
                     };
 
                     context.Usuarios.Add(usuario);
@@ -121,11 +118,9 @@ namespace GGHardware.Views
             }
             catch (Exception ex)
             {
-                // Esta es la clave. Muestra el error más específico.
                 MessageBox.Show($"❌ Error al guardar. Detalles: {ex.InnerException?.Message ?? ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
 
         private void btnLimpiar_Click(object sender, RoutedEventArgs e)
         {
@@ -134,15 +129,63 @@ namespace GGHardware.Views
 
         private void LimpiarCampos()
         {
-            // Restablece los campos del formulario a su estado inicial.
             txtDNI.Text = string.Empty;
             txtNombre.Text = string.Empty;
             txtApellido.Text = string.Empty;
             txtCorreo.Text = string.Empty;
             pbContrasena.Password = string.Empty;
-            cmbRol.SelectedIndex = -1; // Deselecciona el ítem
-            txtDNI.Focus(); 
+            cmbRol.SelectedIndex = -1;
+            dpFechaNacimiento.SelectedDate = null;
+            txtDNI.Focus();
         }
+
+        
+        private void btnActivarDesactivar_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            if (button?.DataContext is Usuario usuario)
+            {
+                try
+                {
+                    using (var context = new ApplicationDbContext())
+                    {
+                        var userDb = context.Usuarios.FirstOrDefault(u => u.id_usuario == usuario.id_usuario);
+                        if (userDb != null)
+                        {
+                            // Cambiar estado
+                            userDb.Activo = !userDb.Activo;
+                            context.SaveChanges();
+
+                            MessageBox.Show(
+                                userDb.Activo ? "✅ Usuario activado." : "⚠️ Usuario desactivado.",
+                                "Información",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Information
+                            );
+                        }
+                    }
+
+                    CargarUsuarios(); // refrescar grilla
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("❌ Error al cambiar estado: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+        private void btnEditar_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            if (button?.DataContext is GGHardware.Models.Usuario usuario)
+            {
+                var mainWindow = Window.GetWindow(this) as MainWindow;
+                if (mainWindow != null)
+                {
+                    mainWindow.MainContentBorder.Child = new EditarUsuario(usuario.id_usuario);
+                }
+            }
+        }
+
+
     }
-    
 }
