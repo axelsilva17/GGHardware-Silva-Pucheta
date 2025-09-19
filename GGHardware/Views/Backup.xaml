@@ -3,40 +3,48 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="600">
 
-  
-    <Grid Background="#f4f8fb">
-     
+    <Grid Background="{DynamicResource MaterialDesignPaper}">
         <Border Padding="20">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Text="Gestion de Backup" 
-                           FontSize="24" FontWeight="Bold" 
-                           Foreground="#2a4d7c" Margin="0 0 0 20"/>
 
-                <!-- Contenido -->
+                <TextBlock Text="Gestion de Backup"
+                           FontSize="24" FontWeight="Bold"
+                           Foreground="{DynamicResource MaterialDesignBody}"
+                           Margin="0 0 0 20"/>
+
                 <StackPanel Grid.Row="1" VerticalAlignment="Top">
-                    <!-- Seleccion de carpeta -->
                     <StackPanel Orientation="Horizontal" Margin="0 0 0 15">
-                        <TextBox x:Name="txtRuta" Width="350" Margin="0 0 10 0"
-                                 IsReadOnly="True" 
-                                 Text="Seleccione una ubicacion para guardar"/>
-                        <Button x:Name="btnSeleccionarRuta" Content="Buscar..." Width="100" 
+                        <TextBox x:Name="txtRuta"
+                                 Width="350"
+                                 Margin="0 0 10 0"
+                                 IsReadOnly="True"
+                                 materialDesign:HintAssist.Hint="Seleccione una ubicacion para guardar"/>
+                        <Button x:Name="btnSeleccionarRuta"
+                                Content="Buscar..."
+                                Width="100"
+                                Style="{DynamicResource MaterialDesignRaisedButton}"
                                 Click="btnSeleccionarRuta_Click"/>
                     </StackPanel>
 
-                    <!-- Boton Backup -->
-                    <Button x:Name="btnBackup" Content="Realizar Backup" Width="150" Height="40"
-                            Background="#2a4d7c" Foreground="White" FontWeight="Bold"
-                            Click="btnBackup_Click" Margin="0 0 0 15"/>
+                    <Button x:Name="btnBackup"
+                            Content="Realizar Backup"
+                            Width="150" Height="40"
+                            Style="{DynamicResource MaterialDesignRaisedButton}"
+                            FontWeight="Bold"
+                            Click="btnBackup_Click"
+                            Margin="0 0 0 15"/>
 
-                    <!-- Mensaje de estado -->
-                    <TextBlock x:Name="lblEstado" FontSize="14" Foreground="Green"/>
+                    <TextBlock x:Name="lblEstado"
+                               FontSize="14"
+                               Foreground="{DynamicResource MaterialDesignBody}"/>
                 </StackPanel>
             </Grid>
         </Border>

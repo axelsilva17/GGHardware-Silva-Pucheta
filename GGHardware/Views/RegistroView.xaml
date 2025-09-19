@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             Background="#F3F4F6">
+             Background="{DynamicResource PrimaryBrush}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -18,11 +19,11 @@
             <TextBlock Text="¡Bienvenido a GGHardware!"
                        FontSize="30"
                        FontWeight="Bold"
-                       Foreground="#1F2937"
+                       Foreground="{DynamicResource PrimaryForegroundBrush}"
                        HorizontalAlignment="Center"/>
             <TextBlock Text="Selecciona una opción para continuar"
                        FontSize="18"
-                       Foreground="#6B7280"
+                       Foreground="{DynamicResource PrimaryForegroundBrush}"
                        HorizontalAlignment="Center"
                        Margin="0,5,0,0"/>
         </StackPanel>
@@ -31,40 +32,26 @@
                     Orientation="Horizontal"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center">
-
             <Button Content="Registrar Cliente"
                     Width="220" Height="60"
                     FontSize="16"
-                    Background="#2563EB" Foreground="White"
-                    BorderBrush="Transparent" FontWeight="SemiBold"
-                    Cursor="Hand" Margin="0,0,30,0"
-                    Click="btnRegistrarCliente_Click">
-                <Button.Template>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border Background="{TemplateBinding Background}"
-                                CornerRadius="8">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Button.Template>
-            </Button>
+                    Style="{DynamicResource MaterialDesignRaisedLightButton}"
+                    Background="{DynamicResource PrimaryForegroundBrush}"
+                    Foreground="{DynamicResource PrimaryBrush}"
+                    materialDesign:ButtonAssist.CornerRadius="8"
+                    materialDesign:ElevationAssist.Elevation="Dp3"
+                    Margin="0,0,30,0"
+                    Click="btnRegistrarCliente_Click"/>
 
             <Button Content="Registrar Usuario"
                     Width="220" Height="60"
                     FontSize="16"
-                    Background="#10B981" Foreground="White"
-                    BorderBrush="Transparent" FontWeight="SemiBold"
-                    Cursor="Hand"
-                    Click="btnRegistrarUsuario_Click">
-                <Button.Template>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border Background="{TemplateBinding Background}"
-                                CornerRadius="8">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Button.Template>
-            </Button>
+                    Style="{DynamicResource MaterialDesignRaisedLightButton}"
+                    Background="{DynamicResource PrimaryForegroundBrush}"
+                    Foreground="{DynamicResource PrimaryBrush}"
+                    materialDesign:ButtonAssist.CornerRadius="8"
+                    materialDesign:ElevationAssist.Elevation="Dp3"
+                    Click="btnRegistrarUsuario_Click"/>
         </StackPanel>
     </Grid>
 </UserControl>

@@ -24,10 +24,10 @@ namespace GGHardware.Models
 
         // 🚀 Propiedades de navegación (opcionales, pero recomendadas)
         [ForeignKey("id_Cliente")]
-        public virtual Cliente Cliente { get; set; }
+        public virtual Cliente? Cliente { get; set; }
 
         [ForeignKey("id_Usuario")]
-        public virtual Usuario Usuario { get; set; }
+        public virtual Usuario? Usuario { get; set; }
 
     }
 }

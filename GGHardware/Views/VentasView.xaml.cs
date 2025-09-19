@@ -13,9 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using GGHardware.Models;
-
 using GGHardware.ViewModels;
-
 
 namespace GGHardware.Views
 {
@@ -29,17 +27,48 @@ namespace GGHardware.Views
             ViewModel = new VentasViewModel();
             this.DataContext = ViewModel;
 
-            // Ejemplo: mostrar clientes en txtBuscarCliente
+            // Inicializar hint simulado
+            txtBuscarCliente.Text = "Buscar Cliente (DNI/Nombre)";
+            txtBuscarCliente.Foreground = Brushes.Gray;
+
+            txtBuscarCliente.GotFocus += TxtBuscarCliente_GotFocus;
+            txtBuscarCliente.LostFocus += TxtBuscarCliente_LostFocus;
+
+            // Ejemplo: manejar cambios para filtrar clientes
             txtBuscarCliente.TextChanged += (s, e) =>
             {
-                // Podés filtrar aquí
+                if (txtBuscarCliente.Text != "Buscar Cliente (DNI/Nombre)")
+                {
+                    // Aquí podés filtrar tu lista de clientes en ViewModel
+                    ViewModel.FiltrarClientes(txtBuscarCliente.Text);
+                }
             };
+        }
+
+        private void TxtBuscarCliente_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (txtBuscarCliente.Text == "Buscar Cliente (DNI/Nombre)")
+            {
+                txtBuscarCliente.Text = "";
+                txtBuscarCliente.Foreground = Brushes.Black;
+            }
+        }
+
+        private void TxtBuscarCliente_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtBuscarCliente.Text))
+            {
+                txtBuscarCliente.Text = "Buscar Cliente (DNI/Nombre)";
+                txtBuscarCliente.Foreground = Brushes.Gray;
+            }
         }
 
         private void Agregar_Click(object sender, RoutedEventArgs e)
         {
-            var producto = (Producto)dgProductos.SelectedItem;
-            ViewModel.AgregarProducto(producto);
+            if (dgProductos.SelectedItem is Producto producto)
+            {
+                ViewModel.AgregarProducto(producto);
+            }
         }
     }
 }

@@ -3,11 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
-             Background="#F3F4F6">
+             d:DesignHeight="400"
+             d:DesignWidth="500"
+             Background="{DynamicResource MaterialDesignPaper}">
 
     <Viewbox Stretch="Uniform">
-        <Grid Margin="20">
+        <Grid Width="500" Height="400">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -16,39 +19,32 @@
 
             <!-- Encabezado -->
             <StackPanel Grid.Row="0" Margin="10" HorizontalAlignment="Center">
-                <TextBlock Text="GGHardware" FontSize="32" FontWeight="Bold" Foreground="#1F2937" TextAlignment="Center"/>
-                <TextBlock Text="Tu tienda de hardware de confianza" FontSize="16" Foreground="Gray" TextAlignment="Center"/>
+                <TextBlock Text="GGHardware" FontSize="32" FontWeight="Bold" Foreground="{DynamicResource MaterialDesignBody}" TextAlignment="Center"/>
+                <TextBlock Text="Tu tienda de hardware de confianza" FontSize="16" Foreground="{DynamicResource MaterialDesignBody}" TextAlignment="Center"/>
             </StackPanel>
 
-            <!-- Contenido principal -->
-            <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20" Width="300">
+            <!-- Card Login (usa MiCardStyle, sin CornerRadius ni Elevation) -->
+            <!-- Reemplazo del Card por Border para poder usar CornerRadius -->
+            <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Width="300">
+                <Border Background="{DynamicResource MaterialDesignCardBackground}" CornerRadius="8" Padding="20">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.15"/>
+                    </Border.Effect>
 
-                <!-- Campo Usuario o Correo -->
-                <TextBox x:Name="txtCorreo"
-                         Margin="0,10,0,0" 
-                         Padding="10"
-               
-                         Foreground="Gray"
-                         GotFocus="TextBox_GotFocus"
-                         LostFocus="TextBox_LostFocus"/>
-
-                <!-- Campo Contrasenia -->
-                <PasswordBox x:Name="pbContrasena"
-                             Margin="0,10,0,0" Padding="10" 
-                             Tag="Contrasena"
-                             GotFocus="PasswordBox_GotFocus"
-                             LostFocus="PasswordBox_LostFocus"/>
-
-                <!-- Boton Iniciar Sesion -->
-                <Button Margin="0,20,0,0" Padding="10" Background="#1F2937" Foreground="White"
-                        Click="BtnInicioSesion_Click">
-                    Inicio Sesion
-                </Button>
+                    <StackPanel>
+                        <TextBox x:Name="txtCorreo" Margin="0,0,0,10"
+                     materialDesign:HintAssist.Hint="Usuario o Correo"
+                     Style="{DynamicResource MaterialDesignOutlinedTextBox}"/>
+                        <PasswordBox x:Name="pbContrasena" Margin="0,0,0,20"
+                         materialDesign:HintAssist.Hint="Contrasenia"
+                         Style="{DynamicResource MaterialDesignOutlinedPasswordBox}"/>
+                        <Button Content="Iniciar Sesion" Style="{DynamicResource MaterialDesignRaisedButton}" Click="BtnInicioSesion_Click"/>
+                    </StackPanel>
+                </Border>
             </StackPanel>
 
             <!-- Footer -->
-            <TextBlock Grid.Row="2" Text="2025 GGHardware"
-                       HorizontalAlignment="Center" Margin="10" Foreground="Gray"/>
+            <TextBlock Grid.Row="2" Text="2025 GGHardware" HorizontalAlignment="Center" Margin="10" Foreground="{DynamicResource MaterialDesignBody}"/>
         </Grid>
     </Viewbox>
 </UserControl>

@@ -3,57 +3,36 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
-             Background="#F3F4F6">
+             Background="{DynamicResource MaterialDesignPaper}">
 
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- Título -->
             <RowDefinition Height="*"/>
-            <!-- DataGrid que se expande -->
             <RowDefinition Height="Auto"/>
-            <!-- Botones -->
         </Grid.RowDefinitions>
 
-        <!-- Título -->
         <TextBlock Grid.Row="0"
                    Text="Gestión de Productos"
-                   FontSize="22"
+                   FontSize="24"
                    FontWeight="Bold"
-                   Foreground="#1F2937"
-                   Margin="0,0,0,15"
+                   Foreground="{DynamicResource MaterialDesignBody}"
+                   Margin="0,0,0,20"
                    HorizontalAlignment="Center" />
 
-        <!-- Tabla de productos -->
         <Border Grid.Row="1"
-                Background="White"
-                BorderBrush="#E5E7EB"
-                BorderThickness="1"
-                CornerRadius="5"
+                Background="{DynamicResource MaterialDesignCardBackground}"
+                materialDesign:ElevationAssist.Elevation="Dp6"
+                CornerRadius="8"
                 Padding="10">
             <DataGrid x:Name="dgProductos"
                       AutoGenerateColumns="False"
                       CanUserAddRows="False"
-                      SelectionMode="Single"
-                      HeadersVisibility="Column"
-                      GridLinesVisibility="None"
                       IsReadOnly="True"
-                      Background="Transparent"
-                      BorderBrush="Transparent"
-                      RowBackground="#F9FAFB"
-                      AlternatingRowBackground="#E5E7EB"
-                      FontSize="14">
-                <DataGrid.Resources>
-                    <Style TargetType="{x:Type DataGridColumnHeader}">
-                        <Setter Property="HorizontalContentAlignment" Value="Center" />
-                        <Setter Property="FontWeight" Value="SemiBold"/>
-                    </Style>
-                    <Style TargetType="{x:Type TextBlock}">
-                        <Setter Property="HorizontalAlignment" Value="Center" />
-                        <Setter Property="VerticalAlignment" Value="Center" />
-                    </Style>
-                </DataGrid.Resources>
+                      SelectionMode="Single"
+                      Style="{DynamicResource MaterialDesignDataGrid}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="80" />
                     <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="*" />
@@ -63,32 +42,24 @@
             </DataGrid>
         </Border>
 
-        <!-- Botones -->
         <StackPanel Grid.Row="2"
                     Orientation="Horizontal"
                     HorizontalAlignment="Center"
-                    Margin="0,15,0,0">
+                    Margin="0,20,0,0">
             <Button Content="Alta"
+                    Style="{DynamicResource MaterialDesignRaisedButton}"
                     Width="110" Height="35"
-                    FontSize="14"
-                    Margin="5,0"
-                    Background="#2563EB" Foreground="White"
-                    BorderBrush="Transparent" FontWeight="SemiBold"
-                    Cursor="Hand"/>
+                    Margin="5,0"/>
             <Button Content="Baja"
+                    Style="{DynamicResource MaterialDesignRaisedButton}"
                     Width="110" Height="35"
-                    FontSize="14"
-                    Margin="5,0"
-                    Background="#EF4444" Foreground="White"
-                    BorderBrush="Transparent" FontWeight="SemiBold"
-                    Cursor="Hand"/>
+                    Margin="5,0"/>
             <Button Content="Modificar"
+                    Style="{DynamicResource MaterialDesignRaisedButton}"
+                    Background="{DynamicResource MaterialDesignToolBarBackground}"
+                    Foreground="{DynamicResource MaterialDesignBody}"
                     Width="110" Height="35"
-                    FontSize="14"
-                    Margin="5,0"
-                    Background="#10B981" Foreground="White"
-                    BorderBrush="Transparent" FontWeight="SemiBold"
-                    Cursor="Hand"/>
+                    Margin="5,0"/>
         </StackPanel>
     </Grid>
 </UserControl>

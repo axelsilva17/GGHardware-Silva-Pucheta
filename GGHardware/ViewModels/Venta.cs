@@ -12,50 +12,52 @@ namespace GGHardware.ViewModels
     {
         private readonly ApplicationDbContext _context;
 
-        // Propiedad corregida para manejar la colección de productos
+        // Colecciones
         public ObservableCollection<Producto> Productos { get; set; }
         public ObservableCollection<CarritoItem> Carrito { get; set; }
+
         public double Total => Carrito.Sum(c => c.Precio * c.Cantidad);
 
-        // Comandos
-        public RelayCommand AgregarProductoCommand { get; set; }
-        public RelayCommand QuitarProductoCommand { get; set; }
-        public RelayCommand FinalizarVentaCommand { get; set; }
-
+        // Comandos simulados como métodos
         public VentasViewModel()
         {
             _context = new ApplicationDbContext();
 
-            // Inicializa la colección de productos correctamente
             Productos = new ObservableCollection<Producto>(_context.Producto.ToList());
             Carrito = new ObservableCollection<CarritoItem>();
-
-            // Inicializar comandos
-            AgregarProductoCommand = new RelayCommand(o => AgregarProducto(o as Producto));
-            QuitarProductoCommand = new RelayCommand(o => QuitarProducto(o as CarritoItem));
-            FinalizarVentaCommand = new RelayCommand(o => FinalizarVenta());
         }
 
+        // Método para filtrar clientes (simulado)
+        public void FiltrarClientes(string filtro)
+        {
+            // Aquí podrías filtrar tu lista de clientes si la tuvieras
+            // Por ahora solo ejemplo:
+            Console.WriteLine($"Filtrando clientes por: {filtro}");
+        }
+
+        // Agregar producto al carrito
         public void AgregarProducto(Producto producto)
         {
             if (producto == null) return;
 
             var item = Carrito.FirstOrDefault(c => c.IdProducto == producto.Id_Producto);
-            if (item != null) item.Cantidad++;
+            if (item != null)
+                item.Cantidad++;
             else
             {
                 Carrito.Add(new CarritoItem
                 {
                     IdProducto = producto.Id_Producto,
                     Nombre = producto.Nombre,
-                   Precio = producto.precio_venta, // Usar Precio_venta para el precio
+                    Precio = producto.precio_venta,
                     Cantidad = 1
                 });
             }
             OnPropertyChanged(nameof(Total));
         }
 
-        private void QuitarProducto(CarritoItem item)
+        // Quitar producto del carrito
+        public void QuitarProducto(CarritoItem item)
         {
             if (item == null) return;
 
@@ -63,7 +65,8 @@ namespace GGHardware.ViewModels
             OnPropertyChanged(nameof(Total));
         }
 
-        private void FinalizarVenta()
+        // Finalizar venta
+        public void FinalizarVenta()
         {
             if (!Carrito.Any())
             {
@@ -71,9 +74,8 @@ namespace GGHardware.ViewModels
                 return;
             }
 
-            // Para probar, cliente y usuario fijos
-            int idCliente = 1;
-            int idUsuario = 1;
+            int idCliente = 1; // Cliente fijo para prueba
+            int idUsuario = 1; // Usuario fijo para prueba
 
             var venta = new Venta
             {
@@ -83,27 +85,23 @@ namespace GGHardware.ViewModels
                 id_Usuario = idUsuario
             };
 
-            // 🔹 Descontar stock de los productos
+            // Verificar stock y descontar
             foreach (var item in Carrito)
             {
-                // Accede a la colección de productos desde el contexto
                 var producto = _context.Producto.FirstOrDefault(p => p.Id_Producto == item.IdProducto);
                 if (producto != null)
                 {
                     if (producto.Stock >= item.Cantidad)
-                    {
                         producto.Stock -= item.Cantidad;
-                    }
                     else
                     {
                         MessageBox.Show($"No hay suficiente stock para {producto.Nombre}.",
                             "Error de stock", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        return; // corta la venta si falta stock
+                        return;
                     }
                 }
             }
 
-            // Guardar la venta
             _context.Venta.Add(venta);
             _context.SaveChanges();
 
@@ -112,7 +110,7 @@ namespace GGHardware.ViewModels
 
             Carrito.Clear();
 
-            // 🔹 Refrescar productos en pantalla después de guardar
+            // Refrescar productos en pantalla
             Productos = new ObservableCollection<Producto>(_context.Producto.ToList());
             OnPropertyChanged(nameof(Productos));
             OnPropertyChanged(nameof(Total));
@@ -124,5 +122,14 @@ namespace GGHardware.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+    }
+
+    // Clase para el carrito
+    public class CarritoItem
+    {
+        public int IdProducto { get; set; }
+        public string Nombre { get; set; } = "";
+        public double Precio { get; set; }
+        public int Cantidad { get; set; }
     }
 }

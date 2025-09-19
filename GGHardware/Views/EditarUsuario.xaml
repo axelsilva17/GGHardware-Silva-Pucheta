@@ -3,48 +3,59 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
-             Height="Auto" Width="Auto">
+             d:DesignHeight="600" d:DesignWidth="400"
+             Background="{DynamicResource MaterialDesignBackground}">
 
     <Grid Margin="20">
         <StackPanel>
-            <TextBlock Text="✏ Editar Usuario" 
-                       FontSize="20" 
+            <TextBlock Text="Editar Usuario"
+                       FontSize="24"
                        FontWeight="Bold"
+                       Foreground="{DynamicResource MaterialDesignBody}"
                        Margin="0,0,0,20"/>
 
-            <TextBlock Text="DNI"/>
-            <TextBox x:Name="txtDNI" Margin="0,5"/>
+            <TextBlock Text="DNI" Style="{StaticResource MaterialDesignCaptionTextBlock}" Margin="0,5,0,0"/>
+            <TextBox x:Name="txtDNI" Style="{StaticResource MaterialDesignFilledTextBox}" Margin="0,5,0,10"
+                     materialDesign:HintAssist.Hint="DNI"/>
 
-            <TextBlock Text="Nombre"/>
-            <TextBox x:Name="txtNombre" Margin="0,5"/>
+            <TextBlock Text="Nombre" Style="{StaticResource MaterialDesignCaptionTextBlock}" Margin="0,5,0,0"/>
+            <TextBox x:Name="txtNombre" Style="{StaticResource MaterialDesignFilledTextBox}" Margin="0,5,0,10"
+                     materialDesign:HintAssist.Hint="Nombre"/>
 
-            <TextBlock Text="Apellido"/>
-            <TextBox x:Name="txtApellido" Margin="0,5"/>
+            <TextBlock Text="Apellido" Style="{StaticResource MaterialDesignCaptionTextBlock}" Margin="0,5,0,0"/>
+            <TextBox x:Name="txtApellido" Style="{StaticResource MaterialDesignFilledTextBox}" Margin="0,5,0,10"
+                     materialDesign:HintAssist.Hint="Apellido"/>
 
-            <TextBlock Text="Correo"/>
-            <TextBox x:Name="txtCorreo" Margin="0,5"/>
+            <TextBlock Text="Correo" Style="{StaticResource MaterialDesignCaptionTextBlock}" Margin="0,5,0,0"/>
+            <TextBox x:Name="txtCorreo" Style="{StaticResource MaterialDesignFilledTextBox}" Margin="0,5,0,10"
+                     materialDesign:HintAssist.Hint="Correo"/>
 
-            <TextBlock Text="Contraseña"/>
-            <PasswordBox x:Name="pbContrasena" Margin="0,5"/>
+            <TextBlock Text="Contraseña" Style="{StaticResource MaterialDesignCaptionTextBlock}" Margin="0,5,0,0"/>
+            <PasswordBox x:Name="pbContrasena" Style="{StaticResource MaterialDesignFilledPasswordBox}" Margin="0,5,0,10"
+                         materialDesign:HintAssist.Hint="Contraseña"/>
 
-            <TextBlock Text="Fecha de nacimiento"/>
-            <DatePicker x:Name="dpFechaNacimiento" Margin="0,5"/>
+            <TextBlock Text="Fecha de nacimiento" Style="{StaticResource MaterialDesignCaptionTextBlock}" Margin="0,5,0,0"/>
+            <DatePicker x:Name="dpFechaNacimiento" Style="{StaticResource MaterialDesignFilledDatePicker}" Margin="0,5,0,10"/>
 
-            <TextBlock Text="Rol"/>
-            <ComboBox x:Name="cmbRol" Margin="0,5">
+            <TextBlock Text="Rol" Style="{StaticResource MaterialDesignCaptionTextBlock}" Margin="0,5,0,0"/>
+            <ComboBox x:Name="cmbRol" Style="{StaticResource MaterialDesignFilledComboBox}" Margin="0,5,0,10"
+                      materialDesign:HintAssist.Hint="Rol">
                 <ComboBoxItem Content="Admin"/>
                 <ComboBoxItem Content="Empleado"/>
                 <ComboBoxItem Content="Cliente"/>
             </ComboBox>
 
-            <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
-                <Button Content="Guardar cambios" 
-                        Width="150" 
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                <Button Content="Guardar cambios"
+                        Style="{StaticResource MaterialDesignRaisedButton}"
+                        Width="150"
                         Margin="5"
                         Click="btnActualizar_Click"/>
-                <Button Content="Volver" 
-                        Width="100" 
+                <Button Content="Volver"
+                        Style="{StaticResource MaterialDesignOutlinedButton}"
+                        Width="100"
                         Margin="5"
                         Click="btnVolver_Click"/>
             </StackPanel>

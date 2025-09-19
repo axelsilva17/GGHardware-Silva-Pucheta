@@ -12,18 +12,33 @@ using System.Windows.Shapes;
 using GGHardware.Data;
 using GGHardware.Models;
 using System.Linq;
+using MaterialDesignThemes.Wpf;
 
 namespace GGHardware
 {
     public partial class MainWindow : Window
     {
-        public static Usuario UsuarioActual { get; set; }
+        public static Usuario? UsuarioActual { get; set; }
 
         public void HabilitarMenu()
         {
             mainMenu.IsEnabled = true;
             mainMenu.Opacity = 1.0;
         }
+        private void ToggleTheme_Click(object sender, RoutedEventArgs e)
+        {
+            var theme = Application.Current.Resources.MergedDictionaries
+                .OfType<BundledTheme>()
+                .FirstOrDefault();
+
+            if (theme != null)
+            {
+                theme.BaseTheme = theme.BaseTheme == BaseTheme.Dark
+                    ? BaseTheme.Light
+                    : BaseTheme.Dark;
+            }
+        }
+
 
         public MainWindow()
         {
@@ -58,6 +73,7 @@ namespace GGHardware
             VentasView ventasView = new VentasView();
             MainContentBorder.Child = ventasView;
         }
+
 
         private void btnInicio_Click(object sender, RoutedEventArgs e)
         {
