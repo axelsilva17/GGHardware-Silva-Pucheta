@@ -26,6 +26,37 @@ namespace GGHardware
 
         public void HabilitarMenu()
         {
+            if (UsuarioActual == null) return;
+
+            // Deshabilitar todo por defecto
+            btnProductos.IsEnabled = false;
+            btnVentas.IsEnabled = false;
+            btnRegistro.IsEnabled = false;
+            btnReportes.IsEnabled = false;
+            btnBackup.IsEnabled = false;
+
+            // Activar botones según rol
+            switch (UsuarioActual.RolId)
+            {
+                case 1: // Supervisor
+                    btnProductos.IsEnabled = true;
+                    btnVentas.IsEnabled = true;
+                    btnRegistro.IsEnabled = true;
+                    btnReportes.IsEnabled = true;
+                    btnBackup.IsEnabled = true;
+                break;
+
+                case 2: // Usuario
+                    btnProductos.IsEnabled = true;
+                    btnVentas.IsEnabled = true;
+                    btnRegistro.IsEnabled = true; // aquí solo se permitirá registrar clientes (se hace en la vista de registro)
+                    break;
+
+                case 3: // Cliente
+                        // Opcional: botones limitados o ninguno
+                    break;
+            }
+
             mainMenu.IsEnabled = true;
             mainMenu.Opacity = 1.0;
         }
@@ -65,12 +96,50 @@ namespace GGHardware
             MainContentBorder.Child = ventasView;
         }
 
-
+        private void MostrarInicio()
+        {
+            if (UsuarioActual != null)
+            {
+                // Ya hay sesión iniciada, mostrar dashboard
+                MainContentBorder.Child = new DashboardView();
+            }
+            else
+            {
+                // No hay sesión, mostrar login
+                MainContentBorder.Child = new InicioView();
+            }
+        }
         private void btnInicio_Click(object sender, RoutedEventArgs e)
         {
-            MainContentBorder.Child = null;
-            InicioView inicioView = new InicioView();
-            MainContentBorder.Child = inicioView;
+            MostrarInicio();
+        }
+
+        public void ActualizarSesion()
+        {
+            if (UsuarioActual != null)
+            {
+                btnCerrarSesion.Visibility = Visibility.Visible;
+                
+            }
+            else
+            {
+                btnCerrarSesion.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        public void IniciarSesion(Usuario usuarioLogueado)
+        {
+            UsuarioActual = usuarioLogueado;   // Asignar usuario
+            ActualizarSesion();                // Mostrar botón de cerrar sesión
+            HabilitarMenu();                   // Habilitar menú según rol
+            MainContentBorder.Child = new DashboardView(); // Mostrar dashboard
+        }
+
+        private void btnCerrarSesion_Click(object sender, RoutedEventArgs e)
+        {
+            UsuarioActual = null; // Limpiar sesión
+            ActualizarSesion();
+            MainContentBorder.Child = new InicioView(); // Volver al login
         }
 
         private void btnReportes_Click(object sender, RoutedEventArgs e)
@@ -82,12 +151,6 @@ namespace GGHardware
         {
             MainContentBorder.Child = new GGHardware.Views.Backup();
         }
-
-        private void btnConfiguracion_Click(object sender, RoutedEventArgs e)
-        {
-            // Lógica para la vista de configuración
-        }
-
 
         private void ToggleTheme_Click(object sender, RoutedEventArgs e)
         {

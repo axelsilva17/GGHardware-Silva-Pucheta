@@ -35,11 +35,13 @@ namespace GGHardware.Models
         public required string contraseña { get; set; }
 
         [Required]
-        [MaxLength(20)]
-        public required string rol { get; set; }
+        public required int RolId { get; set; }
 
         [Column(TypeName = "date")]
        public DateTime? fecha_Nacimiento { get; set; } 
-        }
+        
+       [NotMapped]  // No se guarda en la base de datos
+        public string NombreRol { get; set; } = string.Empty;
 
+    }
 }

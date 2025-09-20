@@ -43,7 +43,7 @@
                     Margin="0,0,30,0"
                     Click="btnRegistrarCliente_Click"/>
 
-            <Button Content="Registrar Usuario"
+            <Button  x:Name="btnRegistrarUsuario" Content="Registrar Usuario"
                     Width="220" Height="60"
                     FontSize="16"
                     Style="{DynamicResource MaterialDesignRaisedLightButton}"

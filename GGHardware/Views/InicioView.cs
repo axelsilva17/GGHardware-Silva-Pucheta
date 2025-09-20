@@ -21,19 +21,13 @@ namespace GGHardware.Views
 
                 if (usuario != null)
                 {
-                    // Inicio de sesión exitoso
                     MessageBox.Show("Inicio de sesión exitoso.", "Bienvenido", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                    MainWindow.UsuarioActual = usuario;
-                    // Cargar la vista principal
+                    // Llamar al método de MainWindow
                     var mainWindow = Window.GetWindow(this) as MainWindow;
                     if (mainWindow != null)
                     {
-                        // Habilitar el menú de navegación
-                        mainWindow.HabilitarMenu();
-
-                        // Cargar la vista de inicio dentro del MainContentBorder
-                        mainWindow.MainContentBorder.Child = new GGHardware.Views.DashboardView();
+                        mainWindow.IniciarSesion(usuario);
                     }
                 }
                 else

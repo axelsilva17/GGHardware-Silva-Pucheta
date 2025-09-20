@@ -29,18 +29,40 @@
             <Border.Effect>
                 <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" Opacity="0.3" BlurRadius="5"/>
             </Border.Effect>
-            <DockPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <!-- Icono -->
+                    <ColumnDefinition Width="*"/>
+                    <!-- Título -->
+                    <ColumnDefinition Width="Auto"/>
+                    <!-- Botón -->
+                </Grid.ColumnDefinitions>
+
                 <materialDesign:PackIcon Kind="Harddisk" 
                                          Width="32" Height="32"
                                          Foreground="{DynamicResource PrimaryForegroundBrush}"
                                          VerticalAlignment="Center"
-                                         Margin="20,0,15,0"/>
+                                         Margin="20,0,15,0"
+                                          Grid.Column="0"/>
+
                 <TextBlock Text="GGHardware - Dashboard"
                            Foreground="{DynamicResource PrimaryForegroundBrush}"
                            VerticalAlignment="Center"
                            FontSize="24"
-                           FontWeight="SemiBold"/>
-            </DockPanel>
+                           FontWeight="SemiBold"
+                           Grid.Column="1"/>
+                <!-- Botón Cerrar Sesión -->
+                <Button x:Name="btnCerrarSesion"
+                        Content="Cerrar sesión"
+                        Width="120" Height="30"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Margin="0,0,20,0"
+                        Click="btnCerrarSesion_Click"
+                        Visibility="Collapsed"
+                        Grid.Column="2"/>
+            </Grid>
         </Border>
 
         <!-- Menú lateral -->
@@ -148,16 +170,6 @@
                                Margin="20,10,20,10"
                                Opacity="0.8"/>
 
-                    <Button x:Name="btnConfiguracion" 
-                            Style="{StaticResource MenuButtonStyle}"
-                            HorizontalContentAlignment="Left">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <materialDesign:PackIcon Kind="Cog" 
-                                                     Width="22" Height="22" 
-                                                     Margin="0,0,12,0"/>
-                            <TextBlock Text="Configuración" FontWeight="Medium"/>
-                        </StackPanel>
-                    </Button>
 
                     <Button x:Name="btnModoOscuro" 
                             Click="ToggleTheme_Click" 

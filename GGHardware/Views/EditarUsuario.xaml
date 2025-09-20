@@ -40,11 +40,11 @@
             <DatePicker x:Name="dpFechaNacimiento" Style="{StaticResource MaterialDesignFilledDatePicker}" Margin="0,5,0,10"/>
 
             <TextBlock Text="Rol" Style="{StaticResource MaterialDesignCaptionTextBlock}" Margin="0,5,0,0"/>
-            <ComboBox x:Name="cmbRol" Style="{StaticResource MaterialDesignFilledComboBox}" Margin="0,5,0,10"
-                      materialDesign:HintAssist.Hint="Rol">
-                <ComboBoxItem Content="Admin"/>
-                <ComboBoxItem Content="Empleado"/>
-                <ComboBoxItem Content="Cliente"/>
+            <ComboBox x:Name="cmbRol"
+                  SelectedValuePath="Tag"
+                  DisplayMemberPath="Content">
+                <ComboBoxItem Content="Supervisor" Tag="1"/>
+                <ComboBoxItem Content="Usuario" Tag="2"/>
             </ComboBox>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">

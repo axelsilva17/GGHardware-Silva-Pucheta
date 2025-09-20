@@ -33,7 +33,7 @@ namespace GGHardware.Views
 
                 foreach (ComboBoxItem item in cmbRol.Items)
                 {
-                    if (item.Content.ToString() == usuario.rol)
+                    if (int.TryParse(item.Tag.ToString(), out int tagValue) && tagValue == usuario.RolId)
                     {
                         cmbRol.SelectedItem = item;
                         break;
@@ -53,9 +53,14 @@ namespace GGHardware.Views
                 usuario.correo = txtCorreo.Text;
                 usuario.contraseña = pbContrasena.Password;
                 usuario.fecha_Nacimiento = dpFechaNacimiento.SelectedDate;
-                usuario.rol = (cmbRol.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "SinRol";
 
-                _context.SaveChanges();
+                if (cmbRol.SelectedValue != null && int.TryParse(cmbRol.SelectedValue.ToString(), out int rolId))
+                {
+                    usuario.RolId = rolId;
+                    _context.SaveChanges();
+                }
+
+                
                 MessageBox.Show("✅ Usuario actualizado correctamente.");
             }
         }

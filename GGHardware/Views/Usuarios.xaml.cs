@@ -1,6 +1,7 @@
 ﻿using GGHardware.Data;
 using GGHardware.Models;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -38,13 +39,28 @@ namespace GGHardware.Views
             e.Handled = regex.IsMatch(e.Text);
         }
 
+       
         private void CargarUsuarios()
         {
             try
             {
                 using (var context = new ApplicationDbContext())
                 {
-                    dgUsuarios.ItemsSource = context.Usuarios.ToList();
+                    var roles = new Dictionary<int, string>
+                    {
+                        {1, "Supervisor"},
+                        {2, "Usuario"},
+                        {3, "Cliente"}
+                    };
+
+                    var usuarios = context.Usuarios.ToList();
+
+                    foreach (var u in usuarios)
+                    {
+                        u.NombreRol = roles.ContainsKey(u.RolId) ? roles[u.RolId] : "Desconocido";
+                    }
+
+                    dgUsuarios.ItemsSource = usuarios;
                 }
             }
             catch (Exception ex)
@@ -103,7 +119,7 @@ namespace GGHardware.Views
                         correo = txtCorreo.Text,
                         contraseña = pbContrasena.Password,
                         fecha_Nacimiento = dpFechaNacimiento.SelectedDate,
-                        rol = (cmbRol.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "SinRol",
+                        RolId = (int)cmbRol.SelectedValue,
                         Activo = true // 👈 nuevo: los usuarios se crean activos por defecto
                     };
 

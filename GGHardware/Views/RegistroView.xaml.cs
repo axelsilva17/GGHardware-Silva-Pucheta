@@ -11,7 +11,24 @@ namespace GGHardware.Views
         {
             InitializeComponent();
             _mainWindow = mainWindow;
+
+            if (MainWindow.UsuarioActual != null)
+            {
+                if (MainWindow.UsuarioActual.RolId == 2) // Usuario normal
+                {
+                    // Ocultar botón "Registrar Usuario"
+                    btnRegistrarUsuario.Visibility = Visibility.Collapsed;
+
+                    // No es necesario mostrar cmbRol, porque siempre será cliente
+                }
+                else if (MainWindow.UsuarioActual.RolId == 1) // Supervisor
+                {
+                    // Mostrar botón "Registrar Usuario"
+                    btnRegistrarUsuario.Visibility = Visibility.Visible;
+                }
+            }
         }
+
 
         // Método para el botón "Registrar Cliente"
         private void btnRegistrarCliente_Click(object sender, RoutedEventArgs e)
