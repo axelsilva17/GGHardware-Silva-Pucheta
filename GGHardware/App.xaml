@@ -6,20 +6,78 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!-- Tema global con soporte Light/Dark -->
-                <materialDesign:BundledTheme BaseTheme="Light"
-                                             PrimaryColor="Blue"
-                                             SecondaryColor="Lime"/>
-
-                <!-- Defaults de MaterialDesign -->
+                <!-- Material Design Theme -->
+                <materialDesign:BundledTheme BaseTheme="Light" 
+                                           PrimaryColor="Blue" 
+                                           SecondaryColor="Cyan" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <!-- Estilo común para Cards -->
-            <Style x:Key="MiCardStyle" TargetType="materialDesign:Card">
-                <Setter Property="Background" Value="{DynamicResource MaterialDesignCardBackground}" />
-                <Setter Property="Padding" Value="20"/>
+            <!-- 🎨 RECURSOS ESTÁTICOS DE COLORES -->
+
+            <!-- MODO CLARO - Celestes con texto negro -->
+            <SolidColorBrush x:Key="PrimaryBrushLight" Color="#0097A7"/>
+            <SolidColorBrush x:Key="PrimaryForegroundBrushLight" Color="White"/>
+            <SolidColorBrush x:Key="BackgroundLight" Color="#F8FAFB"/>
+            <SolidColorBrush x:Key="SurfaceLight" Color="White"/>
+            <SolidColorBrush x:Key="TextPrimaryLight" Color="#212121"/>
+            <SolidColorBrush x:Key="TextSecondaryLight" Color="#757575"/>
+
+            <!-- MODO OSCURO - Azules con texto blanco -->
+            <SolidColorBrush x:Key="PrimaryBrushDark" Color="#1565C0"/>
+            <SolidColorBrush x:Key="PrimaryForegroundBrushDark" Color="White"/>
+            <SolidColorBrush x:Key="BackgroundDark" Color="#121212"/>
+            <SolidColorBrush x:Key="SurfaceDark" Color="#1E1E1E"/>
+            <SolidColorBrush x:Key="TextPrimaryDark" Color="White"/>
+            <SolidColorBrush x:Key="TextSecondaryDark" Color="#B0B0B0"/>
+
+            <!-- 🎛️ RECURSOS DINÁMICOS INICIALES (Modo Claro por defecto) -->
+            <SolidColorBrush x:Key="PrimaryBrush" Color="#0097A7"/>
+            <SolidColorBrush x:Key="PrimaryForegroundBrush" Color="White"/>
+            <SolidColorBrush x:Key="Background" Color="#F8FAFB"/>
+            <SolidColorBrush x:Key="Surface" Color="White"/>
+            <SolidColorBrush x:Key="TextPrimary" Color="#212121"/>
+            <SolidColorBrush x:Key="TextSecondary" Color="#757575"/>
+
+            <!-- 🎨 ESTILO GLOBAL PARA BOTONES DEL MENÚ -->
+            <Style x:Key="MenuButtonStyle" TargetType="Button">
+                <Setter Property="Margin" Value="8,2"/>
+                <Setter Property="Padding" Value="16,12"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontWeight" Value="Medium"/>
+                <Setter Property="Height" Value="48"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border" 
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="8"
+                                    Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  TextBlock.Foreground="{TemplateBinding Foreground}"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundBrush}"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundBrush}"/>
+                                    <Setter TargetName="border" Property="Opacity" Value="0.8"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
             </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>
