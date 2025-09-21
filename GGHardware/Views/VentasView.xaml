@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             Background="White"
+             Background="{DynamicResource Background}"
              MinHeight="460" MinWidth="830">
 
     <UserControl.Resources>
@@ -13,28 +13,155 @@
         </Style>
 
         <Style x:Key="CardStyle" TargetType="Border">
-            <Setter Property="Background" Value="#F5F5F5"/>
+            <Setter Property="Background" Value="{DynamicResource Surface}"/>
             <Setter Property="CornerRadius" Value="8"/>
             <Setter Property="Padding" Value="15"/>
             <Setter Property="Margin" Value="0,0,0,10"/>
-            <Setter Property="BorderBrush" Value="#DDD"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" Direction="270" ShadowDepth="2" Opacity="0.1" BlurRadius="8"/>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <Style x:Key="PrimaryButton" TargetType="Button">
-            <Setter Property="Background" Value="#1976D2"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundBrush}"/>
+            <Setter Property="Padding" Value="12,6"/>
             <Setter Property="Margin" Value="5,0,0,0"/>
-            <Setter Property="BorderBrush" Value="#1976D2"/>
-            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.8"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Opacity" Value="0.7"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
-        <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
-            <Setter Property="Background" Value="#E0E0E0"/>
-            <Setter Property="Foreground" Value="Black"/>
-            <Setter Property="BorderBrush" Value="#CCC"/>
+        <Style x:Key="SecondaryButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="Margin" Value="5,0,0,0"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundBrush}"/>
+                                <Setter Property="Opacity" Value="0.8"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DangerButton" TargetType="Button">
+            <Setter Property="Background" Value="#D32F2F"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="6,4"/>
+            <Setter Property="Margin" Value="5,0,0,0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="3"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.8"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Estilo para TextBox con placeholder -->
+        <Style x:Key="PlaceholderTextBox" TargetType="TextBox">
+            <Setter Property="Background" Value="{DynamicResource Background}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4">
+                            <Grid>
+                                <ScrollViewer x:Name="PART_ContentHost"
+                                            Padding="{TemplateBinding Padding}"/>
+                                <TextBlock x:Name="PlaceholderText"
+                                         Text="Buscar Cliente (DNI/Nombre)"
+                                         Foreground="Gray"
+                                         Padding="{TemplateBinding Padding}"
+                                         IsHitTestVisible="False"
+                                         VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="PlaceholderText" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+                            <Trigger Property="Text" Value="">
+                                <Setter TargetName="PlaceholderText" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="Text" Value="{x:Null}">
+                                <Setter TargetName="PlaceholderText" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </UserControl.Resources>
 
@@ -45,7 +172,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- Selección de Productos -->
-        <Border Grid.Column="0" Style="{StaticResource CardStyle}">
+        <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,10,0">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -56,13 +183,62 @@
                            Text="Selección de Productos"
                            FontSize="20"
                            FontWeight="SemiBold"
-                           Margin="0,0,0,10"/>
+                           Foreground="{DynamicResource TextPrimary}"
+                           Margin="0,0,0,15"/>
 
                 <DataGrid x:Name="dgProductos"
                           Grid.Row="1"
                           AutoGenerateColumns="False"
                           IsReadOnly="True"
-                          SelectionMode="Single">
+                          SelectionMode="Single"
+                          Background="{DynamicResource Surface}"
+                          Foreground="{DynamicResource TextPrimary}"
+                          BorderThickness="0"
+                          RowBackground="{DynamicResource Surface}"
+                          AlternatingRowBackground="{DynamicResource Background}"
+                          GridLinesVisibility="Horizontal"
+                          HorizontalGridLinesBrush="{DynamicResource TextSecondary}">
+
+                    <!-- Estilo para las cabeceras -->
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundBrush}"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                            <Setter Property="Padding" Value="12,8"/>
+                            <Setter Property="BorderThickness" Value="0,0,1,0"/>
+                            <Setter Property="BorderBrush" Value="{DynamicResource PrimaryForegroundBrush}"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+
+                    <!-- Estilo para las celdas -->
+                    <DataGrid.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Padding" Value="12,8"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundBrush}"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.CellStyle>
+
+                    <!-- Estilo para las filas -->
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundBrush}"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="*"/>
                         <DataGridTextColumn Header="Precio" Binding="{Binding Precio, StringFormat=C}" Width="Auto"
@@ -85,7 +261,7 @@
         </Border>
 
         <!-- Información del Cliente y Carrito -->
-        <Border Grid.Column="1" Style="{StaticResource CardStyle}">
+        <Border Grid.Column="1" Style="{StaticResource CardStyle}" Margin="10,0,0,0">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -98,55 +274,117 @@
                            Text="Información del Cliente"
                            FontSize="20"
                            FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextPrimary}"
                            Margin="0,0,0,10"/>
 
-                <!-- Hint simulado para WPF -->
+                <!-- Campo de búsqueda de cliente con placeholder automático -->
                 <TextBox x:Name="txtBuscarCliente"
-         Text="Buscar Cliente (DNI/Nombre)"
-         Foreground="Gray"/>
-
+                         Grid.Row="1"
+                         Style="{StaticResource PlaceholderTextBox}"
+                         Margin="0,0,0,15" TextChanged="txtBuscarCliente_TextChanged"/>
 
                 <StackPanel Grid.Row="2">
                     <TextBlock Text="Productos en Carrito"
                                FontWeight="SemiBold"
-                               Margin="0,10,0,10"/>
-                    <ListBox x:Name="lstCarrito">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Margin="0,0,0,5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="{Binding Nombre}"/>
-                                    <TextBlock Grid.Column="1" Text="{Binding Cantidad}" Margin="10,0"/>
-                                    <TextBlock Grid.Column="2" Text="{Binding Precio, StringFormat=C}" Margin="10,0"/>
-                                    <Button Grid.Column="3"
-                                            Content="X"
-                                            Style="{StaticResource SecondaryButton}"
-                                            Command="{Binding DataContext.QuitarProductoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            CommandParameter="{Binding}"/>
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                               Foreground="{DynamicResource TextPrimary}"
+                               Margin="0,0,0,10"/>
+
+                    <Border Background="{DynamicResource Background}"
+                            BorderBrush="{DynamicResource PrimaryBrush}"
+                            BorderThickness="1"
+                            CornerRadius="4"
+                            MinHeight="200"
+                            MaxHeight="300">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <ListBox x:Name="lstCarrito"
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="{DynamicResource Surface}"
+                                                Padding="8"
+                                                Margin="2"
+                                                CornerRadius="3"
+                                                BorderBrush="{DynamicResource TextSecondary}"
+                                                BorderThickness="1">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" 
+                                                           Text="{Binding Nombre}"
+                                                           Foreground="{DynamicResource TextPrimary}"
+                                                           VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="1" 
+                                                           Text="{Binding Cantidad}" 
+                                                           Margin="10,0"
+                                                           Foreground="{DynamicResource TextPrimary}"
+                                                           VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="2" 
+                                                           Text="{Binding Precio, StringFormat=C}" 
+                                                           Margin="10,0"
+                                                           Foreground="{DynamicResource PrimaryBrush}"
+                                                           FontWeight="SemiBold"
+                                                           VerticalAlignment="Center"/>
+                                                <Button Grid.Column="3"
+                                                        Content="×"
+                                                        Style="{StaticResource DangerButton}"
+                                                        Width="20"
+                                                        Height="20"
+                                                        FontSize="12"
+                                                        Command="{Binding DataContext.QuitarProductoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </ScrollViewer>
+                    </Border>
                 </StackPanel>
 
-                <StackPanel Grid.Row="3"
-                            Orientation="Horizontal"
-                            HorizontalAlignment="Right"
-                            Margin="0,20,0,0"
-                            VerticalAlignment="Center">
-                    <TextBlock Text="{Binding Total, StringFormat=C}"
-                               FontWeight="Bold"
-                               FontSize="18"
-                               VerticalAlignment="Center"
-                               Margin="0,0,20,0"/>
-                    <Button Content="Cancelar" Style="{StaticResource SecondaryButton}"/>
-                    <Button Content="Finalizar Venta" Style="{StaticResource PrimaryButton}" Width="120"/>
-                </StackPanel>
+                <!-- Panel inferior con total y botones -->
+                <Border Grid.Row="3"
+                        Background="{DynamicResource PrimaryBrush}"
+                        CornerRadius="4"
+                        Padding="15"
+                        Margin="0,28,0,0">
+                    <Grid Margin="0,-35,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0"
+                                   Text="{Binding Total, StringFormat='Total: {0:C}'}"
+                                   FontWeight="Bold"
+                                   FontSize="18"
+                                   Foreground="{DynamicResource PrimaryForegroundBrush}"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,0,0,10"/>
+
+                        <StackPanel Grid.Row="1"
+                                    Orientation="Horizontal"
+                                    HorizontalAlignment="Center">
+                            <Button Content="Cancelar" 
+                                    Style="{StaticResource SecondaryButton}"
+                                    Background="Transparent"
+                                    BorderBrush="White"
+                                    Foreground="White"
+                                    Width="90"/>
+                            <Button Content="Finalizar Venta" 
+                                    Style="{StaticResource SecondaryButton}"
+                                    Background="White"
+                                    BorderBrush="White"
+                                    Foreground="{DynamicResource PrimaryBrush}"
+                                    Width="120"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
             </Grid>
         </Border>
     </Grid>

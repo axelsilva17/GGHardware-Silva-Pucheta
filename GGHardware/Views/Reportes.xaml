@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
-             Background="{DynamicResource MaterialDesignBackground}">
+             Background="{DynamicResource Background}">
 
     <Grid Margin="20">
         <Grid.RowDefinitions>
@@ -18,7 +18,7 @@
                    Text="Reportes"
                    FontSize="24"
                    FontWeight="Bold"
-                   Foreground="{DynamicResource MaterialDesignBodyMediumBrush}"
+                   Foreground="{DynamicResource TextPrimary}"
                    Margin="0,0,0,20"
                    HorizontalAlignment="Left"/>
 
@@ -26,60 +26,78 @@
 
             <!-- Tarjetas -->
             <UniformGrid Columns="3" Margin="0,0,0,20">
-                <Border Background="{DynamicResource MaterialDesignCardBackground}"
+                <Border Background="{DynamicResource Surface}"
                         Padding="20"
-                        Margin="10">
+                        Margin="10"
+                        CornerRadius="8"
+                        BorderBrush="{DynamicResource PrimaryBrush}"
+                        BorderThickness="1">
+                    <Border.Effect>
+                        <DropShadowEffect Color="Black" Direction="270" ShadowDepth="2" Opacity="0.1" BlurRadius="8"/>
+                    </Border.Effect>
                     <StackPanel>
                         <materialDesign:PackIcon Kind="Finance"
                                                  Height="24"
                                                  Width="24"
-                                                 Foreground="{DynamicResource MaterialDesignBodyMediumBrush}"/>
+                                                 Foreground="{DynamicResource PrimaryBrush}"/>
                         <TextBlock Text="Ventas del día"
                                    FontWeight="SemiBold"
-                                   Foreground="{DynamicResource MaterialDesignBodyMediumBrush}"
+                                   Foreground="{DynamicResource TextPrimary}"
                                    Margin="0,5,0,0"/>
                         <TextBlock Text="$15.200"
                                    FontSize="22"
                                    FontWeight="Bold"
-                                   Foreground="{DynamicResource MaterialDesignBodyMediumBrush}"/>
+                                   Foreground="{DynamicResource PrimaryBrush}"/>
                     </StackPanel>
                 </Border>
 
-                <Border Background="{DynamicResource MaterialDesignCardBackground}"
+                <Border Background="{DynamicResource Surface}"
                         Padding="20"
-                        Margin="10">
+                        Margin="10"
+                        CornerRadius="8"
+                        BorderBrush="{DynamicResource PrimaryBrush}"
+                        BorderThickness="1">
+                    <Border.Effect>
+                        <DropShadowEffect Color="Black" Direction="270" ShadowDepth="2" Opacity="0.1" BlurRadius="8"/>
+                    </Border.Effect>
                     <StackPanel>
                         <materialDesign:PackIcon Kind="Box"
                                                  Height="24"
                                                  Width="24"
-                                                 Foreground="{DynamicResource MaterialDesignBodyMediumBrush}"/>
+                                                 Foreground="{DynamicResource PrimaryBrush}"/>
                         <TextBlock Text="Productos vendidos"
                                    FontWeight="SemiBold"
-                                   Foreground="{DynamicResource MaterialDesignBodyMediumBrush}"
+                                   Foreground="{DynamicResource TextPrimary}"
                                    Margin="0,5,0,0"/>
                         <TextBlock Text="124"
                                    FontSize="22"
                                    FontWeight="Bold"
-                                   Foreground="{DynamicResource MaterialDesignBodyMediumBrush}"/>
+                                   Foreground="{DynamicResource PrimaryBrush}"/>
                     </StackPanel>
                 </Border>
 
-                <Border Background="{DynamicResource MaterialDesignCardBackground}"
+                <Border Background="{DynamicResource Surface}"
                         Padding="20"
-                        Margin="10">
+                        Margin="10"
+                        CornerRadius="8"
+                        BorderBrush="{DynamicResource PrimaryBrush}"
+                        BorderThickness="1">
+                    <Border.Effect>
+                        <DropShadowEffect Color="Black" Direction="270" ShadowDepth="2" Opacity="0.1" BlurRadius="8"/>
+                    </Border.Effect>
                     <StackPanel>
                         <materialDesign:PackIcon Kind="AccountPlus"
                                                  Height="24"
                                                  Width="24"
-                                                 Foreground="{DynamicResource MaterialDesignBodyMediumBrush}"/>
+                                                 Foreground="{DynamicResource PrimaryBrush}"/>
                         <TextBlock Text="Clientes nuevos"
                                    FontWeight="SemiBold"
-                                   Foreground="{DynamicResource MaterialDesignBodyMediumBrush}"
+                                   Foreground="{DynamicResource TextPrimary}"
                                    Margin="0,5,0,0"/>
                         <TextBlock Text="8"
                                    FontSize="22"
                                    FontWeight="Bold"
-                                   Foreground="{DynamicResource MaterialDesignBodyMediumBrush}"/>
+                                   Foreground="{DynamicResource PrimaryBrush}"/>
                     </StackPanel>
                 </Border>
             </UniformGrid>
@@ -91,22 +109,108 @@
                 <TextBlock Text="Filtrar por fecha:"
                            VerticalAlignment="Center"
                            Margin="0,0,10,0"
-                           Foreground="{DynamicResource MaterialDesignBodyMediumBrush}"/>
+                           Foreground="{DynamicResource TextPrimary}"/>
                 <DatePicker x:Name="dpFechaInicio"
                             Width="140"
-                            Margin="0,0,10,0"/>
+                            Margin="0,0,10,0"
+                            Background="{DynamicResource Surface}"
+                            Foreground="{DynamicResource TextPrimary}"
+                            BorderBrush="{DynamicResource PrimaryBrush}"/>
                 <DatePicker x:Name="dpFechaFin"
                             Width="140"
-                            Margin="0,0,10,0"/>
+                            Margin="0,0,10,0"
+                            Background="{DynamicResource Surface}"
+                            Foreground="{DynamicResource TextPrimary}"
+                            BorderBrush="{DynamicResource PrimaryBrush}"/>
                 <Button Content="Aplicar"
-                        Margin="10,0,0,0"/>
+                        Margin="10,0,0,0"
+                        Background="{DynamicResource PrimaryBrush}"
+                        Foreground="{DynamicResource PrimaryForegroundBrush}"
+                        BorderThickness="0"
+                        Padding="15,8"
+                        FontWeight="Medium"
+                        Cursor="Hand">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                CornerRadius="4"
+                                                Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Opacity" Value="0.8"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
             </StackPanel>
 
             <!-- DataGrid -->
             <DataGrid x:Name="dgReporte"
                       AutoGenerateColumns="False"
                       IsReadOnly="True"
-                      Style="{DynamicResource MaterialDesignDataGrid}">
+                      Background="{DynamicResource Surface}"
+                      Foreground="{DynamicResource TextPrimary}"
+                      BorderBrush="{DynamicResource PrimaryBrush}"
+                      BorderThickness="1"
+                      RowBackground="{DynamicResource Surface}"
+                      AlternatingRowBackground="{DynamicResource Background}"
+                      GridLinesVisibility="Horizontal"
+                      HorizontalGridLinesBrush="{DynamicResource TextSecondary}"
+                      HeadersVisibility="Column"
+                      CanUserReorderColumns="False"
+                      CanUserResizeColumns="True"
+                      CanUserSortColumns="True">
+
+                <!-- Estilo para las cabeceras -->
+                <DataGrid.ColumnHeaderStyle>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundBrush}"/>
+                        <Setter Property="FontWeight" Value="SemiBold"/>
+                        <Setter Property="Padding" Value="12,8"/>
+                        <Setter Property="BorderThickness" Value="0,0,1,0"/>
+                        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryForegroundBrush}"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                    </Style>
+                </DataGrid.ColumnHeaderStyle>
+
+                <!-- Estilo para las celdas -->
+                <DataGrid.CellStyle>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Padding" Value="12,8"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundBrush}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.CellStyle>
+
+                <!-- Estilo para las filas -->
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundBrush}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
+
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Fecha" Binding="{Binding Fecha}" Width="*"/>
                     <DataGridTextColumn Header="Cliente" Binding="{Binding Cliente}" Width="*"/>

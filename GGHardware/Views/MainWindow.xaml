@@ -69,10 +69,13 @@
         <Border Grid.Row="1" Grid.Column="0"
                 Background="{DynamicResource Surface}"
                 BorderThickness="0,0,1,0"
-                BorderBrush="{DynamicResource TextSecondary}"
-                Opacity="0.3">
+                BorderBrush="{DynamicResource TextSecondary}">
+            <Border.Effect>
+                <DropShadowEffect Color="Black" Direction="0" ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
+            </Border.Effect>
             <ScrollViewer VerticalScrollBarVisibility="Auto" 
-                          HorizontalScrollBarVisibility="Disabled">
+                          HorizontalScrollBarVisibility="Disabled"
+                          >
                 <StackPanel x:Name="mainMenu" Margin="0,10">
 
                     <!-- Título de navegación -->
@@ -83,83 +86,107 @@
                                Margin="20,15,20,10"
                                Opacity="0.8"/>
 
-                    <!-- Botones del menú -->
+                    <!-- Botones del menú CORREGIDOS -->
                     <Button x:Name="btnInicio" 
                             Click="btnInicio_Click" 
                             Style="{StaticResource MenuButtonStyle}"
-                            HorizontalContentAlignment="Left">
+                            HorizontalContentAlignment="Left"
+                            Foreground="{DynamicResource TextPrimary}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <materialDesign:PackIcon Kind="Home" 
                                                      Width="22" Height="22" 
-                                                     Margin="0,0,12,0"/>
-                            <TextBlock Text="Inicio" FontWeight="Medium"/>
+                                                     Margin="0,0,12,0"
+                                                     Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
+                            <TextBlock Text="Inicio" 
+                                       FontWeight="Medium"
+                                       Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
                         </StackPanel>
                     </Button>
 
                     <Button x:Name="btnProductos" 
                             Click="btnProductos_Click" 
                             Style="{StaticResource MenuButtonStyle}"
-                            HorizontalContentAlignment="Left">
+                            HorizontalContentAlignment="Left"
+                            Foreground="{DynamicResource TextPrimary}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <materialDesign:PackIcon Kind="PackageVariantClosed" 
                                                      Width="22" Height="22" 
-                                                     Margin="0,0,12,0"/>
-                            <TextBlock Text="Productos" FontWeight="Medium"/>
+                                                     Margin="0,0,12,0"
+                                                     Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
+                            <TextBlock Text="Productos" 
+                                       FontWeight="Medium"
+                                       Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
                         </StackPanel>
                     </Button>
 
                     <Button x:Name="btnVentas" 
                             Click="btnVentas_Click" 
                             Style="{StaticResource MenuButtonStyle}"
-                            HorizontalContentAlignment="Left">
+                            HorizontalContentAlignment="Left"
+                            Foreground="{DynamicResource TextPrimary}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <materialDesign:PackIcon Kind="Cart" 
                                                      Width="22" Height="22" 
-                                                     Margin="0,0,12,0"/>
-                            <TextBlock Text="Ventas" FontWeight="Medium"/>
+                                                     Margin="0,0,12,0"
+                                                     Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
+                            <TextBlock Text="Ventas" 
+                                       FontWeight="Medium"
+                                       Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
                         </StackPanel>
                     </Button>
 
                     <Button x:Name="btnRegistro" 
                             Click="BtnRegistro_Click" 
                             Style="{StaticResource MenuButtonStyle}"
-                            HorizontalContentAlignment="Left">
+                            HorizontalContentAlignment="Left"
+                            Foreground="{DynamicResource TextPrimary}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <materialDesign:PackIcon Kind="Account" 
                                                      Width="22" Height="22" 
-                                                     Margin="0,0,12,0"/>
-                            <TextBlock Text="Registro" FontWeight="Medium"/>
+                                                     Margin="0,0,12,0"
+                                                     Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
+                            <TextBlock Text="Registro" 
+                                       FontWeight="Medium"
+                                       Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
                         </StackPanel>
                     </Button>
 
                     <Button x:Name="btnReportes" 
                             Click="btnReportes_Click" 
                             Style="{StaticResource MenuButtonStyle}"
-                            HorizontalContentAlignment="Left">
+                            HorizontalContentAlignment="Left"
+                            Foreground="{DynamicResource TextPrimary}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <materialDesign:PackIcon Kind="ChartBar" 
                                                      Width="22" Height="22" 
-                                                     Margin="0,0,12,0"/>
-                            <TextBlock Text="Reportes" FontWeight="Medium"/>
+                                                     Margin="0,0,12,0"
+                                                     Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
+                            <TextBlock Text="Reportes" 
+                                       FontWeight="Medium"
+                                       Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
                         </StackPanel>
                     </Button>
 
                     <Button x:Name="btnBackup" 
                             Click="btnBackup_Click" 
                             Style="{StaticResource MenuButtonStyle}"
-                            HorizontalContentAlignment="Left">
+                            HorizontalContentAlignment="Left"
+                            Foreground="{DynamicResource TextPrimary}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <materialDesign:PackIcon Kind="Database" 
                                                      Width="22" Height="22" 
-                                                     Margin="0,0,12,0"/>
-                            <TextBlock Text="Backup" FontWeight="Medium"/>
+                                                     Margin="0,0,12,0"
+                                                     Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
+                            <TextBlock Text="Backup" 
+                                       FontWeight="Medium"
+                                       Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
                         </StackPanel>
                     </Button>
 
                     <!-- Separador -->
                     <Rectangle Height="1" 
-                               Fill="{DynamicResource TextSecondary}" 
-                               Opacity="0.2" 
+                               Fill="{DynamicResource PrimaryBrush}" 
+                               Opacity="0.3" 
                                Margin="15,20"/>
 
                     <!-- Título de configuración -->
@@ -170,16 +197,19 @@
                                Margin="20,10,20,10"
                                Opacity="0.8"/>
 
-
                     <Button x:Name="btnModoOscuro" 
                             Click="ToggleTheme_Click" 
                             Style="{StaticResource MenuButtonStyle}"
-                            HorizontalContentAlignment="Left">
+                            HorizontalContentAlignment="Left"
+                            Foreground="{DynamicResource TextPrimary}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <materialDesign:PackIcon Kind="WeatherNight" 
                                                      Width="22" Height="22" 
-                                                     Margin="0,0,12,0"/>
-                            <TextBlock Text="Modo Oscuro" FontWeight="Medium"/>
+                                                     Margin="0,0,12,0"
+                                                     Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
+                            <TextBlock Text="Modo Oscuro" 
+                                       FontWeight="Medium"
+                                       Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
                         </StackPanel>
                     </Button>
 

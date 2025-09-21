@@ -70,5 +70,10 @@ namespace GGHardware.Views
                 ViewModel.AgregarProducto(producto);
             }
         }
+
+        private void txtBuscarCliente_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }
