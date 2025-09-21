@@ -1,12 +1,14 @@
-﻿using System;
+﻿using GGHardware.Data;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
-using GGHardware.Data;
 
 namespace GGHardware.Views
 {
@@ -21,8 +23,7 @@ namespace GGHardware.Views
 
                 if (usuario != null)
                 {
-                    MessageBox.Show("Inicio de sesión exitoso.", "Bienvenido", MessageBoxButton.OK, MessageBoxImage.Information);
-
+     
                     // Llamar al método de MainWindow
                     var mainWindow = Window.GetWindow(this) as MainWindow;
                     if (mainWindow != null)
@@ -80,10 +81,20 @@ namespace GGHardware.Views
                 pb.ToolTip = "Contrasena";
             }
         }
+        private void InicioView_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                BtnInicioSesion_Click(null, null); // Llama al método que ya tenés
+                e.Handled = true; // Evita efectos no deseados
+            }
+        }
 
         public InicioView()
         {
             InitializeComponent();
+            // Atajo Enter para iniciar sesión
+            this.PreviewKeyDown += InicioView_PreviewKeyDown;
         }
     }
 }

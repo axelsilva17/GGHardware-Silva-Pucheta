@@ -46,26 +46,26 @@
                     </Grid.RowDefinitions>
 
                     <materialDesign:PackIcon Grid.Row="0" Grid.Column="0" Kind="AccountCard" VerticalAlignment="Center" Margin="0,0,10,10"/>
-                    <TextBox x:Name="txtDNI" Grid.Row="0" Grid.Column="1" materialDesign:HintAssist.Hint="DNI" PreviewTextInput="txtDNI_PreviewTextInput"/>
+                    <TextBox x:Name="txtDNI" Grid.Row="0" Grid.Column="1" materialDesign:HintAssist.Hint="DNI" PreviewTextInput="txtDNI_PreviewTextInput" TabIndex="0"/>
 
                     <materialDesign:PackIcon Grid.Row="0" Grid.Column="2" Kind="Account" VerticalAlignment="Center" Margin="20,0,10,10"/>
-                    <TextBox x:Name="txtNombre" Grid.Row="0" Grid.Column="3" materialDesign:HintAssist.Hint="Nombre" PreviewTextInput="txtLetras_PreviewTextInput"/>
+                    <TextBox x:Name="txtNombre" Grid.Row="0" Grid.Column="3" materialDesign:HintAssist.Hint="Nombre" PreviewTextInput="txtLetras_PreviewTextInput" TabIndex="1"/>
 
                     <materialDesign:PackIcon Grid.Row="1" Grid.Column="0" Kind="Account" VerticalAlignment="Center" Margin="0,0,10,10"/>
-                    <TextBox x:Name="txtApellido" Grid.Row="1" Grid.Column="1" materialDesign:HintAssist.Hint="Apellido" PreviewTextInput="txtLetras_PreviewTextInput"/>
+                    <TextBox x:Name="txtApellido" Grid.Row="1" Grid.Column="1" materialDesign:HintAssist.Hint="Apellido" PreviewTextInput="txtLetras_PreviewTextInput" TabIndex="2" />
 
                     <materialDesign:PackIcon Grid.Row="1" Grid.Column="2" Kind="Email" VerticalAlignment="Center" Margin="20,0,10,10"/>
-                    <TextBox x:Name="txtCorreo" Grid.Row="1" Grid.Column="3" materialDesign:HintAssist.Hint="Correo"/>
+                    <TextBox x:Name="txtCorreo" Grid.Row="1" Grid.Column="3" materialDesign:HintAssist.Hint="Correo" TabIndex="3"/>
 
                     <materialDesign:PackIcon Grid.Row="2" Grid.Column="0" Kind="Key" VerticalAlignment="Center" Margin="0,0,10,10"/>
-                    <PasswordBox x:Name="pbContrasena" Grid.Row="2" Grid.Column="1" materialDesign:HintAssist.Hint="Contraseña"/>
+                    <PasswordBox x:Name="pbContrasena" Grid.Row="2" Grid.Column="1" materialDesign:HintAssist.Hint="Contraseña" TabIndex="4"/>
 
                     <materialDesign:PackIcon Grid.Row="2" Grid.Column="2" Kind="Calendar" VerticalAlignment="Center" Margin="20,0,10,10"/>
-                    <DatePicker x:Name="dpFechaNacimiento" Grid.Row="2" Grid.Column="3" materialDesign:HintAssist.Hint="Fecha de Nacimiento"/>
+                    <DatePicker x:Name="dpFechaNacimiento" Grid.Row="2" Grid.Column="3" materialDesign:HintAssist.Hint="Fecha de Nacimiento" TabIndex="5"/>
 
                     <materialDesign:PackIcon Grid.Row="3" Grid.Column="0" Kind="AccountGroup" VerticalAlignment="Center" Margin="0,0,10,10"/>
                     <ComboBox x:Name="cmbRol" Grid.Row="3" Grid.Column="1" materialDesign:HintAssist.Hint="Rol"
-                    SelectedValuePath="Tag" DisplayMemberPath="Content">
+                    SelectedValuePath="Tag" DisplayMemberPath="Content" TabIndex="6">
                         <ComboBoxItem Content="Supervisor" Tag="1"/>
                         <ComboBoxItem Content="Usuario" Tag="2"/>
                         <ComboBoxItem Content="Cliente" Tag="3"/>
@@ -74,8 +74,8 @@
                 </Grid>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
-                    <Button Content="Limpiar" Width="80" Margin="0,0,10,0" Click="btnLimpiar_Click"/>
-                    <Button Content="Guardar" Width="80" Click="btnGuardar_Click"/>
+                    <Button x:Name="btnLimpiar" Content="Limpiar" Width="80" Margin="0,0,10,0" Click="btnLimpiar_Click" TabIndex="7"/>
+                    <Button x:Name="btnGuardar" Content="Guardar" Width="80" Click="btnGuardar_Click" TabIndex="8"/>
                 </StackPanel>
             </StackPanel>
         </Border>
@@ -91,13 +91,13 @@
                       Style="{DynamicResource MaterialDesignDataGrid}">
 
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID" Binding="{Binding id_usuario}" Width="Auto"/>
-                    <DataGridTextColumn Header="DNI" Binding="{Binding dni}" Width="Auto"/>
-                    <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="*"/>
-                    <DataGridTextColumn Header="Apellido" Binding="{Binding apellido}" Width="*"/>
-                    <DataGridTextColumn Header="Rol" Binding="{Binding NombreRol}" Width="Auto"/>
-                    <DataGridTextColumn Header="Activo" Binding="{Binding Activo}" Width="Auto"/>
-                    <DataGridTemplateColumn Header="Acciones" Width="Auto">
+                    <DataGridTextColumn Header="ID" Binding="{Binding id_usuario}" Width="60"/>
+                    <DataGridTextColumn Header="DNI" Binding="{Binding dni}" Width="120"/>
+                    <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="200"/>
+                    <DataGridTextColumn Header="Apellido" Binding="{Binding apellido}" Width="200"/>
+                    <DataGridTextColumn Header="Rol" Binding="{Binding NombreRol}" Width="150"/>
+                    <DataGridTextColumn Header="Activo" Binding="{Binding Activo}" Width="100"/>
+                    <DataGridTemplateColumn Header="Acciones" Width="100">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">

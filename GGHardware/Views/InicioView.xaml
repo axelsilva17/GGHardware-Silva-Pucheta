@@ -9,6 +9,7 @@
              d:DesignWidth="500"
              Background="{DynamicResource MaterialDesignPaper}">
 
+
     <Viewbox Stretch="Uniform">
         <Grid Width="500" Height="400">
             <Grid.RowDefinitions>

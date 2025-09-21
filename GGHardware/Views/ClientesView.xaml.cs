@@ -16,11 +16,27 @@ namespace GGHardware.Views
         {
             InitializeComponent();
             CargarClientes();
+            this.PreviewKeyDown += ClientesView_PreviewKeyDown;
         }
 
-        /// <summary>
-        /// Maneja el evento de clic para el botón 'Volver' y navega a la vista de Registro.
-        /// </summary>
+        private void ClientesView_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                // Si el foco está en el botón Limpiar, ejecutamos su acción en lugar de Guardar
+                if (Keyboard.FocusedElement == btnLimpiar)
+                {
+                    btnLimpiar_Click(btnLimpiar, null);
+                }
+                else
+                {
+                    btnGuardar_Click(null, null);
+                }
+
+                e.Handled = true; // Para que no se propague más el Enter
+            }
+        }
+
         private void btnVolver_Click(object sender, RoutedEventArgs e)
         {
             var mainWindow = Window.GetWindow(this) as MainWindow;
@@ -109,8 +125,8 @@ namespace GGHardware.Views
             {
                 nombre = txtNombre.Text,
                 apellido = txtApellido.Text,
-                cuit = int.TryParse(txtCUIT.Text, out int cuitVal) ? cuitVal : 0,
-                telefono = int.TryParse(txtTelefono.Text, out int telVal) ? telVal : 0,
+                cuit = txtCUIT.Text,
+                telefono = txtTelefono.Text,
                 direccion = txtDireccion.Text,
                 provincia = txtProvincia.Text,
                 localidad = txtLocalidad.Text,
@@ -144,9 +160,6 @@ namespace GGHardware.Views
             LimpiarCampos();
         }
 
-        /// <summary>
-        /// Borra el contenido de los TextBoxes y el ComboBox.
-        /// </summary>
         private void LimpiarCampos()
         {
             txtNombre.Text = string.Empty;
@@ -169,17 +182,19 @@ namespace GGHardware.Views
             // para su posterior edición.
         }
 
-        /// <summary>
-        /// Maneja el evento de clic para el botón 'Editar'. Edita el cliente seleccionado en el DataGrid.
-        /// </summary>
         private void btnEditar_Click(object sender, RoutedEventArgs e)
         {
             if (dgClientes.SelectedItem is Cliente clienteSeleccionado)
             {
-                // Implementa aquí la lógica para editar el cliente
-                // Puedes cargar los datos en los campos de texto y luego, al hacer clic en 'Guardar',
-                // actualizar el cliente existente en lugar de agregar uno nuevo.
-                MessageBox.Show($"Lógica de edición para el cliente: {clienteSeleccionado.nombre} {clienteSeleccionado.apellido}");
+                var button = sender as Button;
+                if (button?.DataContext is GGHardware.Models.Cliente cliente)
+                {
+                    var mainWindow = Window.GetWindow(this) as MainWindow;
+                    if (mainWindow != null)
+                    {
+                        mainWindow.MainContentBorder.Child = new EditarCliente(cliente.id_cliente);
+                    }
+                }
             }
             else
             {

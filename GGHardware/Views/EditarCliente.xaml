@@ -1,0 +1,184 @@
+﻿<UserControl x:Class="GGHardware.Views.EditarCliente"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+             Background="{DynamicResource Background}" Height="775" Width="527">
+
+    <!-- Contenedor principal con tarjeta -->
+    <Border Background="{DynamicResource Surface}"
+            CornerRadius="12"
+            Margin="20"
+            Padding="30"
+            BorderBrush="{DynamicResource PrimaryBrush}"
+            BorderThickness="1">
+        <Border.Effect>
+            <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" Opacity="0.1" BlurRadius="10"/>
+        </Border.Effect>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <Grid>
+            <StackPanel>
+                <!-- Título -->
+                <TextBlock Text="Editar Cliente"
+                           FontSize="28"
+                           FontWeight="Bold"
+                           Foreground="{DynamicResource PrimaryBrush}"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,30"/>
+
+                <!-- CUIT -->
+                <TextBlock Text="CUIT"
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextPrimary}"
+                           Margin="0,10,0,5"/>
+                <TextBox x:Name="txtCuit"
+                         Margin="0,0,0,15"
+                         materialDesign:HintAssist.Hint="CUIT"
+                         Background="{DynamicResource Surface}"
+                         Foreground="{DynamicResource TextPrimary}"
+                         BorderBrush="{DynamicResource PrimaryBrush}"
+                         BorderThickness="2"
+                         Padding="12,8"
+                         FontSize="14"/>
+
+                <!-- Nombre -->
+                <TextBlock Text="Nombre"
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextPrimary}"
+                           Margin="0,10,0,5"/>
+                <TextBox x:Name="txtNombre"
+                         Margin="0,0,0,15"
+                         materialDesign:HintAssist.Hint="Nombre"
+                         Background="{DynamicResource Surface}"
+                         Foreground="{DynamicResource TextPrimary}"
+                         BorderBrush="{DynamicResource PrimaryBrush}"
+                         BorderThickness="2"
+                         Padding="12,8"
+                         FontSize="14"/>
+
+                <!-- Apellido -->
+                <TextBlock Text="Apellido"
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextPrimary}"
+                           Margin="0,10,0,5"/>
+                <TextBox x:Name="txtApellido"
+                         Margin="0,0,0,15"
+                         materialDesign:HintAssist.Hint="Apellido"
+                         Background="{DynamicResource Surface}"
+                         Foreground="{DynamicResource TextPrimary}"
+                         BorderBrush="{DynamicResource PrimaryBrush}"
+                         BorderThickness="2"
+                         Padding="12,8"
+                         FontSize="14"/>
+
+                <!-- Teléfono -->
+                <TextBlock Text="Teléfono"
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextPrimary}"
+                           Margin="0,10,0,5"/>
+                <TextBox x:Name="txtTelefono"
+                         Margin="0,0,0,15"
+                         materialDesign:HintAssist.Hint="Teléfono"
+                         Background="{DynamicResource Surface}"
+                         Foreground="{DynamicResource TextPrimary}"
+                         BorderBrush="{DynamicResource PrimaryBrush}"
+                         BorderThickness="2"
+                         Padding="12,8"
+                         FontSize="14"/>
+
+                <!-- Dirección -->
+                <TextBlock Text="Dirección"
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextPrimary}"
+                           Margin="0,10,0,5"/>
+                <TextBox x:Name="txtDireccion"
+                         Margin="0,0,0,15"
+                         materialDesign:HintAssist.Hint="Dirección"
+                         Background="{DynamicResource Surface}"
+                         Foreground="{DynamicResource TextPrimary}"
+                         BorderBrush="{DynamicResource PrimaryBrush}"
+                         BorderThickness="2"
+                         Padding="12,8"
+                         FontSize="14"/>
+
+                <!-- Provincia -->
+                <TextBlock Text="Provincia"
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextPrimary}"
+                           Margin="0,10,0,5"/>
+                <TextBox x:Name="txtProvincia"
+                         Margin="0,0,0,15"
+                         materialDesign:HintAssist.Hint="Provincia"
+                         Background="{DynamicResource Surface}"
+                         Foreground="{DynamicResource TextPrimary}"
+                         BorderBrush="{DynamicResource PrimaryBrush}"
+                         BorderThickness="2"
+                         Padding="12,8"
+                         FontSize="14"/>
+
+                <!-- Localidad -->
+                <TextBlock Text="Localidad"
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextPrimary}"
+                           Margin="0,10,0,5"/>
+                <TextBox x:Name="txtLocalidad"
+                         Margin="0,0,0,15"
+                         materialDesign:HintAssist.Hint="Localidad"
+                         Background="{DynamicResource Surface}"
+                         Foreground="{DynamicResource TextPrimary}"
+                         BorderBrush="{DynamicResource PrimaryBrush}"
+                         BorderThickness="2"
+                         Padding="12,8"
+                         FontSize="14"/>
+
+                <!-- Condición Fiscal -->
+                <TextBlock Text="Condición Fiscal"
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextPrimary}"
+                           Margin="0,10,0,5"/>
+                <TextBox x:Name="txtCondicionFiscal"
+                         Margin="0,0,0,25"
+                         materialDesign:HintAssist.Hint="Condición Fiscal"
+                         Background="{DynamicResource Surface}"
+                         Foreground="{DynamicResource TextPrimary}"
+                         BorderBrush="{DynamicResource PrimaryBrush}"
+                         BorderThickness="2"
+                         Padding="12,8"
+                         FontSize="14"/>
+
+                <!-- Botones -->
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            Margin="0,10,0,0">
+                    <Button Content="Guardar cambios"
+                            Width="150"
+                            Height="40"
+                            Margin="5"
+                            Click="btnActualizar_Click"
+                            Background="{DynamicResource PrimaryBrush}"
+                            Foreground="{DynamicResource PrimaryForegroundBrush}"
+                            BorderThickness="0"
+                            FontWeight="SemiBold"
+                            FontSize="14"
+                            Cursor="Hand"/>
+
+                    <Button Content="Volver"
+                            Width="100"
+                            Height="40"
+                            Margin="5"
+                            Click="btnVolver_Click"
+                            Background="Transparent"
+                            Foreground="{DynamicResource TextPrimary}"
+                            BorderBrush="{DynamicResource PrimaryBrush}"
+                            BorderThickness="2"
+                            FontWeight="SemiBold"
+                            FontSize="14"
+                            Cursor="Hand"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+        </ScrollViewer>
+    </Border>
+</UserControl>

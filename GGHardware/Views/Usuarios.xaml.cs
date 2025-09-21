@@ -16,8 +16,27 @@ namespace GGHardware.Views
         {
             InitializeComponent();
             CargarUsuarios();
-        }
+            this.PreviewKeyDown += Usuarios_PreviewKeyDown;
 
+        }
+        private void Usuarios_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                // Detectar si el foco está en el botón Limpiar
+                if (btnLimpiar.IsKeyboardFocusWithin)
+                {
+                    btnLimpiar.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    e.Handled = true;
+                }
+                else
+                {
+                    // Ejecuta Guardar por defecto si no está en Limpiar
+                    btnGuardar.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    e.Handled = true;
+                }
+            }
+        }
         private void btnVolver_Click(object sender, RoutedEventArgs e)
         {
             var mainWindow = Window.GetWindow(this) as MainWindow;
@@ -68,6 +87,7 @@ namespace GGHardware.Views
                 MessageBox.Show("❌ Error al cargar usuarios: " + ex.Message);
             }
         }
+
 
         private void btnGuardar_Click(object sender, RoutedEventArgs e)
         {
@@ -189,6 +209,7 @@ namespace GGHardware.Views
                 }
             }
         }
+
         private void btnEditar_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;

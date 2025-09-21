@@ -85,10 +85,11 @@
                                VerticalAlignment="Center" 
                                FontWeight="SemiBold" 
                                Margin="0,0,10,10"
-                               Foreground="{DynamicResource TextPrimary}"/>
+                               Foreground="{DynamicResource TextPrimary}"
+                               />
                     <TextBox x:Name="txtNombre" 
                              Grid.Row="0" Grid.Column="1" 
-                             Margin="0,0,20,10" 
+                             Margin="0,0,20,10" TabIndex="0"
                              materialDesign:HintAssist.Hint="Nombre" 
                              PreviewTextInput="txtLetras_PreviewTextInput"
                              Background="{DynamicResource Surface}"
@@ -103,7 +104,7 @@
                                Foreground="{DynamicResource TextPrimary}"/>
                     <TextBox x:Name="txtApellido" 
                              Grid.Row="0" Grid.Column="3" 
-                             Margin="0,0,0,10" 
+                             Margin="0,0,0,10" TabIndex="1"
                              materialDesign:HintAssist.Hint="Apellido" 
                              PreviewTextInput="txtLetras_PreviewTextInput"
                              Background="{DynamicResource Surface}"
@@ -118,7 +119,7 @@
                                Margin="0,0,10,10"
                                Foreground="{DynamicResource TextPrimary}"/>
                     <TextBox x:Name="txtCUIT" 
-                             Grid.Row="1" Grid.Column="1" 
+                             Grid.Row="1" Grid.Column="1" TabIndex="2"
                              Margin="0,0,20,10" 
                              materialDesign:HintAssist.Hint="CUIT" 
                              PreviewTextInput="txtNumeros_PreviewTextInput"
@@ -133,7 +134,7 @@
                                Margin="0,0,10,10"
                                Foreground="{DynamicResource TextPrimary}"/>
                     <TextBox x:Name="txtTelefono" 
-                             Grid.Row="1" Grid.Column="3" 
+                             Grid.Row="1" Grid.Column="3" TabIndex="3"
                              Margin="0,0,0,10" 
                              materialDesign:HintAssist.Hint="Teléfono" 
                              PreviewTextInput="txtNumeros_PreviewTextInput"
@@ -149,7 +150,7 @@
                                Margin="0,0,10,10"
                                Foreground="{DynamicResource TextPrimary}"/>
                     <TextBox x:Name="txtDireccion" 
-                             Grid.Row="2" Grid.Column="1" 
+                             Grid.Row="2" Grid.Column="1" TabIndex="4"
                              Margin="0,0,20,10" 
                              materialDesign:HintAssist.Hint="Dirección"
                              Background="{DynamicResource Surface}"
@@ -163,7 +164,7 @@
                                Margin="0,0,10,10"
                                Foreground="{DynamicResource TextPrimary}"/>
                     <ComboBox x:Name="cmbCondicionFiscal" 
-                              Grid.Row="2" Grid.Column="3" 
+                              Grid.Row="2" Grid.Column="3" TabIndex="5"
                               Margin="0,0,0,10"
                               Background="{DynamicResource Surface}"
                               Foreground="{DynamicResource TextPrimary}"
@@ -182,7 +183,7 @@
                                Margin="0,0,10,10"
                                Foreground="{DynamicResource TextPrimary}"/>
                     <TextBox x:Name="txtProvincia" 
-                             Grid.Row="3" Grid.Column="1" 
+                             Grid.Row="3" Grid.Column="1" TabIndex="6"
                              Margin="0,0,20,10" 
                              materialDesign:HintAssist.Hint="Provincia" 
                              PreviewTextInput="txtLetras_PreviewTextInput"
@@ -197,7 +198,7 @@
                                Margin="0,0,10,10"
                                Foreground="{DynamicResource TextPrimary}"/>
                     <TextBox x:Name="txtLocalidad" 
-                             Grid.Row="3" Grid.Column="3" 
+                             Grid.Row="3" Grid.Column="3" TabIndex="7"
                              Margin="0,0,0,10" 
                              materialDesign:HintAssist.Hint="Localidad" 
                              PreviewTextInput="txtLetras_PreviewTextInput"
@@ -208,7 +209,7 @@
 
                 <!-- Botones -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-                    <Button Content="Limpiar" 
+                    <Button x:Name="btnLimpiar" Content="Limpiar" TabIndex="8" 
                             Click="btnLimpiar_Click" 
                             Margin="0,0,10,0"
                             Background="Transparent"
@@ -243,8 +244,8 @@
                             </Style>
                         </Button.Style>
                     </Button>
-                    <Button Content="Guardar Cliente" 
-                            Click="btnGuardar_Click"
+                    <Button Content="Guardar Cliente" TabIndex="9"
+                            Click="btnGuardar_Click" 
                             Background="{DynamicResource PrimaryBrush}"
                             Foreground="{DynamicResource PrimaryForegroundBrush}"
                             BorderThickness="0"
@@ -298,7 +299,8 @@
                       RowBackground="{DynamicResource Surface}"
                       AlternatingRowBackground="{DynamicResource Background}"
                       HorizontalGridLinesBrush="{DynamicResource TextSecondary}"
-                      SelectionChanged="dgClientes_SelectionChanged">
+                      SelectionChanged="dgClientes_SelectionChanged"
+                      HorizontalAlignment="Left">
 
                 <!-- Estilo para las cabeceras -->
                 <DataGrid.ColumnHeaderStyle>
@@ -341,12 +343,12 @@
                 </DataGrid.RowStyle>
 
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID" Binding="{Binding id_cliente}" Width="Auto"/>
-                    <DataGridTextColumn Header="Nombre" Binding="{Binding nombre}" Width="*"/>
-                    <DataGridTextColumn Header="Apellido" Binding="{Binding apellido}" Width="*"/>
-                    <DataGridTextColumn Header="CUIT" Binding="{Binding CUIT}" Width="Auto"/>
-                    <DataGridTextColumn Header="Condición Fiscal" Binding="{Binding condicion_fiscal}" Width="*"/>
-                    <DataGridTemplateColumn Header="Acciones" Width="Auto">
+                    <DataGridTextColumn Header="ID" Binding="{Binding id_cliente}" Width="60"/>
+                    <DataGridTextColumn Header="Nombre" Binding="{Binding nombre}" Width="200"/>
+                    <DataGridTextColumn Header="Apellido" Binding="{Binding apellido}" Width="200"/>
+                    <DataGridTextColumn Header="CUIT" Binding="{Binding cuit}" Width="150"/>
+                    <DataGridTextColumn Header="Condición Fiscal" Binding="{Binding condicion_fiscal}" Width="200"/>
+                    <DataGridTemplateColumn Header="Acciones" Width="100">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">

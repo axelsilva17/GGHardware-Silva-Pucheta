@@ -27,13 +27,6 @@ namespace GGHardware.Views
             ViewModel = new VentasViewModel();
             this.DataContext = ViewModel;
 
-            // Inicializar hint simulado
-            txtBuscarCliente.Text = "Buscar Cliente (DNI/Nombre)";
-            txtBuscarCliente.Foreground = Brushes.Gray;
-
-            txtBuscarCliente.GotFocus += TxtBuscarCliente_GotFocus;
-            txtBuscarCliente.LostFocus += TxtBuscarCliente_LostFocus;
-
             // Ejemplo: manejar cambios para filtrar clientes
             txtBuscarCliente.TextChanged += (s, e) =>
             {

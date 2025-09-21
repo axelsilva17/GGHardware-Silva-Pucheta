@@ -9,7 +9,8 @@ namespace GGHardware.Models
         [Key]
         public int id_cliente { get; set; }
 
-        public int cuit { get; set; }
+        [MaxLength(11)]
+        public required string cuit { get; set; }
 
         [MaxLength(50)]
         public required string nombre { get; set; }
@@ -17,7 +18,8 @@ namespace GGHardware.Models
         [MaxLength(50)]
         public required string apellido { get; set; }
 
-        public int telefono { get; set; }
+        [MaxLength(25)]
+        public required string telefono { get; set; }
 
         [MaxLength(100)]
         public required string direccion { get; set; }
