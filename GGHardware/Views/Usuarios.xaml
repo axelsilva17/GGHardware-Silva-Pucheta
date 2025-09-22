@@ -96,13 +96,17 @@
                     <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="200"/>
                     <DataGridTextColumn Header="Apellido" Binding="{Binding apellido}" Width="200"/>
                     <DataGridTextColumn Header="Rol" Binding="{Binding NombreRol}" Width="150"/>
-                    <DataGridTextColumn Header="Activo" Binding="{Binding Activo}" Width="100"/>
-                    <DataGridTemplateColumn Header="Acciones" Width="100">
+                    <DataGridTextColumn Header="Estado" Binding="{Binding EstadoTexto}" Width="100"/>
+                    <DataGridTemplateColumn Header="Acciones" Width="150">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
                                     <Button ToolTip="Editar" Click="btnEditar_Click">
                                         <materialDesign:PackIcon Kind="Pencil" Foreground="{DynamicResource MaterialDesignBodyMediumBrush}"/>
+                                    </Button>
+                                    <Button ToolTip="Activar/Desactivar" Click="btnActivarDesactivar_Click">
+                                        <materialDesign:PackIcon Kind="Power" 
+                                              Foreground="{DynamicResource MaterialDesignBodyMediumBrush}"/>
                                     </Button>
                                 </StackPanel>
                             </DataTemplate>

@@ -8,6 +8,7 @@ namespace GGHardware.Models
     {
         [Key]
         public int id_cliente { get; set; }
+        public bool Activo { get; set; } = true;
 
         [MaxLength(11)]
         public required string cuit { get; set; }
@@ -32,5 +33,7 @@ namespace GGHardware.Models
 
         [MaxLength(100)]
         public required string condicion_fiscal { get; set; }
+        public string EstadoTexto => Activo ? "Activo" : "Inactivo";
+
     }
 }

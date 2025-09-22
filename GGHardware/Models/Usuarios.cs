@@ -43,5 +43,9 @@ namespace GGHardware.Models
        [NotMapped]  // No se guarda en la base de datos
         public string NombreRol { get; set; } = string.Empty;
 
+        [NotMapped] // para que EF no intente guardarla en la DB
+        public string EstadoTexto { get; set; }
+
+
     }
 }
