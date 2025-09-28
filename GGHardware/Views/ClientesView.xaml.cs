@@ -140,6 +140,26 @@ namespace GGHardware.Views
                     context.Clientes.Add(cliente);
                     context.SaveChanges();
                 }
+                try
+                {
+                    using (var context = new ApplicationDbContext())
+                    {
+                        context.Clientes.Add(cliente);
+                        context.SaveChanges();
+
+                        // AGREGAR ESTA LÍNEA para notificar a VentasView
+                        ClienteService.Instance.NotificarClienteAgregado(cliente);
+                    }
+
+                    MessageBox.Show("Cliente guardado con éxito.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    LimpiarCampos();
+                    CargarClientes(); // Actualiza el DataGrid
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("❌ Error al guardar cliente: " + ex.Message);
+                }
 
                 MessageBox.Show("Cliente guardado con éxito.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
 
@@ -234,5 +254,29 @@ namespace GGHardware.Views
                 MessageBox.Show("Por favor, selecciona un cliente para eliminar.", "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
+        public class ClienteService
+        {
+            private static ClienteService _instance;
+            public static ClienteService Instance => _instance ??= new ClienteService();
+
+            public event EventHandler<ClienteEventArgs> ClienteAgregado;
+            public event EventHandler<ClienteEventArgs> ClienteActualizado;
+
+            public void NotificarClienteAgregado(Cliente cliente)
+            {
+                ClienteAgregado?.Invoke(this, new ClienteEventArgs { Cliente = cliente });
+            }
+
+            public void NotificarClienteActualizado(Cliente cliente)
+            {
+                ClienteActualizado?.Invoke(this, new ClienteEventArgs { Cliente = cliente });
+            }
+        }
+
+        public class ClienteEventArgs : EventArgs
+        {
+            public Cliente Cliente { get; set; }
+        }
     }
+
 }

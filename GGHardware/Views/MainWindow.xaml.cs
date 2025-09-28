@@ -139,7 +139,11 @@ namespace GGHardware
         {
             UsuarioActual = null; // Limpiar sesión
             ActualizarSesion();
+
+            mainMenu.IsEnabled = false;
+            mainMenu.Opacity = 0.5;
             MainContentBorder.Child = new InicioView(); // Volver al login
+
         }
 
         private void btnReportes_Click(object sender, RoutedEventArgs e)

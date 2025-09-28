@@ -141,7 +141,7 @@
                                 <ScrollViewer x:Name="PART_ContentHost"
                                             Padding="{TemplateBinding Padding}"/>
                                 <TextBlock x:Name="PlaceholderText"
-                                         Text="Buscar Cliente (DNI/Nombre)"
+                                        Text="Buscar Cliente (CUIT/Nombre)"
                                          Foreground="Gray"
                                          Padding="{TemplateBinding Padding}"
                                          IsHitTestVisible="False"
@@ -185,21 +185,22 @@
                            FontWeight="SemiBold"
                            Foreground="{DynamicResource TextPrimary}"
                            Margin="0,0,0,15"/>
-
+                
                 <DataGrid x:Name="dgProductos"
-                          Grid.Row="1"
-                          AutoGenerateColumns="False"
-                          IsReadOnly="True"
-                          SelectionMode="Single"
-                          Background="{DynamicResource Surface}"
-                          Foreground="{DynamicResource TextPrimary}"
-                          BorderThickness="0"
-                          RowBackground="{DynamicResource Surface}"
-                          AlternatingRowBackground="{DynamicResource Background}"
-                          GridLinesVisibility="Horizontal"
-                          HorizontalGridLinesBrush="{DynamicResource TextSecondary}">
+          Grid.Row="1"
+          ItemsSource="{Binding Productos}"
+          AutoGenerateColumns="False"
+          IsReadOnly="True"
+          SelectionMode="Single"
+          Background="{DynamicResource Surface}"
+          Foreground="{DynamicResource TextPrimary}"
+          BorderThickness="0"
+          RowBackground="{DynamicResource Surface}"
+          AlternatingRowBackground="{DynamicResource Background}"
+          GridLinesVisibility="Horizontal"
+          HorizontalGridLinesBrush="{DynamicResource TextSecondary}">
 
-                    <!-- Estilo para las cabeceras -->
+                    <!-- Estilo cabeceras -->
                     <DataGrid.ColumnHeaderStyle>
                         <Style TargetType="DataGridColumnHeader">
                             <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
@@ -212,7 +213,7 @@
                         </Style>
                     </DataGrid.ColumnHeaderStyle>
 
-                    <!-- Estilo para las celdas -->
+                    <!-- Estilo celdas -->
                     <DataGrid.CellStyle>
                         <Style TargetType="DataGridCell">
                             <Setter Property="BorderThickness" Value="0"/>
@@ -227,7 +228,7 @@
                         </Style>
                     </DataGrid.CellStyle>
 
-                    <!-- Estilo para las filas -->
+                    <!-- Estilo filas -->
                     <DataGrid.RowStyle>
                         <Style TargetType="DataGridRow">
                             <Style.Triggers>
@@ -242,21 +243,21 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="*"/>
                         <DataGridTextColumn Header="Precio" Binding="{Binding Precio, StringFormat=C}" Width="Auto"
-                                            ElementStyle="{StaticResource RightAlignedText}"/>
+                            ElementStyle="{StaticResource RightAlignedText}"/>
                         <DataGridTextColumn Header="Stock" Binding="{Binding Stock}" Width="Auto"
-                                            ElementStyle="{StaticResource RightAlignedText}"/>
+                            ElementStyle="{StaticResource RightAlignedText}"/>
                         <DataGridTemplateColumn Header="Acción" Width="Auto">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button Content="Agregar"
-                                            Style="{StaticResource PrimaryButton}"
-                                            Command="{Binding DataContext.AgregarProductoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            CommandParameter="{Binding}"/>
+                            Style="{StaticResource PrimaryButton}"
+                            Click="AgregarProducto_Click"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
+
             </Grid>
         </Border>
 
@@ -281,7 +282,10 @@
                 <TextBox x:Name="txtBuscarCliente"
                          Grid.Row="1"
                          Style="{StaticResource PlaceholderTextBox}"
-                         Margin="0,0,0,15" TextChanged="txtBuscarCliente_TextChanged"/>
+                         Margin="0,0,0,15" 
+                         TextChanged="txtBuscarCliente_TextChanged"
+                         GotFocus="TxtBuscarCliente_GotFocus"
+                         LostFocus="TxtBuscarCliente_LostFocus"/>
 
                 <StackPanel Grid.Row="2">
                     <TextBlock Text="Productos en Carrito"
@@ -297,6 +301,7 @@
                             MaxHeight="300">
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
                             <ListBox x:Name="lstCarrito"
+                                     ItemsSource="{Binding Carrito}"
                                      Background="Transparent"
                                      BorderThickness="0"
                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled">
@@ -325,7 +330,7 @@
                                                            Foreground="{DynamicResource TextPrimary}"
                                                            VerticalAlignment="Center"/>
                                                 <TextBlock Grid.Column="2" 
-                                                           Text="{Binding Precio, StringFormat=C}" 
+                                                           Text="{Binding Subtotal, StringFormat=C}" 
                                                            Margin="10,0"
                                                            Foreground="{DynamicResource PrimaryBrush}"
                                                            FontWeight="SemiBold"
@@ -336,8 +341,7 @@
                                                         Width="20"
                                                         Height="20"
                                                         FontSize="12"
-                                                        Command="{Binding DataContext.QuitarProductoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                        CommandParameter="{Binding}"/>
+                                                        Click="QuitarProducto_Click"/>
                                             </Grid>
                                         </Border>
                                     </DataTemplate>
@@ -375,13 +379,15 @@
                                     Background="Transparent"
                                     BorderBrush="White"
                                     Foreground="White"
-                                    Width="90"/>
+                                    Width="90"
+                                    Click="CancelarVenta_Click"/>
                             <Button Content="Finalizar Venta" 
                                     Style="{StaticResource SecondaryButton}"
                                     Background="White"
                                     BorderBrush="White"
                                     Foreground="{DynamicResource PrimaryBrush}"
-                                    Width="120"/>
+                                    Width="120"
+                                    Click="FinalizarVenta_Click"/>
                         </StackPanel>
                     </Grid>
                 </Border>
