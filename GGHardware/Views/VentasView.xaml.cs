@@ -218,5 +218,44 @@ namespace GGHardware.Views
             // Ocultar sugerencias cuando pierde el foco
             lstClientesSugerencias.Visibility = Visibility.Collapsed;
         }
+        // Evento KeyDown del TextBox de código de producto
+        private void TxtCodigoProducto_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                // Podés llamar al ViewModel acá
+                if (sender is TextBox textBox)
+                {
+                    string codigo = textBox.Text;
+                    ViewModel.BuscarProductoPorCodigo(codigo);
+                }
+            }
+        }
+
+
+        private void AplicarDescuento5_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO: lógica para aplicar descuento del 5%
+            MessageBox.Show("Aplicando descuento del 5%");
+        }
+
+        private void AplicarDescuento10_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO: lógica para aplicar descuento del 10%
+            MessageBox.Show("Aplicando descuento del 10%");
+        }
+
+        private void AplicarDescuento15_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO: lógica para aplicar descuento del 15%
+            MessageBox.Show("Aplicando descuento del 15%");
+        }
+        // Evento Click del botón Buscar
+        private void BuscarProducto_Click(object sender, RoutedEventArgs e)
+        {
+            // Podés abrir buscador de productos o ejecutar la lógica del VM
+            ViewModel.BuscarProducto();
+        }
+
     }
 }

@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.CompilerServices;
 
 namespace GGHardware.Models
 {
@@ -13,13 +14,13 @@ namespace GGHardware.Models
 
         private string _nombre;
         [MaxLength(100)]
-        public string? Nombre
+        public string Nombre
         {
             get => _nombre;
             set
             {
                 _nombre = value;
-                OnPropertyChanged(nameof(Nombre));
+                OnPropertyChanged();
             }
         }
 
@@ -32,12 +33,12 @@ namespace GGHardware.Models
             set
             {
                 _precio_venta = value;
-                OnPropertyChanged(nameof(precio_venta));
+                OnPropertyChanged();
             }
         }
 
         [MaxLength(255)]
-        public string? descripcion { get; set; }
+        public string descripcion { get; set; }
 
         public double stock_min { get; set; }
 
@@ -48,19 +49,39 @@ namespace GGHardware.Models
             set
             {
                 _stock = value;
-                OnPropertyChanged(nameof(Stock));
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(TieneStock));
             }
         }
 
         [MaxLength(50)]
-        public string? categoria { get; set; }
+        public string categoria { get; set; }
 
         public DateTime fecha_creacion { get; set; } = DateTime.Now;
 
         public bool activo { get; set; } = true;
 
+        // NUEVOS CAMPOS para búsqueda por código
+        [MaxLength(50)]
+        public string codigo_barras { get; set; }
+
+        [MaxLength(20)]
+        public string codigo_interno { get; set; }
+
+        // Propiedades calculadas para la UI
+        [NotMapped]
+        public bool TieneStock => Stock > 0;
+
+        [NotMapped]
+        public bool StockBajo => Stock <= stock_min;
+
+        [NotMapped]
+        public string EstadoStock => Stock <= 0 ? "Sin Stock" :
+                                    Stock <= stock_min ? "Stock Bajo" : "Disponible";
+
         public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged(string propertyName)
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
