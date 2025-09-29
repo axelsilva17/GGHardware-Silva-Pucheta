@@ -10,7 +10,37 @@
         Background="{DynamicResource Background}"
         TextElement.Foreground="{DynamicResource TextPrimary}"
         FontFamily="Segoe UI">
-
+    <Window.Resources>
+        <Style x:Key="MenuButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <!-- Botón deshabilitado -->
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="#1F000000"/>
+                    <!-- Gris más oscuro -->
+                    <Setter Property="Opacity" Value="0.5"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
@@ -76,14 +106,14 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" 
                           HorizontalScrollBarVisibility="Disabled"
                           >
-                <StackPanel x:Name="mainMenu" Margin="0,10">
+                <StackPanel x:Name="mainMenu" Margin="0,20">
 
                     <!-- Título de navegación -->
                     <TextBlock Text="NAVEGACIÓN"
                                FontWeight="Bold"
-                               FontSize="12"
+                               FontSize="22"
                                Foreground="{DynamicResource TextSecondary}"
-                               Margin="20,15,20,10"
+                               Margin="20,10,20,10"
                                Opacity="0.8"/>
 
                     <!-- Botones del menú CORREGIDOS -->
@@ -95,10 +125,10 @@
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <materialDesign:PackIcon Kind="Home" 
                                                      Width="22" Height="22" 
-                                                     Margin="0,0,12,0"
+                                                     Margin="0,0,12,10"
                                                      Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
                             <TextBlock Text="Inicio" 
-                                       FontWeight="Medium"
+                                       FontWeight="Medium" FontSize="20"
                                        Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
                         </StackPanel>
                     </Button>
@@ -111,10 +141,10 @@
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <materialDesign:PackIcon Kind="PackageVariantClosed" 
                                                      Width="22" Height="22" 
-                                                     Margin="0,0,12,0"
+                                                     Margin="0,0,12,10"
                                                      Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
                             <TextBlock Text="Productos" 
-                                       FontWeight="Medium"
+                                       FontWeight="Medium" FontSize="20"
                                        Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
                         </StackPanel>
                     </Button>
@@ -127,10 +157,10 @@
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <materialDesign:PackIcon Kind="Cart" 
                                                      Width="22" Height="22" 
-                                                     Margin="0,0,12,0"
+                                                     Margin="0,0,12,10"
                                                      Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
                             <TextBlock Text="Ventas" 
-                                       FontWeight="Medium"
+                                       FontWeight="Medium" FontSize="20"
                                        Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
                         </StackPanel>
                     </Button>
@@ -143,9 +173,9 @@
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <materialDesign:PackIcon Kind="Account" 
                                                      Width="22" Height="22" 
-                                                     Margin="0,0,12,0"
+                                                     Margin="0,0,12,10"
                                                      Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
-                            <TextBlock Text="Registro" 
+                            <TextBlock Text="Registro"  FontSize="20"
                                        FontWeight="Medium"
                                        Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
                         </StackPanel>
@@ -159,10 +189,10 @@
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <materialDesign:PackIcon Kind="ChartBar" 
                                                      Width="22" Height="22" 
-                                                     Margin="0,0,12,0"
+                                                     Margin="0,0,12,10"
                                                      Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
                             <TextBlock Text="Reportes" 
-                                       FontWeight="Medium"
+                                       FontWeight="Medium" FontSize="20"
                                        Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
                         </StackPanel>
                     </Button>
@@ -175,10 +205,10 @@
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <materialDesign:PackIcon Kind="Database" 
                                                      Width="22" Height="22" 
-                                                     Margin="0,0,12,0"
+                                                     Margin="0,0,12,10"
                                                      Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
                             <TextBlock Text="Backup" 
-                                       FontWeight="Medium"
+                                       FontWeight="Medium" FontSize="20"
                                        Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
                         </StackPanel>
                     </Button>

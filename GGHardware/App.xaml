@@ -87,7 +87,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-
+            
             <!-- ESTILO PARA MATERIAL DESIGN DATAGRIDS -->
             <Style x:Key="MaterialDesignDataGrid" TargetType="DataGrid" BasedOn="{StaticResource {x:Type DataGrid}}">
                 <Setter Property="Background" Value="{DynamicResource Surface}"/>

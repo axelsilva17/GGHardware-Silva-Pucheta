@@ -1,0 +1,98 @@
+﻿<UserControl x:Class="GGHardware.Views.Gerente"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             Background="{DynamicResource MaterialDesignBackground}">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="0,0,0,20">
+            
+            <TextBlock Text="Reportes Gerente"
+                       FontSize="28"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource MaterialDesignBodyMediumBrush}"
+                       VerticalAlignment="Center"
+                       Margin="10,0,0,0"/>
+        </StackPanel>
+
+        <!-- Estadísticas generales -->
+        <Border Grid.Row="1"
+                Background="{DynamicResource MaterialDesignCardBackground}"
+                Padding="20"
+                Margin="0,0,0,20">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+                <StackPanel Margin="0,0,20,0">
+                    <TextBlock Text="Total Ventas:" FontWeight="Bold"/>
+                    <TextBlock x:Name="txtTotalVentas" Text="0" FontSize="20" FontWeight="SemiBold"/>
+                </StackPanel>
+                <StackPanel Margin="0,0,20,0">
+                    <TextBlock Text="Usuarios Activos:" FontWeight="Bold"/>
+                    <TextBlock x:Name="txtUsuariosActivos" Text="0" FontSize="20" FontWeight="SemiBold"/>
+                </StackPanel>
+                <StackPanel Margin="0,0,20,0">
+                    <TextBlock Text="Usuarios Inactivos:" FontWeight="Bold"/>
+                    <TextBlock x:Name="txtUsuariosInactivos" Text="0" FontSize="20" FontWeight="SemiBold"/>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="Clientes Frecuentes:" FontWeight="Bold"/>
+                    <TextBlock x:Name="txtClientesFrecuentes" Text="0" FontSize="20" FontWeight="SemiBold"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Productos más vendidos y gráfico simple -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- DataGrid -->
+            <Border Background="{DynamicResource MaterialDesignCardBackground}" Padding="10" Margin="0,0,10,0">
+                <StackPanel>
+                    <TextBlock Text="Productos más vendidos" FontWeight="SemiBold" FontSize="18" Margin="0,0,0,10"/>
+                    <DataGrid x:Name="dgProductosVendidos"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              HeadersVisibility="Column"
+                              GridLinesVisibility="None"
+                              Style="{DynamicResource MaterialDesignDataGrid}"
+                              Height="400">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Producto" Binding="{Binding Nombre}" Width="*"/>
+                            <DataGridTextColumn Header="Cantidad Vendida" Binding="{Binding Cantidad}" Width="150"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
+            </Border>
+
+            <!-- Gráfico sencillo con ProgressBars -->
+            <Border Grid.Column="1" Background="{DynamicResource MaterialDesignCardBackground}" Padding="10">
+                <StackPanel>
+                    <TextBlock Text="Gráfico de productos vendidos" FontWeight="SemiBold" FontSize="18" Margin="0,0,0,10"/>
+                    <ItemsControl x:Name="icGraficoProductos">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0,5,0,5">
+                                    <TextBlock Text="{Binding Nombre}" FontWeight="Bold"/>
+                                    <ProgressBar Value="{Binding Cantidad}" Maximum="100" Height="20"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+    </Grid>
+</UserControl>

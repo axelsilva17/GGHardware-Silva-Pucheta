@@ -28,12 +28,15 @@ namespace GGHardware
         {
             if (UsuarioActual == null) return;
 
-            // Deshabilitar todo por defecto
-            btnProductos.IsEnabled = false;
-            btnVentas.IsEnabled = false;
-            btnRegistro.IsEnabled = false;
-            btnReportes.IsEnabled = false;
-            btnBackup.IsEnabled = false;
+            // Todos los botones
+            var botones = new[] { btnProductos, btnVentas, btnRegistro, btnReportes, btnBackup };
+
+            // Desactivar todo por defecto
+            foreach (var btn in botones)
+            {
+                btn.IsEnabled = false;
+                
+            }
 
             // Activar botones según rol
             switch (UsuarioActual.RolId)
@@ -44,7 +47,7 @@ namespace GGHardware
                     btnRegistro.IsEnabled = true;
                     btnReportes.IsEnabled = true;
                     btnBackup.IsEnabled = true;
-                break;
+                    break;
 
                 case 2: // Usuario
                     btnProductos.IsEnabled = true;
@@ -55,11 +58,15 @@ namespace GGHardware
                 case 3: // Cliente
                         // Opcional: botones limitados o ninguno
                     break;
+                case 4: // Gerente  
+                    btnBackup.IsEnabled = true;
+                    break;
             }
 
             mainMenu.IsEnabled = true;
-            mainMenu.Opacity = 1.0;
         }
+
+
 
         public MainWindow()
         {
@@ -100,8 +107,16 @@ namespace GGHardware
         {
             if (UsuarioActual != null)
             {
-                // Ya hay sesión iniciada, mostrar dashboard
-                MainContentBorder.Child = new DashboardView();
+                switch (UsuarioActual.RolId)
+                {
+                    case 4: // Gerente
+                        MainContentBorder.Child = new Gerente();
+                        break;
+
+                    default:
+                        MainContentBorder.Child = new DashboardView();
+                        break;
+                }
             }
             else
             {
@@ -109,6 +124,7 @@ namespace GGHardware
                 MainContentBorder.Child = new InicioView();
             }
         }
+
         private void btnInicio_Click(object sender, RoutedEventArgs e)
         {
             MostrarInicio();
@@ -132,8 +148,19 @@ namespace GGHardware
             UsuarioActual = usuarioLogueado;   // Asignar usuario
             ActualizarSesion();                // Mostrar botón de cerrar sesión
             HabilitarMenu();                   // Habilitar menú según rol
-            MainContentBorder.Child = new DashboardView(); // Mostrar dashboard
+
+            // Mostrar la vista según rol
+            switch (usuarioLogueado.RolId)
+            {
+                case 4: // gerente
+                    MainContentBorder.Child = new Gerente(); // tu UserControl Gerente
+                    break;
+                default:
+                    MainContentBorder.Child = new DashboardView(); // otras vistas
+                    break;
+            }
         }
+
 
         private void btnCerrarSesion_Click(object sender, RoutedEventArgs e)
         {
@@ -142,6 +169,7 @@ namespace GGHardware
             mainMenu.IsEnabled = false;
             mainMenu.Opacity = 0.5;
             MainContentBorder.Child = new InicioView(); // Volver al login
+
         }
 
         private void btnReportes_Click(object sender, RoutedEventArgs e)

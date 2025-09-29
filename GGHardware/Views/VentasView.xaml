@@ -5,9 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
              Background="{DynamicResource Background}"
-             MinHeight="460" MinWidth="830">
+             MinHeight="460" MinWidth="1000">
 
     <UserControl.Resources>
+        <!-- Converter para visibilidad -->
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+
         <Style x:Key="RightAlignedText" TargetType="TextBlock">
             <Setter Property="HorizontalAlignment" Value="Right"/>
         </Style>
@@ -94,6 +97,34 @@
             </Setter>
         </Style>
 
+        <Style x:Key="SmallButton" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundBrush}"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Margin" Value="2,0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="3"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.8"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style x:Key="DangerButton" TargetType="Button">
             <Setter Property="Background" Value="#D32F2F"/>
             <Setter Property="Foreground" Value="White"/>
@@ -141,7 +172,7 @@
                                 <ScrollViewer x:Name="PART_ContentHost"
                                             Padding="{TemplateBinding Padding}"/>
                                 <TextBlock x:Name="PlaceholderText"
-                                         Text="Buscar Cliente (DNI/Nombre)"
+                                        Text="Buscar Cliente (CUIT/Nombre)"
                                          Foreground="Gray"
                                          Padding="{TemplateBinding Padding}"
                                          IsHitTestVisible="False"
@@ -163,6 +194,16 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- Estilo para ComboBox -->
+        <Style x:Key="ModernComboBox" TargetType="ComboBox">
+            <Setter Property="Background" Value="{DynamicResource Background}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+        </Style>
     </UserControl.Resources>
 
     <Grid Margin="20">
@@ -176,6 +217,7 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
@@ -186,8 +228,31 @@
                            Foreground="{DynamicResource TextPrimary}"
                            Margin="0,0,0,15"/>
 
+                <!-- NUEVO: Panel de búsqueda por código -->
+                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,15">
+                    <TextBlock Text="Código:" 
+                               VerticalAlignment="Center" 
+                               FontWeight="SemiBold" 
+                               Margin="0,0,10,0"
+                               Foreground="{DynamicResource TextPrimary}"/>
+                    <TextBox x:Name="txtCodigoProducto" 
+                             Text="{Binding CodigoProductoBuscar, UpdateSourceTrigger=PropertyChanged}"
+                             Width="200"
+                             KeyDown="TxtCodigoProducto_KeyDown"
+                             Background="{DynamicResource Background}"
+                             BorderBrush="{DynamicResource PrimaryBrush}"
+                             BorderThickness="2"
+                             Padding="8"
+                             ToolTip="Código de barras, interno o ID del producto"/>
+                    <Button Content="Buscar" 
+                            Style="{StaticResource SmallButton}"
+                            Click="BuscarProducto_Click"
+                            Margin="10,0,0,0"/>
+                </StackPanel>
+
                 <DataGrid x:Name="dgProductos"
-                          Grid.Row="1"
+                          Grid.Row="2"
+                          ItemsSource="{Binding Productos}"
                           AutoGenerateColumns="False"
                           IsReadOnly="True"
                           SelectionMode="Single"
@@ -241,7 +306,8 @@
 
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="*"/>
-                        <DataGridTextColumn Header="Precio" Binding="{Binding Precio, StringFormat=C}" Width="Auto"
+                        <DataGridTextColumn Header="Código" Binding="{Binding codigo_interno}" Width="80"/>
+                        <DataGridTextColumn Header="Precio" Binding="{Binding precio_venta, StringFormat=C}" Width="Auto"
                                             ElementStyle="{StaticResource RightAlignedText}"/>
                         <DataGridTextColumn Header="Stock" Binding="{Binding Stock}" Width="Auto"
                                             ElementStyle="{StaticResource RightAlignedText}"/>
@@ -250,8 +316,7 @@
                                 <DataTemplate>
                                     <Button Content="Agregar"
                                             Style="{StaticResource PrimaryButton}"
-                                            Command="{Binding DataContext.AgregarProductoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            CommandParameter="{Binding}"/>
+                                            Click="AgregarProducto_Click"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -277,67 +342,259 @@
                            Foreground="{DynamicResource TextPrimary}"
                            Margin="0,0,0,10"/>
 
-                <!-- Campo de búsqueda de cliente con placeholder automático -->
-                <TextBox x:Name="txtBuscarCliente"
-                         Grid.Row="1"
-                         Style="{StaticResource PlaceholderTextBox}"
-                         Margin="0,0,0,15" TextChanged="txtBuscarCliente_TextChanged"/>
+                <!-- PANEL AMPLIADO: Información del cliente y comprobante -->
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="200">
+                    <StackPanel>
+                        <!-- Campo de búsqueda de cliente -->
+                        <TextBox x:Name="txtBuscarCliente"
+                                 Style="{StaticResource PlaceholderTextBox}"
+                                 Margin="0,0,0,10" 
+                                 TextChanged="txtBuscarCliente_TextChanged"
+                                 GotFocus="TxtBuscarCliente_GotFocus"
+                                 LostFocus="TxtBuscarCliente_LostFocus"/>
 
+                        <!-- NUEVO: Tipo de Comprobante -->
+                        <TextBlock Text="Tipo de Comprobante:" 
+                                   FontWeight="SemiBold" 
+                                   Margin="0,0,0,5"
+                                   Foreground="{DynamicResource TextPrimary}"/>
+                        <ComboBox x:Name="cmbTipoComprobante" 
+                                  ItemsSource="{Binding TiposComprobante}"
+                                  SelectedItem="{Binding TipoComprobanteSeleccionado}"
+                                  DisplayMemberPath="nombre"
+                                  Style="{StaticResource ModernComboBox}"
+                                  Margin="0,0,0,10"/>
+
+                        <!-- NUEVO: Método de Pago -->
+                        <TextBlock Text="Método de Pago:" 
+                                   FontWeight="SemiBold" 
+                                   Margin="0,0,0,5"
+                                   Foreground="{DynamicResource TextPrimary}"/>
+                        <ComboBox x:Name="cmbMetodoPago"
+                                  ItemsSource="{Binding MetodosPago}"
+                                  SelectedItem="{Binding MetodoPagoSeleccionado}"
+                                  DisplayMemberPath="nombre"
+                                  Style="{StaticResource ModernComboBox}"
+                                  Margin="0,0,0,10"/>
+
+                        <!-- NUEVO: Monto recibido (visible solo para efectivo) -->
+                        <StackPanel Visibility="{Binding MostrarCampoVuelto, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <TextBlock Text="Monto Recibido:" 
+                                       FontWeight="SemiBold" 
+                                       Margin="0,0,0,5"
+                                       Foreground="{DynamicResource TextPrimary}"/>
+                            <TextBox x:Name="txtMontoRecibido" 
+                                     Text="{Binding MontoRecibido, UpdateSourceTrigger=PropertyChanged}"
+                                     Background="{DynamicResource Background}"
+                                     BorderBrush="{DynamicResource PrimaryBrush}"
+                                     BorderThickness="2"
+                                     Padding="8"
+                                     Margin="0,0,0,5"/>
+                            <TextBlock Text="{Binding Vuelto, StringFormat='Vuelto: {0:C}'}" 
+                                       FontWeight="Bold" 
+                                       Foreground="Green"
+                                       Margin="0,0,0,10"/>
+                        </StackPanel>
+
+                        <!-- NUEVO: Observaciones -->
+                        <TextBlock Text="Observaciones:" 
+                                   FontWeight="SemiBold" 
+                                   Margin="0,0,0,5"
+                                   Foreground="{DynamicResource TextPrimary}"/>
+                        <TextBox x:Name="txtObservaciones" 
+                                 Text="{Binding Observaciones, UpdateSourceTrigger=PropertyChanged}"
+                                 Background="{DynamicResource Background}"
+                                 BorderBrush="{DynamicResource PrimaryBrush}"
+                                 BorderThickness="2"
+                                 Padding="8"
+                                 Height="60"
+                                 TextWrapping="Wrap"
+                                 AcceptsReturn="True"
+                                 VerticalScrollBarVisibility="Auto"
+                                 Margin="0,0,0,15"/>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- Carrito de compras -->
                 <StackPanel Grid.Row="2">
-                    <TextBlock Text="Productos en Carrito"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource TextPrimary}"
-                               Margin="0,0,0,10"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <TextBlock Text="Productos en Carrito"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextPrimary}"
+                                   VerticalAlignment="Center"/>
+
+                        <!-- NUEVOS: Botones de descuento -->
+                        <Button Content="Desc. 5%" 
+                                Style="{StaticResource SmallButton}"
+                                Background="Orange"
+                                Click="AplicarDescuento5_Click"
+                                Margin="10,0,0,0"/>
+                        <Button Content="Desc. 10%" 
+                                Style="{StaticResource SmallButton}"
+                                Background="Orange"
+                                Click="AplicarDescuento10_Click"/>
+                        <Button Content="Desc. 15%" 
+                                Style="{StaticResource SmallButton}"
+                                Background="Orange"
+                                Click="AplicarDescuento15_Click"/>
+                    </StackPanel>
 
                     <Border Background="{DynamicResource Background}"
                             BorderBrush="{DynamicResource PrimaryBrush}"
                             BorderThickness="1"
                             CornerRadius="4"
-                            MinHeight="200"
-                            MaxHeight="300">
+                            MinHeight="150"
+                            MaxHeight="200">
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
                             <ListBox x:Name="lstCarrito"
+                                     ItemsSource="{Binding Carrito}"
                                      Background="Transparent"
                                      BorderThickness="0"
                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <Border Background="{DynamicResource Surface}"
-                                                Padding="8"
+                                                Padding="6"
                                                 Margin="2"
                                                 CornerRadius="3"
                                                 BorderBrush="{DynamicResource TextSecondary}"
                                                 BorderThickness="1">
                                             <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Column="0" 
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+
+                                                <!-- Fila 1: Nombre del producto -->
+                                                <TextBlock Grid.Row="0" 
                                                            Text="{Binding Nombre}"
                                                            Foreground="{DynamicResource TextPrimary}"
-                                                           VerticalAlignment="Center"/>
-                                                <TextBlock Grid.Column="1" 
-                                                           Text="{Binding Cantidad}" 
-                                                           Margin="10,0"
-                                                           Foreground="{DynamicResource TextPrimary}"
-                                                           VerticalAlignment="Center"/>
-                                                <TextBlock Grid.Column="2" 
-                                                           Text="{Binding Precio, StringFormat=C}" 
-                                                           Margin="10,0"
-                                                           Foreground="{DynamicResource PrimaryBrush}"
                                                            FontWeight="SemiBold"
-                                                           VerticalAlignment="Center"/>
-                                                <Button Grid.Column="3"
-                                                        Content="×"
-                                                        Style="{StaticResource DangerButton}"
-                                                        Width="20"
-                                                        Height="20"
-                                                        FontSize="12"
-                                                        Command="{Binding DataContext.QuitarProductoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                        CommandParameter="{Binding}"/>
+                                                           TextWrapping="Wrap"
+                                                           Margin="0,0,0,5"/>
+
+                                                <!-- Fila 2: Controles -->
+                                                <Grid Grid.Row="1">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <!-- Controles de cantidad -->
+                                                    <StackPanel Grid.Column="0" 
+                                                                Orientation="Horizontal">
+                                                        <!-- Botón para quitar una unidad -->
+                                                        <Button Content="-"
+                                                                Width="20"
+                                                                Height="20"
+                                                                FontSize="12"
+                                                                FontWeight="Bold"
+                                                                Background="#FF6B6B"
+                                                                Foreground="White"
+                                                                BorderThickness="0"
+                                                                Cursor="Hand"
+                                                                Margin="0,0,2,0"
+                                                                Click="QuitarUnaUnidad_Click">
+                                                            <Button.Style>
+                                                                <Style TargetType="Button">
+                                                                    <Setter Property="Template">
+                                                                        <Setter.Value>
+                                                                            <ControlTemplate TargetType="Button">
+                                                                                <Border Background="{TemplateBinding Background}"
+                                                                                        CornerRadius="3">
+                                                                                    <ContentPresenter HorizontalAlignment="Center"
+                                                                                                    VerticalAlignment="Center"/>
+                                                                                </Border>
+                                                                                <ControlTemplate.Triggers>
+                                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                                        <Setter Property="Opacity" Value="0.8"/>
+                                                                                    </Trigger>
+                                                                                </ControlTemplate.Triggers>
+                                                                            </ControlTemplate>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                </Style>
+                                                            </Button.Style>
+                                                        </Button>
+
+                                                        <!-- Cantidad -->
+                                                        <TextBlock Text="{Binding Cantidad}" 
+                                                                   Width="20"
+                                                                   HorizontalAlignment="Center"
+                                                                   TextAlignment="Center"
+                                                                   Foreground="{DynamicResource TextPrimary}"
+                                                                   FontWeight="SemiBold"
+                                                                   VerticalAlignment="Center"
+                                                                   Margin="2,0"/>
+
+                                                        <!-- Botón para agregar una unidad -->
+                                                        <Button Content="+"
+                                                                Width="20"
+                                                                Height="20"
+                                                                FontSize="12"
+                                                                FontWeight="Bold"
+                                                                Background="{DynamicResource PrimaryBrush}"
+                                                                Foreground="{DynamicResource PrimaryForegroundBrush}"
+                                                                BorderThickness="0"
+                                                                Cursor="Hand"
+                                                                Margin="2,0,0,0"
+                                                                Click="AgregarUnaUnidad_Click">
+                                                            <Button.Style>
+                                                                <Style TargetType="Button">
+                                                                    <Setter Property="Template">
+                                                                        <Setter.Value>
+                                                                            <ControlTemplate TargetType="Button">
+                                                                                <Border Background="{TemplateBinding Background}"
+                                                                                        CornerRadius="3">
+                                                                                    <ContentPresenter HorizontalAlignment="Center"
+                                                                                                    VerticalAlignment="Center"/>
+                                                                                </Border>
+                                                                                <ControlTemplate.Triggers>
+                                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                                        <Setter Property="Opacity" Value="0.8"/>
+                                                                                    </Trigger>
+                                                                                </ControlTemplate.Triggers>
+                                                                            </ControlTemplate>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                </Style>
+                                                            </Button.Style>
+                                                        </Button>
+                                                    </StackPanel>
+
+                                                    <!-- Precio unitario con descuento -->
+                                                    <StackPanel Grid.Column="1" 
+                                                                Orientation="Vertical"
+                                                                Margin="10,0">
+                                                        <TextBlock Text="{Binding Precio, StringFormat=C}" 
+                                                                   FontSize="11"
+                                                                   Foreground="{DynamicResource TextPrimary}"/>
+                                                        <TextBlock Text="{Binding PorcentajeDescuento, StringFormat='Desc: {0:F1}%'}" 
+                                                                   FontSize="10"
+                                                                   Foreground="Orange"
+                                                                   Visibility="{Binding TieneDescuento, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                                    </StackPanel>
+
+                                                    <!-- Subtotal -->
+                                                    <TextBlock Grid.Column="2" 
+                                                               Text="{Binding Subtotal, StringFormat=C}" 
+                                                               Margin="5,0"
+                                                               Foreground="{DynamicResource PrimaryBrush}"
+                                                               FontWeight="Bold"
+                                                               VerticalAlignment="Center"/>
+
+                                                    <!-- Botón para eliminar todo -->
+                                                    <Button Grid.Column="3"
+                                                            Content="×"
+                                                            Style="{StaticResource DangerButton}"
+                                                            Width="18"
+                                                            Height="18"
+                                                            FontSize="12"
+                                                            ToolTip="Eliminar producto del carrito"
+                                                            Click="QuitarProducto_Click"/>
+                                                </Grid>
                                             </Grid>
                                         </Border>
                                     </DataTemplate>
@@ -375,13 +632,15 @@
                                     Background="Transparent"
                                     BorderBrush="White"
                                     Foreground="White"
-                                    Width="90"/>
+                                    Width="90"
+                                    Click="CancelarVenta_Click"/>
                             <Button Content="Finalizar Venta" 
                                     Style="{StaticResource SecondaryButton}"
                                     Background="White"
                                     BorderBrush="White"
                                     Foreground="{DynamicResource PrimaryBrush}"
-                                    Width="120"/>
+                                    Width="120"
+                                    Click="FinalizarVenta_Click"/>
                         </StackPanel>
                     </Grid>
                 </Border>
