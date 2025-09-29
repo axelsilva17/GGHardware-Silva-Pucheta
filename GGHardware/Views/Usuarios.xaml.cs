@@ -67,11 +67,11 @@ namespace GGHardware.Views
                 using (var context = new ApplicationDbContext())
                 {
                     var roles = new Dictionary<int, string>
-                    {
+{
                         {1, "Supervisor"},
                         {2, "Usuario"},
+                        {3, "Cliente"}  
                     };
-
                     var usuarios = context.Usuarios.ToList();
 
                     foreach (var u in usuarios)
@@ -142,7 +142,7 @@ namespace GGHardware.Views
                         correo = txtCorreo.Text,
                         contraseña = pbContrasena.Password,
                         fecha_Nacimiento = dpFechaNacimiento.SelectedDate,
-                        RolId = (int)cmbRol.SelectedValue,
+                        RolId = int.Parse(cmbRol.SelectedValue.ToString()),
                         Activo = true // 👈 nuevo: los usuarios se crean activos por defecto
                     };
 
