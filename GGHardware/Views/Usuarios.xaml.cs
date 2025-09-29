@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Globalization;
 
 namespace GGHardware.Views
 {
@@ -69,7 +70,6 @@ namespace GGHardware.Views
                     {
                         {1, "Supervisor"},
                         {2, "Usuario"},
-                        {3, "Cliente"}
                     };
 
                     var usuarios = context.Usuarios.ToList();
@@ -77,6 +77,9 @@ namespace GGHardware.Views
                     foreach (var u in usuarios)
                     {
                         u.NombreRol = roles.ContainsKey(u.RolId) ? roles[u.RolId] : "Desconocido";
+
+                        // Asignar texto de estado 
+                        u.EstadoTexto = u.Activo ? "Activo" : "Inactivo";
                     }
 
                     dgUsuarios.ItemsSource = usuarios;
@@ -193,7 +196,7 @@ namespace GGHardware.Views
                             context.SaveChanges();
 
                             MessageBox.Show(
-                                userDb.Activo ? "✅ Usuario activado." : "⚠️ Usuario desactivado.",
+                                userDb.Activo ? "✅ activado." : "⚠️ desactivado.",
                                 "Información",
                                 MessageBoxButton.OK,
                                 MessageBoxImage.Information

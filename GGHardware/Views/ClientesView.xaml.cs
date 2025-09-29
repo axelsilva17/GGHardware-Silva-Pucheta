@@ -89,7 +89,7 @@ namespace GGHardware.Views
         /// </summary>
         private void btnGuardar_Click(object sender, RoutedEventArgs e)
         {
-            // Validaciones de entrada (mantengo tu lógica original)
+            // Validaciones de entrada
             if (!Regex.IsMatch(txtNombre.Text, @"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$"))
             {
                 MessageBox.Show("El nombre solo debe contener letras.", "Error de Validación", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -139,26 +139,9 @@ namespace GGHardware.Views
                 {
                     context.Clientes.Add(cliente);
                     context.SaveChanges();
-                }
-                try
-                {
-                    using (var context = new ApplicationDbContext())
-                    {
-                        context.Clientes.Add(cliente);
-                        context.SaveChanges();
 
-                        // AGREGAR ESTA LÍNEA para notificar a VentasView
-                        ClienteService.Instance.NotificarClienteAgregado(cliente);
-                    }
-
-                    MessageBox.Show("Cliente guardado con éxito.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                    LimpiarCampos();
-                    CargarClientes(); // Actualiza el DataGrid
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("❌ Error al guardar cliente: " + ex.Message);
+                    // Notificar a VentasView
+                    ClienteService.Instance.NotificarClienteAgregado(cliente);
                 }
 
                 MessageBox.Show("Cliente guardado con éxito.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -168,7 +151,7 @@ namespace GGHardware.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show("❌ Error al guardar cliente: " + ex.Message);
+                MessageBox.Show("❌ Error al guardar cliente: " + ex.Message + "\n\nDetalles: " + ex.InnerException?.Message);
             }
         }
 
@@ -225,33 +208,21 @@ namespace GGHardware.Views
         /// <summary>
         /// Maneja el evento de clic para el botón 'Eliminar'. Elimina el cliente seleccionado de la base de datos.
         /// </summary>
-        private void btnEliminar_Click(object sender, RoutedEventArgs e)
+        private void btnCambiarEstado_Click(object sender, RoutedEventArgs e)
         {
-            if (dgClientes.SelectedItem is Cliente clienteSeleccionado)
+            if (dgClientes.SelectedItem is Cliente cliente)
             {
-                var resultado = MessageBox.Show($"¿Estás seguro de que quieres eliminar a {clienteSeleccionado.nombre} {clienteSeleccionado.apellido}?", "Confirmar Eliminación", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-                if (resultado == MessageBoxResult.Yes)
+                using (var context = new ApplicationDbContext())
                 {
-                    try
+                    var cli = context.Clientes.Find(cliente.id_cliente);
+                    if (cli != null)
                     {
-                        using (var context = new ApplicationDbContext())
-                        {
-                            context.Entry(clienteSeleccionado).State = EntityState.Deleted;
-                            context.SaveChanges();
-                            CargarClientes(); // Refresca el DataGrid
-                            MessageBox.Show("Cliente eliminado con éxito.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"❌ Error al eliminar cliente: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        // Cambiar el estado de Activo
+                        cli.Activo = !cli.Activo; // Activo -> Inactivo o Inactivo -> Activo
+                        context.SaveChanges();
                     }
                 }
-            }
-            else
-            {
-                MessageBox.Show("Por favor, selecciona un cliente para eliminar.", "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
+                CargarClientes(); // Método que recarga el DataGrid
             }
         }
         public class ClienteService

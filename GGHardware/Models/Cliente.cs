@@ -10,6 +10,8 @@ namespace GGHardware.Models
         [Key]
         public int id_cliente { get; set; }
 
+        public bool Activo { get; set; } = true;
+
         [MaxLength(11)]
         public required string cuit { get; set; }
 
@@ -54,10 +56,13 @@ namespace GGHardware.Models
         [MaxLength(100)]
         public required string condicion_fiscal { get; set; }
 
-        // Propiedad calculada para mostrar en la UI
-        public string NombreCompleto => $"{nombre} {apellido} - CUIT: {cuit}";
+        // Propiedad calculada (no se guarda en BD)
+        [NotMapped]
+        public string NombreCompleto => $"{nombre} {apellido}";
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        // Implementación de INotifyPropertyChanged
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

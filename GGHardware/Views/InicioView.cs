@@ -23,7 +23,13 @@ namespace GGHardware.Views
 
                 if (usuario != null)
                 {
-     
+                    // Verificar si el usuario está activo
+                    if (!usuario.Activo)
+                    {
+                        MessageBox.Show("Su cuenta está inactiva. No puede iniciar sesión.",
+                                        "Cuenta Inactiva", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
                     // Llamar al método de MainWindow
                     var mainWindow = Window.GetWindow(this) as MainWindow;
                     if (mainWindow != null)
@@ -36,12 +42,6 @@ namespace GGHardware.Views
                     MessageBox.Show("Usuario o contraseña incorrectos.", "Error de Inicio de Sesión", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-        }
-
-        private void BtnRegistrarse_Click(object sender, RoutedEventArgs e)
-        {
-            //lógica de navegación a la vista de Registro
-            MessageBox.Show("Ir a Registro");
         }
 
         private void TextBox_GotFocus(object sender, RoutedEventArgs e)

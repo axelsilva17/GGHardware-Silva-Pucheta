@@ -344,11 +344,12 @@
 
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding id_cliente}" Width="60"/>
-                    <DataGridTextColumn Header="Nombre" Binding="{Binding nombre}" Width="200"/>
-                    <DataGridTextColumn Header="Apellido" Binding="{Binding apellido}" Width="200"/>
+                    <DataGridTextColumn Header="Nombre" Binding="{Binding nombre}" Width="180"/>
+                    <DataGridTextColumn Header="Apellido" Binding="{Binding apellido}" Width="180"/>
                     <DataGridTextColumn Header="CUIT" Binding="{Binding cuit}" Width="150"/>
-                    <DataGridTextColumn Header="Condición Fiscal" Binding="{Binding condicion_fiscal}" Width="200"/>
-                    <DataGridTemplateColumn Header="Acciones" Width="100">
+                    <DataGridTextColumn Header="Condición Fiscal" Binding="{Binding condicion_fiscal}" Width="180"/>
+                    <DataGridTextColumn Header="Estado" Binding="{Binding EstadoTexto}" Width="100"/>
+                    <DataGridTemplateColumn Header="Acciones" Width="150">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -383,8 +384,8 @@
                                             </Style>
                                         </Button.Style>
                                     </Button>
-                                    <Button Content="Eliminar" 
-                                            Click="btnEliminar_Click"
+                                    <Button Content="Cambiar Estado" 
+                                            Click="btnCambiarEstado_Click"
                                             Background="#D32F2F"
                                             Foreground="White"
                                             BorderThickness="0"
