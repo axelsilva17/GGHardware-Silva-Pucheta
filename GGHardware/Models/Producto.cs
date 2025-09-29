@@ -12,14 +12,14 @@ namespace GGHardware.Models
         [Key]
         public int Id_Producto { get; set; }
 
-        private string _nombre;
+        private string nombre;
         [MaxLength(100)]
         public string Nombre
         {
-            get => _nombre;
+            get => nombre;
             set
             {
-                _nombre = value;
+                nombre = value;
                 OnPropertyChanged();
             }
         }

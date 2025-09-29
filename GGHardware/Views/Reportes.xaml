@@ -8,6 +8,10 @@
              Background="{DynamicResource Background}">
 
     <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="195*"/>
+            <ColumnDefinition Width="314*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -22,7 +26,7 @@
                    Margin="0,0,0,20"
                    HorizontalAlignment="Left"/>
 
-        <StackPanel Grid.Row="1" Orientation="Vertical">
+        <StackPanel Grid.Row="1" Orientation="Vertical" Grid.ColumnSpan="2">
 
             <!-- Tarjetas -->
             <UniformGrid Columns="3" Margin="0,0,0,20">

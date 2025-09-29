@@ -8,6 +8,7 @@ namespace GGHardware.Models
     public class Cliente : INotifyPropertyChanged
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int id_cliente { get; set; }
 
         public bool Activo { get; set; } = true;
@@ -15,7 +16,7 @@ namespace GGHardware.Models
         [MaxLength(11)]
         public required string cuit { get; set; }
 
-        private string _nombre;
+        private string _nombre = string.Empty;
         [MaxLength(50)]
         public required string nombre
         {
@@ -28,7 +29,7 @@ namespace GGHardware.Models
             }
         }
 
-        private string _apellido;
+        private string _apellido = string.Empty;
         [MaxLength(50)]
         public required string apellido
         {
@@ -56,11 +57,9 @@ namespace GGHardware.Models
         [MaxLength(100)]
         public required string condicion_fiscal { get; set; }
 
-        // Propiedad calculada (no se guarda en BD)
         [NotMapped]
         public string NombreCompleto => $"{nombre} {apellido}";
 
-        // Implementación de INotifyPropertyChanged
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected virtual void OnPropertyChanged(string propertyName)
