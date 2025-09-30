@@ -69,8 +69,7 @@ namespace GGHardware.Views
                     var roles = new Dictionary<int, string>
 {
                         {1, "Supervisor"},
-                        {2, "Usuario"},
-                        {3, "Cliente"}  
+                        {2, "Usuario"}, 
                     };
                     var usuarios = context.Usuarios.ToList();
 

@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
-             Background="{DynamicResource MaterialDesignPaper}">
+             Background="{DynamicResource MaterialDesignPaper}" Height="453" Width="864">
 
     <Grid Margin="20">
         <Grid.RowDefinitions>
@@ -28,16 +28,31 @@
                 CornerRadius="8"
                 Padding="10">
             <DataGrid x:Name="dgProductos"
-                      AutoGenerateColumns="False"
-                      CanUserAddRows="False"
-                      IsReadOnly="True"
-                      SelectionMode="Single"
-                      Style="{DynamicResource MaterialDesignDataGrid}">
+            AutoGenerateColumns="False"
+            CanUserAddRows="False"
+            IsReadOnly="True"
+            SelectionMode="Single"
+            Style="{DynamicResource MaterialDesignDataGrid}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="80" />
-                    <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="*" />
-                    <DataGridTextColumn Header="Precio" Binding="{Binding Precio}" Width="120" />
-                    <DataGridTextColumn Header="Stock" Binding="{Binding Stock}" Width="120" />
+                    <DataGridTextColumn Header="ID" Binding="{Binding Id_Producto}" Width="60" />
+                    <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="150" />
+                    <DataGridTextColumn Header="Precio" Binding="{Binding precio_venta}" Width="150" />
+                    <DataGridTextColumn Header="Stock Disponible" Binding="{Binding Stock}" Width="150" />
+                    <DataGridTextColumn Header="Categoria" Binding="{Binding NombreCategoria}" Width="150" />
+                    <DataGridTemplateColumn Header="Acciones" Width="150">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button ToolTip="Editar" Click="btnEditar_Click">
+                                        <materialDesign:PackIcon Kind="Pencil" Foreground="{DynamicResource MaterialDesignBodyMediumBrush}"/>
+                                    </Button>
+                                    <Button ToolTip="Activar/Desactivar" Click="btnActivarDesactivar_Click">
+                                        <materialDesign:PackIcon Kind="Power" Foreground="{DynamicResource MaterialDesignBodyMediumBrush}"/>
+                                    </Button>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </Border>
@@ -46,20 +61,12 @@
                     Orientation="Horizontal"
                     HorizontalAlignment="Center"
                     Margin="0,20,0,0">
-            <Button Content="Alta"
+            <Button Content="Nuevo Producto"
                     Style="{DynamicResource MaterialDesignRaisedButton}"
-                    Width="110" Height="35"
-                    Margin="5,0"/>
-            <Button Content="Baja"
-                    Style="{DynamicResource MaterialDesignRaisedButton}"
-                    Width="110" Height="35"
-                    Margin="5,0"/>
-            <Button Content="Modificar"
-                    Style="{DynamicResource MaterialDesignRaisedButton}"
-                    Background="{DynamicResource MaterialDesignToolBarBackground}"
-                    Foreground="{DynamicResource MaterialDesignBody}"
-                    Width="110" Height="35"
-                    Margin="5,0"/>
+                    Width="160" Height="35"
+                    Margin="5,0"
+                    Click="btnAltaProducto_Click"/>
+
         </StackPanel>
     </Grid>
 </UserControl>

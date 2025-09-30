@@ -19,6 +19,7 @@ namespace GGHardware.Data
         public DbSet<Cliente> Clientes { get; set; }
         public DbSet<Venta> Venta { get; set; }
         public DbSet<Producto> Producto { get; set; }
+        public DbSet<Categoria> Categoria { get; set; }
 
         // NUEVOS DbSets para comprobantes
         public DbSet<TipoComprobante> TiposComprobante { get; set; }

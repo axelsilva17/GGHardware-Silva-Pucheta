@@ -3,10 +3,11 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.CompilerServices;
+using Microsoft.EntityFrameworkCore;
 
 namespace GGHardware.Models
 {
-    [Table("Productos")]
+    [Table("Producto")]
     public class Producto : INotifyPropertyChanged
     {
         [Key]
@@ -54,12 +55,18 @@ namespace GGHardware.Models
             }
         }
 
-        [MaxLength(50)]
-        public string categoria { get; set; }
+       
+        public int id_categoria { get; set; }   // FK
+        [ForeignKey("id_categoria")]
+        public Categoria Categoria { get; set; }
 
-        public DateTime fecha_creacion { get; set; } = DateTime.Now;
+        public string NombreCategoria
+        {
+            get { return Categoria?.nombre ?? "Sin categoría"; }
+        }
+        //public DateTime fecha_creacion { get; set; } = DateTime.Now;
 
-        public bool activo { get; set; } = true;
+        //public bool activo { get; set; } = true;
 
         // NUEVOS CAMPOS para búsqueda por código
         [MaxLength(50)]
