@@ -43,10 +43,10 @@ namespace GGHardware
             {
                 case 1: // Supervisor
                     btnProductos.IsEnabled = true;
-                    btnVentas.IsEnabled = true;
+                    btnVentas.IsEnabled = false;
                     btnRegistro.IsEnabled = true;
                     btnReportes.IsEnabled = true;
-                    btnBackup.IsEnabled = true;
+                    btnBackup.IsEnabled = false;
                     break;
 
                 case 2: // Usuario

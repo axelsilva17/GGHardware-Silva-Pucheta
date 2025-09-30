@@ -1,5 +1,6 @@
 ﻿using MaterialDesignColors;
 using MaterialDesignThemes.Wpf;
+using OfficeOpenXml;   // 👈 Solo este using alcanza
 using System.Configuration;
 using System.Data;
 using System.Windows;
@@ -9,5 +10,10 @@ namespace GGHardware
 {
     public partial class App : Application
     {
+        public App()
+        {
+           
+
+        }
     }
 }
