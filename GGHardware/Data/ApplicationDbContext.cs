@@ -21,10 +21,13 @@ namespace GGHardware.Data
         public DbSet<Producto> Producto { get; set; }
         public DbSet<Categoria> Categoria { get; set; }
 
-        // NUEVOS DbSets para comprobantes
+        //  DbSets para comprobantes
         public DbSet<TipoComprobante> TiposComprobante { get; set; }
         public DbSet<MetodoPago> MetodosPago { get; set; }
         public DbSet<DetalleVenta> DetalleVenta { get; set; }
+
+        //DbSet para Reportes
+        public DbSet<Reporte> Reportes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -37,6 +40,14 @@ namespace GGHardware.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);
+
+            // Configuración de relaciones si es necesario
+            modelBuilder.Entity<Reporte>()
+                .HasOne(r => r.Usuario)
+                .WithMany()
+                .HasForeignKey(r => r.UsuarioID)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Configuraciones específicas para las relaciones
 
@@ -90,4 +101,7 @@ namespace GGHardware.Data
                 .IsUnique();
         }
     }
+
+
+
 }

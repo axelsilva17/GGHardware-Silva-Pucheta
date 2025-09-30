@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GGHardware.Models
@@ -24,6 +25,14 @@ namespace GGHardware.Models
 
         [Column(TypeName = "decimal(10,2)")]
         public decimal? precio_con_descuento { get; set; }
+
+        // ✅ NUEVAS PROPIEDADES
+        [Required]
+        [Column(TypeName = "date")]
+        public DateTime Fecha { get; set; } = DateTime.Today;
+
+        [Required]
+        public bool Activo { get; set; } = true;
 
         // Propiedades de navegación
         [ForeignKey("id_venta")]
