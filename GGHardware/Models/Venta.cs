@@ -7,11 +7,11 @@ using System.Runtime.CompilerServices;
 
 namespace GGHardware.Models
 {
-    [Table("Venta")] // Usando el nombre de tu tabla
+    [Table("Venta")] 
     public class Venta : INotifyPropertyChanged
     {
         [Key]
-        public int id_venta { get; set; } // Cambié de id_Venta a id_venta para consistencia
+        public int id_venta { get; set; } 
 
         public DateTime Fecha { get; set; }
 

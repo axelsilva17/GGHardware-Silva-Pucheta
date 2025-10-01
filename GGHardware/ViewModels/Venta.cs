@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using GGHardware.Data;
 using GGHardware.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace GGHardware.ViewModels
 {
@@ -89,6 +90,9 @@ namespace GGHardware.ViewModels
             Carrito = new ObservableCollection<CarritoItem>();
             TiposComprobante = new ObservableCollection<TipoComprobante>();
             MetodosPago = new ObservableCollection<MetodoPago>();
+
+            // Suscribirse a cambios en el carrito para actualizar la vista de productos
+            Carrito.CollectionChanged += (s, e) => OnPropertyChanged(nameof(Productos));
 
             CargarProductos();
             CargarTiposComprobante();
@@ -191,8 +195,31 @@ namespace GGHardware.ViewModels
             ClienteSeleccionado = cliente;
         }
 
+        // NUEVO: Método para obtener stock disponible de un producto
+        public double ObtenerStockDisponible(int idProducto)
+        {
+            var productoDb = _context.Producto.Find(idProducto);
+            if (productoDb == null) return 0;
+
+            var itemEnCarrito = Carrito.FirstOrDefault(c => c.IdProducto == idProducto);
+            double cantidadEnCarrito = (double)(itemEnCarrito?.Cantidad ?? 0);
+
+            return (double)productoDb.Stock - cantidadEnCarrito;
+        }
+
         public void AgregarProducto(Producto producto)
         {
+            // Obtener stock disponible actual
+            var stockDisponible = ObtenerStockDisponible(producto.Id_Producto);
+
+            if (stockDisponible <= 0)
+            {
+                var cantidadEnCarrito = Carrito.FirstOrDefault(c => c.IdProducto == producto.Id_Producto)?.Cantidad ?? 0;
+                MessageBox.Show($"No hay más stock disponible de '{producto.Nombre}'.\nStock total: {producto.Stock}\nYa en carrito: {cantidadEnCarrito}",
+                    "Stock insuficiente", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             var itemExistente = Carrito.FirstOrDefault(c => c.IdProducto == producto.Id_Producto);
 
             if (itemExistente != null)
@@ -205,18 +232,44 @@ namespace GGHardware.ViewModels
                 {
                     IdProducto = producto.Id_Producto,
                     Nombre = producto.Nombre,
-                    Precio = producto.precio_venta,
+                    Precio = (double)producto.precio_venta,
                     Cantidad = 1
                 });
             }
 
             OnPropertyChanged(nameof(Total));
+
+            // Forzar actualización del DataGrid
+            RefrescarProductos();
+        }
+
+        private void RefrescarProductos()
+        {
+            // Crear lista temporal
+            var tempList = Productos.ToList();
+            Productos.Clear();
+            foreach (var prod in tempList)
+            {
+                Productos.Add(prod);
+            }
         }
 
         public void AgregarUnaUnidad(CarritoItem item)
         {
+            // Verificar stock disponible
+            var stockDisponible = ObtenerStockDisponible(item.IdProducto);
+
+            if (stockDisponible <= 0)
+            {
+                var productoDb = _context.Producto.Find(item.IdProducto);
+                MessageBox.Show($"No hay más stock disponible de '{item.Nombre}'.\nStock total: {productoDb?.Stock ?? 0}\nYa en carrito: {item.Cantidad}",
+                    "Stock insuficiente", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             item.Cantidad++;
             OnPropertyChanged(nameof(Total));
+            RefrescarProductos();
         }
 
         public void QuitarUnaUnidad(CarritoItem item)
@@ -229,13 +282,16 @@ namespace GGHardware.ViewModels
             {
                 Carrito.Remove(item);
             }
+
             OnPropertyChanged(nameof(Total));
+            RefrescarProductos();
         }
 
         public void QuitarProducto(CarritoItem item)
         {
             Carrito.Remove(item);
             OnPropertyChanged(nameof(Total));
+            RefrescarProductos();
         }
 
         public void FinalizarVenta()
@@ -278,24 +334,43 @@ namespace GGHardware.ViewModels
 
             try
             {
-                // 1. Crear la venta (cabecera)
+                // 1. Validar stock ANTES de guardar
+                foreach (var item in Carrito)
+                {
+                    var producto = _context.Producto.Find(item.IdProducto);
+                    if (producto == null)
+                    {
+                        MessageBox.Show($"Producto '{item.Nombre}' no encontrado en la base de datos.",
+                            "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    if (producto.Stock < item.Cantidad)
+                    {
+                        MessageBox.Show($"Stock insuficiente para '{producto.Nombre}'.\nStock disponible: {producto.Stock}\nCantidad solicitada: {item.Cantidad}",
+                            "Stock insuficiente", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+                }
+
+                // 2. Crear la venta (cabecera)
                 var venta = new Venta
                 {
                     id_Cliente = ClienteSeleccionado.id_cliente,
                     id_Usuario = 1, // TODO: Obtener usuario logueado
                     Fecha = DateTime.Now,
                     Monto = Total,
-                    IdTipoComprobante = (int?)TipoComprobanteSeleccionado.id_tipo,
-                    MetodoPago = MetodoPagoSeleccionado.nombre,
-                    MontoRecibido = MostrarCampoVuelto ? (double?)MontoRecibido : null,
-                    Observaciones = Observaciones,
+                    IdTipoComprobante = TipoComprobanteSeleccionado.id_tipo, // Ya es int, se asigna directamente
+                    MetodoPago = MetodoPagoSeleccionado?.nombre ?? string.Empty,
+                    MontoRecibido = MostrarCampoVuelto ? MontoRecibido : (double?)null,
+                    Observaciones = Observaciones ?? string.Empty,
                     Estado = "Completada"
                 };
 
                 _context.Venta.Add(venta);
                 _context.SaveChanges(); // Guardar para obtener el id_venta
 
-                // 2. Crear los detalles de venta
+                // 3. Crear los detalles de venta Y DESCONTAR STOCK
                 foreach (var item in Carrito)
                 {
                     var detalle = new DetalleVenta
@@ -305,10 +380,17 @@ namespace GGHardware.ViewModels
                         nombre_producto = item.Nombre ?? "Sin nombre",
                         cantidad = item.Cantidad,
                         precio_unitario = (decimal)item.Precio,
-                        precio_con_descuento = (decimal)item.PrecioConDescuento,
+                        precio_con_descuento = item.PrecioConDescuento.HasValue ? (decimal)item.PrecioConDescuento.Value : (decimal)item.Precio,
                         Activo = true
                     };
                     _context.DetalleVenta.Add(detalle);
+
+                    // DESCONTAR STOCK
+                    var producto = _context.Producto.Find(item.IdProducto);
+                    if (producto != null)
+                    {
+                        producto.Stock -= (int)item.Cantidad;
+                    }
                 }
 
                 _context.SaveChanges();
@@ -317,8 +399,12 @@ namespace GGHardware.ViewModels
                 MessageBox.Show($"Venta registrada correctamente\nTotal: {Total:C}{mensajeVuelto}",
                     "Venta Exitosa", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                // Limpiar todo
+                // Limpiar todo y recargar productos para actualizar stock en la vista
                 CancelarVenta();
+                CargarProductos();
+
+                // Actualizar visualmente todos los productos
+                OnPropertyChanged(nameof(Productos));
             }
             catch (Exception ex)
             {
@@ -326,6 +412,142 @@ namespace GGHardware.ViewModels
                 MessageBox.Show($"Error al registrar la venta:\n{ex.Message}{detalleError}",
                     "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        // NUEVO: Generar ticket/comprobante de venta
+        public void GenerarTicket(int idVenta)
+        {
+            try
+            {
+                var venta = _context.Venta
+                    .Include(v => v.Cliente)
+                    .Include(v => v.Usuario)
+                    .Include(v => v.TipoComprobante)
+                    .Include(v => v.Detalles)
+                        .ThenInclude(d => d.Producto)
+                    .FirstOrDefault(v => v.id_venta == idVenta);
+
+                if (venta == null)
+                {
+                    MessageBox.Show("No se encontró la venta", "Error",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                // Generar ticket en formato texto
+                var ticket = GenerarTextoTicket(venta);
+
+                // Mostrar en ventana o imprimir
+                var ventanaTicket = new Window
+                {
+                    Title = "Comprobante de Venta",
+                    Width = 400,
+                    Height = 600,
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen
+                };
+
+                var scrollViewer = new System.Windows.Controls.ScrollViewer();
+                var textBlock = new System.Windows.Controls.TextBlock
+                {
+                    Text = ticket,
+                    FontFamily = new System.Windows.Media.FontFamily("Courier New"),
+                    FontSize = 12,
+                    Padding = new Thickness(20),
+                    TextWrapping = TextWrapping.Wrap
+                };
+
+                scrollViewer.Content = textBlock;
+                ventanaTicket.Content = scrollViewer;
+                ventanaTicket.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al generar ticket:\n{ex.Message}",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private string GenerarTextoTicket(Venta venta)
+        {
+            var sb = new System.Text.StringBuilder();
+            var ancho = 40;
+
+            // Encabezado
+            sb.AppendLine(CentrarTexto("GGHardware", ancho));
+            sb.AppendLine(CentrarTexto("9 de Julio 1890", ancho));
+            sb.AppendLine(new string('=', ancho));
+            sb.AppendLine();
+
+            // Información del comprobante
+            sb.AppendLine($"Tipo: {venta.TipoComprobanteNombre}");
+            sb.AppendLine($"Nro: {venta.NumeroComprobanteFormateado}");
+            sb.AppendLine($"Fecha: {venta.Fecha:dd/MM/yyyy HH:mm}");
+            sb.AppendLine($"Vendedor: {venta.Usuario?.Nombre ?? "N/A"}");
+            sb.AppendLine();
+
+            // Cliente
+            sb.AppendLine($"Cliente: {venta.ClienteNombre}");
+            if (venta.Cliente != null && !string.IsNullOrEmpty(venta.Cliente.cuit))
+                sb.AppendLine($"CUIT: {venta.Cliente.cuit}");
+            sb.AppendLine(new string('-', ancho));
+            sb.AppendLine();
+
+            // Detalle de productos
+            sb.AppendLine("PRODUCTOS");
+            sb.AppendLine(new string('-', ancho));
+
+            foreach (var detalle in venta.Detalles)
+            {
+                sb.AppendLine($"{detalle.nombre_producto}");
+                sb.AppendLine($"  {detalle.cantidad} x {detalle.precio_unitario:C} = {detalle.Subtotal:C}");
+
+                if (detalle.TieneDescuento)
+                {
+                    sb.AppendLine($"  Descuento: {detalle.PorcentajeDescuento:F1}% (-{detalle.MontoDescuento:C})");
+                }
+            }
+
+            sb.AppendLine(new string('-', ancho));
+            sb.AppendLine();
+
+            // Totales
+            var totalDescuentos = venta.Detalles.Sum(d => d.MontoDescuento);
+            if (totalDescuentos > 0)
+            {
+                var subtotal = venta.Detalles.Sum(d => (decimal)d.precio_unitario * d.cantidad);
+                sb.AppendLine($"Subtotal:        {subtotal,15:C}");
+                sb.AppendLine($"Descuentos:      {totalDescuentos,15:C}");
+            }
+
+            sb.AppendLine($"TOTAL:           {venta.Monto,15:C}");
+            sb.AppendLine();
+
+            // Método de pago
+            sb.AppendLine($"Método de pago: {venta.MetodoPago}");
+            if (venta.MontoRecibido.HasValue)
+            {
+                sb.AppendLine($"Recibido:        {venta.MontoRecibido.Value,15:C}");
+                sb.AppendLine($"Vuelto:          {venta.Vuelto,15:C}");
+            }
+
+            if (!string.IsNullOrEmpty(venta.Observaciones))
+            {
+                sb.AppendLine();
+                sb.AppendLine($"Obs: {venta.Observaciones}");
+            }
+
+            sb.AppendLine();
+            sb.AppendLine(new string('=', ancho));
+            sb.AppendLine(CentrarTexto("¡Gracias por su compra!", ancho));
+
+            return sb.ToString();
+        }
+
+        private string CentrarTexto(string texto, int ancho)
+        {
+            if (texto.Length >= ancho) return texto;
+            int espacios = (ancho - texto.Length) / 2;
+            return new string(' ', espacios) + texto;
         }
 
         public void CancelarVenta()
@@ -355,12 +577,88 @@ namespace GGHardware.ViewModels
 
         public void BuscarProductoPorCodigo(string codigo)
         {
-            // Tu código existente
+            if (string.IsNullOrWhiteSpace(codigo))
+            {
+                MessageBox.Show("Ingrese un código de producto", "Advertencia",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // Buscar por código de barras, código interno o ID
+            var producto = _context.Producto
+                .FirstOrDefault(p => p.codigo_barras == codigo ||
+                                   p.codigo_interno == codigo ||
+                                   p.Id_Producto.ToString() == codigo);
+
+            if (producto == null)
+            {
+                MessageBox.Show($"No se encontró ningún producto con el código: {codigo}",
+                    "Producto no encontrado", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            // Agregar automáticamente al carrito
+            AgregarProducto(producto);
         }
 
         public void BuscarProducto()
         {
-            // Tu código existente
+            // Abrir ventana de búsqueda avanzada (opcional, por ahora solo mensaje)
+            MessageBox.Show("Funcionalidad de búsqueda avanzada\nUsa el campo 'Código' para búsqueda rápida",
+                "Búsqueda de productos", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        // NUEVO: Aplicar descuento a un item específico
+        public void AplicarDescuentoAItem(CarritoItem item, double porcentaje)
+        {
+            if (item == null) return;
+
+            if (porcentaje < 0 || porcentaje > 100)
+            {
+                MessageBox.Show("El porcentaje debe estar entre 0 y 100",
+                    "Descuento inválido", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            item.AplicarDescuentoPorcentaje(porcentaje);
+            OnPropertyChanged(nameof(Total));
+        }
+
+        // NUEVO: Aplicar descuento global a todos los items
+        public void AplicarDescuentoGlobal(double porcentaje)
+        {
+            if (!Carrito.Any())
+            {
+                MessageBox.Show("El carrito está vacío", "Advertencia",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (porcentaje < 0 || porcentaje > 100)
+            {
+                MessageBox.Show("El porcentaje debe estar entre 0 y 100",
+                    "Descuento inválido", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            foreach (var item in Carrito)
+            {
+                item.AplicarDescuentoPorcentaje(porcentaje);
+            }
+
+            OnPropertyChanged(nameof(Total));
+            MessageBox.Show($"Se aplicó un descuento del {porcentaje}% a todos los productos",
+                "Descuento aplicado", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        // NUEVO: Quitar todos los descuentos
+        public void QuitarTodosLosDescuentos()
+        {
+            foreach (var item in Carrito)
+            {
+                item.QuitarDescuento();
+            }
+            OnPropertyChanged(nameof(Total));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

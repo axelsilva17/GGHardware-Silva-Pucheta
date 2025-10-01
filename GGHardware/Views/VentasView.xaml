@@ -153,7 +153,6 @@
             </Setter>
         </Style>
 
-        <!-- Estilo para TextBox con placeholder -->
         <Style x:Key="PlaceholderTextBox" TargetType="TextBox">
             <Setter Property="Background" Value="{DynamicResource Background}"/>
             <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}"/>
@@ -195,7 +194,6 @@
             </Setter>
         </Style>
 
-        <!-- Estilo para ComboBox -->
         <Style x:Key="ModernComboBox" TargetType="ComboBox">
             <Setter Property="Background" Value="{DynamicResource Background}"/>
             <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}"/>
@@ -221,14 +219,28 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0"
-                           Text="Selección de Productos"
-                           FontSize="20"
-                           FontWeight="SemiBold"
-                           Foreground="{DynamicResource TextPrimary}"
-                           Margin="0,0,0,15"/>
+                <!-- Header con título y botón de historial -->
+                <Grid Grid.Row="0" Margin="0,0,0,15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-                <!-- NUEVO: Panel de búsqueda por código -->
+                    <TextBlock Grid.Column="0"
+                               Text="Selección de Productos"
+                               FontSize="20"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextPrimary}"
+                               VerticalAlignment="Center"/>
+
+                    <Button Grid.Column="1"
+                            Content="📋 Ver Historial"
+                            Style="{StaticResource SecondaryButton}"
+                            Click="VerHistorial_Click"
+                            ToolTip="Ver historial de ventas"/>
+                </Grid>
+
+                <!--  Panel de búsqueda por código -->
                 <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,15">
                     <TextBlock Text="Código:" 
                                VerticalAlignment="Center" 
@@ -264,7 +276,6 @@
                           GridLinesVisibility="Horizontal"
                           HorizontalGridLinesBrush="{DynamicResource TextSecondary}">
 
-                    <!-- Estilo para las cabeceras -->
                     <DataGrid.ColumnHeaderStyle>
                         <Style TargetType="DataGridColumnHeader">
                             <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
@@ -277,7 +288,6 @@
                         </Style>
                     </DataGrid.ColumnHeaderStyle>
 
-                    <!-- Estilo para las celdas -->
                     <DataGrid.CellStyle>
                         <Style TargetType="DataGridCell">
                             <Setter Property="BorderThickness" Value="0"/>
@@ -292,7 +302,6 @@
                         </Style>
                     </DataGrid.CellStyle>
 
-                    <!-- Estilo para las filas -->
                     <DataGrid.RowStyle>
                         <Style TargetType="DataGridRow">
                             <Style.Triggers>
@@ -342,10 +351,8 @@
                            Foreground="{DynamicResource TextPrimary}"
                            Margin="0,0,0,10"/>
 
-                <!-- PANEL AMPLIADO: Información del cliente y comprobante -->
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="200">
                     <StackPanel>
-                        <!-- Campo de búsqueda de cliente -->
                         <TextBox x:Name="txtBuscarCliente"
                                  Style="{StaticResource PlaceholderTextBox}"
                                  Margin="0,0,0,10" 
@@ -353,7 +360,6 @@
                                  GotFocus="TxtBuscarCliente_GotFocus"
                                  LostFocus="TxtBuscarCliente_LostFocus"/>
 
-                        <!-- NUEVO: Tipo de Comprobante -->
                         <TextBlock Text="Tipo de Comprobante:" 
                                    FontWeight="SemiBold" 
                                    Margin="0,0,0,5"
@@ -365,7 +371,6 @@
                                   Style="{StaticResource ModernComboBox}"
                                   Margin="0,0,0,10"/>
 
-                        <!-- NUEVO: Método de Pago -->
                         <TextBlock Text="Método de Pago:" 
                                    FontWeight="SemiBold" 
                                    Margin="0,0,0,5"
@@ -377,7 +382,6 @@
                                   Style="{StaticResource ModernComboBox}"
                                   Margin="0,0,0,10"/>
 
-                        <!-- NUEVO: Monto recibido (visible solo para efectivo) -->
                         <StackPanel Visibility="{Binding MostrarCampoVuelto, Converter={StaticResource BoolToVisibilityConverter}}">
                             <TextBlock Text="Monto Recibido:" 
                                        FontWeight="SemiBold" 
@@ -396,7 +400,6 @@
                                        Margin="0,0,0,10"/>
                         </StackPanel>
 
-                        <!-- NUEVO: Observaciones -->
                         <TextBlock Text="Observaciones:" 
                                    FontWeight="SemiBold" 
                                    Margin="0,0,0,5"
@@ -415,7 +418,6 @@
                     </StackPanel>
                 </ScrollViewer>
 
-                <!-- Carrito de compras -->
                 <StackPanel Grid.Row="2">
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                         <TextBlock Text="Productos en Carrito"
@@ -423,7 +425,6 @@
                                    Foreground="{DynamicResource TextPrimary}"
                                    VerticalAlignment="Center"/>
 
-                        <!-- NUEVOS: Botones de descuento -->
                         <Button Content="Desc. 5%" 
                                 Style="{StaticResource SmallButton}"
                                 Background="Orange"
@@ -465,7 +466,6 @@
                                                     <RowDefinition Height="Auto"/>
                                                 </Grid.RowDefinitions>
 
-                                                <!-- Fila 1: Nombre del producto -->
                                                 <TextBlock Grid.Row="0" 
                                                            Text="{Binding Nombre}"
                                                            Foreground="{DynamicResource TextPrimary}"
@@ -473,7 +473,6 @@
                                                            TextWrapping="Wrap"
                                                            Margin="0,0,0,5"/>
 
-                                                <!-- Fila 2: Controles -->
                                                 <Grid Grid.Row="1">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="Auto"/>
@@ -482,10 +481,8 @@
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
 
-                                                    <!-- Controles de cantidad -->
                                                     <StackPanel Grid.Column="0" 
                                                                 Orientation="Horizontal">
-                                                        <!-- Botón para quitar una unidad -->
                                                         <Button Content="-"
                                                                 Width="20"
                                                                 Height="20"
@@ -519,7 +516,6 @@
                                                             </Button.Style>
                                                         </Button>
 
-                                                        <!-- Cantidad -->
                                                         <TextBlock Text="{Binding Cantidad}" 
                                                                    Width="20"
                                                                    HorizontalAlignment="Center"
@@ -529,7 +525,6 @@
                                                                    VerticalAlignment="Center"
                                                                    Margin="2,0"/>
 
-                                                        <!-- Botón para agregar una unidad -->
                                                         <Button Content="+"
                                                                 Width="20"
                                                                 Height="20"
@@ -564,7 +559,6 @@
                                                         </Button>
                                                     </StackPanel>
 
-                                                    <!-- Precio unitario con descuento -->
                                                     <StackPanel Grid.Column="1" 
                                                                 Orientation="Vertical"
                                                                 Margin="10,0">
@@ -577,7 +571,6 @@
                                                                    Visibility="{Binding TieneDescuento, Converter={StaticResource BoolToVisibilityConverter}}"/>
                                                     </StackPanel>
 
-                                                    <!-- Subtotal -->
                                                     <TextBlock Grid.Column="2" 
                                                                Text="{Binding Subtotal, StringFormat=C}" 
                                                                Margin="5,0"
@@ -585,7 +578,6 @@
                                                                FontWeight="Bold"
                                                                VerticalAlignment="Center"/>
 
-                                                    <!-- Botón para eliminar todo -->
                                                     <Button Grid.Column="3"
                                                             Content="×"
                                                             Style="{StaticResource DangerButton}"
@@ -604,7 +596,6 @@
                     </Border>
                 </StackPanel>
 
-                <!-- Panel inferior con total y botones -->
                 <Border Grid.Row="3"
                         Background="{DynamicResource PrimaryBrush}"
                         CornerRadius="4"

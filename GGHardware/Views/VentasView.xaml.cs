@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using GGHardware.Models;
 using GGHardware.ViewModels;
 
@@ -33,18 +23,19 @@ namespace GGHardware.Views
             // Suscribirse a eventos para recargar datos
             this.Loaded += VentasView_Loaded;
             this.IsVisibleChanged += VentasView_IsVisibleChanged;
+
+            // NUEVO: Agregar atajos de teclado
+            this.KeyDown += VentasView_KeyDown;
         }
 
         private void VentasView_Loaded(object sender, RoutedEventArgs e)
         {
-            // Recargar clientes cuando la vista se carga por primera vez
             ViewModel.RecargarClientes();
             System.Diagnostics.Debug.WriteLine("VentasView cargada - Clientes recargados");
         }
 
         private void VentasView_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            // Recargar clientes cada vez que la vista se hace visible
             if ((bool)e.NewValue == true && ViewModel != null)
             {
                 ViewModel.RecargarClientes();
@@ -52,32 +43,55 @@ namespace GGHardware.Views
             }
         }
 
+        // NUEVO: Manejador de atajos de teclado
+        private void VentasView_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.F1:
+                    txtBuscarCliente.Focus();
+                    e.Handled = true;
+                    break;
+
+                case Key.F2:
+                    txtCodigoProducto.Focus();
+                    e.Handled = true;
+                    break;
+
+                case Key.F3:
+                    if (ViewModel.Carrito.Count > 0 && ViewModel.ClienteSeleccionado != null)
+                        FinalizarVenta_Click(sender, e);
+                    e.Handled = true;
+                    break;
+
+                case Key.Escape:
+                    CancelarVenta_Click(sender, e);
+                    e.Handled = true;
+                    break;
+            }
+        }
+
         private void CrearListaClientes()
         {
-            // Crear ListBox para mostrar sugerencias de clientes
             lstClientesSugerencias = new ListBox
             {
                 Visibility = Visibility.Collapsed,
-                Background = (Brush)FindResource("Surface"),
-                BorderBrush = (Brush)FindResource("PrimaryBrush"),
+                Background = (System.Windows.Media.Brush)FindResource("Surface"),
+                BorderBrush = (System.Windows.Media.Brush)FindResource("PrimaryBrush"),
                 BorderThickness = new Thickness(1),
                 MaxHeight = 150,
                 Margin = new Thickness(0, 5, 0, 0)
             };
 
-            // Acceder a la estructura correcta basada en tu XAML
             var mainGrid = (Grid)this.Content;
             var rightBorder = (Border)mainGrid.Children[1];
             var rightGrid = (Grid)rightBorder.Child;
 
-            // Configurar la posición en la fila 1
             Grid.SetRow(lstClientesSugerencias, 1);
             Grid.SetColumn(lstClientesSugerencias, 0);
 
-            // Agregar después del TextBox
             rightGrid.Children.Insert(2, lstClientesSugerencias);
 
-            // Evento de selección de cliente
             lstClientesSugerencias.SelectionChanged += LstClientesSugerencias_SelectionChanged;
         }
 
@@ -92,10 +106,8 @@ namespace GGHardware.Views
                 return;
             }
 
-            // Filtrar clientes
             ViewModel.FiltrarClientes(texto);
 
-            // Mostrar u ocultar lista de sugerencias
             if (ViewModel.ClientesFiltrados.Count > 0)
             {
                 lstClientesSugerencias.ItemsSource = ViewModel.ClientesFiltrados;
@@ -106,8 +118,7 @@ namespace GGHardware.Views
             {
                 lstClientesSugerencias.Visibility = Visibility.Collapsed;
 
-                // Si no hay resultados, mostrar mensaje temporal
-                if (texto.Length >= 2) // Solo si el usuario ha escrito al menos 2 caracteres
+                if (texto.Length >= 2)
                 {
                     System.Diagnostics.Debug.WriteLine($"No se encontraron clientes para: '{texto}'");
                 }
@@ -118,37 +129,17 @@ namespace GGHardware.Views
         {
             if (lstClientesSugerencias.SelectedItem is Cliente clienteSeleccionado)
             {
-                // Seleccionar cliente en el ViewModel
                 ViewModel.SeleccionarCliente(clienteSeleccionado);
-
-                // Actualizar texto del TextBox
                 txtBuscarCliente.Text = clienteSeleccionado.NombreCompleto;
-
-                // Ocultar lista de sugerencias
                 lstClientesSugerencias.Visibility = Visibility.Collapsed;
-
-                // Mostrar información del cliente seleccionado
-                MostrarInfoCliente();
             }
         }
 
-        private void MostrarInfoCliente()
-        {
-            if (ViewModel.ClienteSeleccionado != null)
-            {
-                var cliente = ViewModel.ClienteSeleccionado;
-                MessageBox.Show($"Cliente seleccionado:\nNombre: {cliente.nombre} {cliente.apellido}\nCUIT: {cliente.cuit}\nDirección: {cliente.direccion}\nCondición Fiscal: {cliente.condicion_fiscal}",
-                    "Cliente Seleccionado", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-        }
-
-        // Método público para forzar recarga (opcional, para llamar desde otras vistas)
         public void ForceReloadClientes()
         {
             ViewModel?.RecargarClientes();
         }
 
-        // Evento para el botón Agregar en el DataGrid
         private void AgregarProducto_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
@@ -158,7 +149,6 @@ namespace GGHardware.Views
             }
         }
 
-        // NUEVO: Evento para agregar una unidad más
         private void AgregarUnaUnidad_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
@@ -168,7 +158,6 @@ namespace GGHardware.Views
             }
         }
 
-        // NUEVO: Evento para quitar solo una unidad
         private void QuitarUnaUnidad_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
@@ -178,7 +167,6 @@ namespace GGHardware.Views
             }
         }
 
-        // Evento para el botón Quitar del carrito (quitar todo)
         private void QuitarProducto_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
@@ -188,8 +176,6 @@ namespace GGHardware.Views
             }
         }
 
-        // Evento para el botón Finalizar Venta
-        // Evento para el botón Finalizar Venta
         private void FinalizarVenta_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -202,7 +188,7 @@ namespace GGHardware.Views
                     "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        // Evento para el botón Cancelar
+
         private void CancelarVenta_Click(object sender, RoutedEventArgs e)
         {
             var resultado = MessageBox.Show("¿Está seguro que desea cancelar la venta?",
@@ -215,7 +201,6 @@ namespace GGHardware.Views
             }
         }
 
-        // Eventos para el placeholder del TextBox
         private void TxtBuscarCliente_GotFocus(object sender, RoutedEventArgs e)
         {
             // El placeholder se maneja automáticamente con el estilo XAML
@@ -223,47 +208,53 @@ namespace GGHardware.Views
 
         private void TxtBuscarCliente_LostFocus(object sender, RoutedEventArgs e)
         {
-            // Ocultar sugerencias cuando pierde el foco
             lstClientesSugerencias.Visibility = Visibility.Collapsed;
         }
-        // Evento KeyDown del TextBox de código de producto
+
+        //  Búsqueda por código con Enter
         private void TxtCodigoProducto_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                // Podés llamar al ViewModel acá
                 if (sender is TextBox textBox)
                 {
                     string codigo = textBox.Text;
                     ViewModel.BuscarProductoPorCodigo(codigo);
+                    textBox.Clear(); // Limpiar para siguiente escaneo
+                    textBox.Focus(); // Mantener foco para siguiente producto
                 }
             }
         }
 
-
+        // ACTUALIZADO: Botones de descuento globales
         private void AplicarDescuento5_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: lógica para aplicar descuento del 5%
-            MessageBox.Show("Aplicando descuento del 5%");
+            ViewModel.AplicarDescuentoGlobal(5);
         }
 
         private void AplicarDescuento10_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: lógica para aplicar descuento del 10%
-            MessageBox.Show("Aplicando descuento del 10%");
+            ViewModel.AplicarDescuentoGlobal(10);
         }
 
         private void AplicarDescuento15_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: lógica para aplicar descuento del 15%
-            MessageBox.Show("Aplicando descuento del 15%");
+            ViewModel.AplicarDescuentoGlobal(15);
         }
-        // Evento Click del botón Buscar
+
         private void BuscarProducto_Click(object sender, RoutedEventArgs e)
         {
-            // Podés abrir buscador de productos o ejecutar la lógica del VM
             ViewModel.BuscarProducto();
         }
 
+        private void VerHistorial_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Window.GetWindow(this) as MainWindow;
+            if (mainWindow != null)
+            {
+                mainWindow.MainContentBorder.Child = null;
+                mainWindow.MainContentBorder.Child = new HistorialVentasView();
+            }
+        }
     }
 }
