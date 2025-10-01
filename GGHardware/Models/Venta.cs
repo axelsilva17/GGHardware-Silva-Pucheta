@@ -19,16 +19,16 @@ namespace GGHardware.Models
 
         // Campos nuevos para comprobantes
         [MaxLength(20)]
-        public string NumeroComprobante { get; set; }
+        public string ?NumeroComprobante { get; set; }
 
         public int? IdTipoComprobante { get; set; }
 
-        public int PuntoVenta { get; set; } = 1;
+        public int ?PuntoVenta { get; set; } = 1;
 
         public int? NumeroSecuencial { get; set; }
 
         [MaxLength(50)]
-        public string MetodoPago { get; set; }
+        public string ?MetodoPago { get; set; }
 
         public double? MontoRecibido { get; set; }
 
@@ -37,10 +37,10 @@ namespace GGHardware.Models
         public double Vuelto => (MontoRecibido ?? 0) - Monto;
 
         [MaxLength(500)]
-        public string Observaciones { get; set; }
+        public string ?Observaciones { get; set; }
 
         [MaxLength(20)]
-        public string Estado { get; set; } = "Completada";
+        public string ?Estado { get; set; } = "Completada";
 
         // Claves foráneas
         public int id_Cliente { get; set; }
@@ -48,10 +48,10 @@ namespace GGHardware.Models
 
         // Propiedades de navegación
         [ForeignKey("id_Cliente")]
-        public virtual Cliente Cliente { get; set; }
+        public virtual Cliente ?Cliente { get; set; } 
 
         [ForeignKey("id_Usuario")]
-        public virtual Usuario Usuario { get; set; }
+        public virtual Usuario ?Usuario { get; set; } 
 
         [ForeignKey("IdTipoComprobante")]
         public virtual TipoComprobante ?TipoComprobante { get; set; }
@@ -69,7 +69,7 @@ namespace GGHardware.Models
         [NotMapped]
         public string NumeroComprobanteFormateado => string.IsNullOrEmpty(NumeroComprobante) ? "Sin número" : NumeroComprobante;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler ?PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

@@ -52,18 +52,16 @@ namespace GGHardware.Views
 
                 using (var context = new ApplicationDbContext())
                 {
-                    // ✅ Consulta corregida - Filtra por v.Fecha (de la tabla Venta)
                     var reporteDetalle = (from dv in context.DetalleVenta
                                           join v in context.Venta on dv.id_venta equals v.id_venta
                                           join c in context.Clientes on v.id_Cliente equals c.id_cliente
                                           join p in context.Producto on dv.id_producto equals p.Id_Producto
-                                          where v.Fecha >= fechaInicio     // ✅ Usa v.Fecha (de Venta)
-                                             && v.Fecha <= fechaFin        // ✅ Usa v.Fecha (de Venta)
-                                             && dv.Activo == true
+                                          where v.Fecha >= fechaInicio
+                                             && v.Fecha <= fechaFin
                                           orderby v.Fecha descending
                                           select new ReporteVentaDetalle
                                           {
-                                              Fecha = v.Fecha,              // ✅ Usa v.Fecha
+                                              Fecha = v.Fecha,
                                               Cliente = c.nombre + " " + c.apellido,
                                               Producto = dv.nombre_producto,
                                               Cantidad = dv.cantidad,
@@ -79,7 +77,8 @@ namespace GGHardware.Views
                         txtRegistrosTotal.Text = "Total de registros: 0";
                         txtTotalGeneral.Text = "$0.00";
 
-                        MessageBox.Show("No se encontraron ventas en el período seleccionado.",
+                        MessageBox.Show($"No se encontraron ventas en el período seleccionado.\n\n" +
+                                      $"Período: {fechaInicio:dd/MM/yyyy} - {fechaFin:dd/MM/yyyy}",
                             "Sin resultados", MessageBoxButton.OK, MessageBoxImage.Information);
                         return;
                     }

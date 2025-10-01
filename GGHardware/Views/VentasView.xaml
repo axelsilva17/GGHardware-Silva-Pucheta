@@ -361,7 +361,7 @@
                         <ComboBox x:Name="cmbTipoComprobante" 
                                   ItemsSource="{Binding TiposComprobante}"
                                   SelectedItem="{Binding TipoComprobanteSeleccionado}"
-                                  DisplayMemberPath="nombre"
+                                  DisplayMemberPath="Nombre"
                                   Style="{StaticResource ModernComboBox}"
                                   Margin="0,0,0,10"/>
 

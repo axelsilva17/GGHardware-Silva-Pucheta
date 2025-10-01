@@ -189,11 +189,19 @@ namespace GGHardware.Views
         }
 
         // Evento para el botón Finalizar Venta
+        // Evento para el botón Finalizar Venta
         private void FinalizarVenta_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.FinalizarVenta();
+            try
+            {
+                ViewModel.FinalizarVenta();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error inesperado:\n{ex.Message}",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
-
         // Evento para el botón Cancelar
         private void CancelarVenta_Click(object sender, RoutedEventArgs e)
         {

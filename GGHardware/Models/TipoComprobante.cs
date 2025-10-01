@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GGHardware.Models
 {
-    [Table("TipoComprobante")]
+    [Table("TiposComprobante")]
     public class TipoComprobante
     {
         [Key]

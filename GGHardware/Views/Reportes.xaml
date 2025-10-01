@@ -83,7 +83,7 @@
                                Foreground="{DynamicResource TextSecondary}"
                                Margin="0,0,0,5"/>
                     <TextBlock x:Name="txtVentasDia"
-                               
+                               Text="$0.00"
                                FontSize="26"
                                FontWeight="Bold"
                                Foreground="{DynamicResource PrimaryBrush}"/>
@@ -112,7 +112,7 @@
                                Foreground="{DynamicResource TextSecondary}"
                                Margin="0,0,0,5"/>
                     <TextBlock x:Name="txtProductosVendidos"
-                             
+                               Text="0"
                                FontSize="26"
                                FontWeight="Bold"
                                Foreground="{DynamicResource PrimaryBrush}"/>
@@ -141,7 +141,7 @@
                                Foreground="{DynamicResource TextSecondary}"
                                Margin="0,0,0,5"/>
                     <TextBlock x:Name="txtClientesNuevos"
-                           
+                               Text="0"
                                FontSize="26"
                                FontWeight="Bold"
                                Foreground="{DynamicResource PrimaryBrush}"/>
@@ -149,7 +149,7 @@
             </Border>
         </UniformGrid>
 
-        <!-- Filtros (sin botones de exportación) -->
+        <!-- Filtros -->
         <Border Grid.Row="2"
                 Background="{DynamicResource Surface}"
                 Padding="20"
@@ -190,6 +190,7 @@
 
                 <Button x:Name="btnAplicarFiltro"
                         Content="Aplicar Filtro"
+                        Click="btnAplicarFiltro_Click"
                         Background="{DynamicResource PrimaryBrush}"
                         Foreground="{DynamicResource PrimaryForegroundBrush}"
                         BorderThickness="0"
