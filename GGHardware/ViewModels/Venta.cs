@@ -795,8 +795,6 @@ namespace GGHardware.ViewModels
                     UseShellExecute = true
                 });
 
-                MessageBox.Show($"Se abrió Gmail en su navegador para enviar el comprobante a:\n{venta.Cliente.email}\n\nPuede adjuntar el PDF manualmente si lo desea.",
-                    "Gmail Abierto", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
