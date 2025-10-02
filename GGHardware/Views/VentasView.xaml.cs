@@ -256,5 +256,6 @@ namespace GGHardware.Views
                 mainWindow.MainContentBorder.Child = new HistorialVentasView();
             }
         }
+  
     }
 }

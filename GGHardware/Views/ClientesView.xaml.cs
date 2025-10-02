@@ -66,6 +66,18 @@ namespace GGHardware.Views
         }
 
         /// <summary>
+        /// Valida si el formato del email es correcto.
+        /// </summary>
+        private bool ValidarEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return true; // Email opcional
+
+            string patron = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+            return Regex.IsMatch(email, patron);
+        }
+
+        /// <summary>
         /// Carga todos los clientes de la base de datos y actualiza el DataGrid.
         /// </summary>
         private void CargarClientes()
@@ -120,6 +132,12 @@ namespace GGHardware.Views
                 MessageBox.Show("La localidad solo debe contener letras.", "Error de Validación", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
+            // Validación de email
+            if (!string.IsNullOrWhiteSpace(txtEmail.Text) && !ValidarEmail(txtEmail.Text))
+            {
+                MessageBox.Show("El formato del email no es válido.", "Error de Validación", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
 
             var cliente = new GGHardware.Models.Cliente
             {
@@ -130,6 +148,7 @@ namespace GGHardware.Views
                 direccion = txtDireccion.Text,
                 provincia = txtProvincia.Text,
                 localidad = txtLocalidad.Text,
+                email = txtEmail.Text,
                 condicion_fiscal = (cmbCondicionFiscal.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "SinCondicion",
             };
 
@@ -172,6 +191,7 @@ namespace GGHardware.Views
             txtDireccion.Text = string.Empty;
             txtProvincia.Text = string.Empty;
             txtLocalidad.Text = string.Empty;
+            txtEmail.Text = string.Empty;
             cmbCondicionFiscal.SelectedIndex = -1; // Deselecciona la opción
             txtNombre.Focus();
         }

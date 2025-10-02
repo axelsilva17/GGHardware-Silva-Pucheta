@@ -13,10 +13,8 @@ namespace GGHardware.Models
     public class CarritoItem : INotifyPropertyChanged
     {
         public int IdProducto { get; set; }
-
         public string Nombre { get; set; }
-
-        public double Precio { get; set; }
+        public decimal Precio { get; set; }
 
         private int _cantidad;
         public int Cantidad
@@ -31,8 +29,8 @@ namespace GGHardware.Models
         }
 
         // NUEVO: Para manejar descuentos individuales
-        private double? _precioConDescuento;
-        public double? PrecioConDescuento
+        private decimal? _precioConDescuento;
+        public decimal? PrecioConDescuento
         {
             get => _precioConDescuento;
             set
@@ -46,17 +44,17 @@ namespace GGHardware.Models
         }
 
         // Propiedades calculadas
-        public double Subtotal => (PrecioConDescuento ?? Precio) * Cantidad;
+        public decimal Subtotal => (PrecioConDescuento ?? Precio) * Cantidad;
 
         [NotMapped]
         public bool TieneDescuento => PrecioConDescuento.HasValue && PrecioConDescuento < Precio;
 
         [NotMapped]
         public double PorcentajeDescuento => TieneDescuento ?
-            Math.Round(((Precio - PrecioConDescuento.Value) / Precio) * 100, 2) : 0;
+            (double)(((Precio - PrecioConDescuento.Value) / Precio) * 100) : 0;
 
         [NotMapped]
-        public double MontoDescuento => TieneDescuento ?
+        public decimal MontoDescuento => TieneDescuento ?
             (Precio - PrecioConDescuento.Value) * Cantidad : 0;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -70,8 +68,7 @@ namespace GGHardware.Models
         public void AplicarDescuentoPorcentaje(double porcentaje)
         {
             if (porcentaje < 0 || porcentaje > 100) return;
-
-            var descuento = (Precio * porcentaje) / 100;
+            var descuento = (Precio * (decimal)porcentaje) / 100;
             PrecioConDescuento = Precio - descuento;
         }
 

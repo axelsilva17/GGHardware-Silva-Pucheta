@@ -90,14 +90,28 @@ namespace GGHardware.ViewModels
         }
 
         public decimal MontoTotal
-{
-    get
-    {
-        if (Ventas == null) return 0;
-        return Ventas.Where(v => v.Estado != "Anulada")
-                     .Sum(v => (decimal)v.Monto);
-    }
-}
+        {
+            get
+            {
+                try
+                {
+                    if (Ventas == null || Ventas.Count == 0) return 0;
+
+                    decimal total = 0;
+                    foreach (var venta in Ventas.Where(v => v.Estado != "Anulada"))
+                    {
+                        total += venta.Monto;
+                    }
+                    return total;
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error en MontoTotal: {ex.Message}");
+                    return 0;
+                }
+            }
+        }
+
         private void CargarClientes()
         {
             Clientes.Clear();
@@ -143,10 +157,13 @@ namespace GGHardware.ViewModels
                 {
                     Ventas.Add(venta);
                 }
+
+                // Notificar cambio en MontoTotal después de cargar ventas
+                OnPropertyChanged(nameof(MontoTotal));
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al buscar ventas:\n{ex.Message}",
+                MessageBox.Show($"Error al buscar ventas:\n{ex.Message}\n\nStack Trace:\n{ex.StackTrace}",
                     "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }

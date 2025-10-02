@@ -6,6 +6,15 @@ using System.Windows;
 using GGHardware.Data;
 using GGHardware.Models;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
+using System.Net;
+using System.Net.Mail;
+using Microsoft.Win32;
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
+using iText.Kernel.Font;
+using iText.IO.Font.Constants;
 
 namespace GGHardware.ViewModels
 {
@@ -18,6 +27,8 @@ namespace GGHardware.ViewModels
         public ObservableCollection<CarritoItem> Carrito { get; set; }
         public ObservableCollection<TipoComprobante> TiposComprobante { get; set; }
         public ObservableCollection<MetodoPago> MetodosPago { get; set; }
+        public ObservableCollection<DetalleVenta> DetallesVenta { get; set; }
+
 
         private Cliente _clienteSeleccionado;
         public Cliente ClienteSeleccionado
@@ -30,6 +41,11 @@ namespace GGHardware.ViewModels
             }
         }
 
+ 
+       
+            
+         
+     
         private TipoComprobante _tipoComprobanteSeleccionado;
         public TipoComprobante TipoComprobanteSeleccionado
         {
@@ -53,8 +69,8 @@ namespace GGHardware.ViewModels
             }
         }
 
-        private double _montoRecibido;
-        public double MontoRecibido
+        private decimal _montoRecibido;
+        public decimal MontoRecibido
         {
             get => _montoRecibido;
             set
@@ -78,9 +94,9 @@ namespace GGHardware.ViewModels
 
         public bool MostrarCampoVuelto => MetodoPagoSeleccionado?.nombre?.ToLower() == "efectivo";
 
-        public double Vuelto => MontoRecibido - Total;
+        public decimal Vuelto => MontoRecibido - Total;
 
-        public double Total => Carrito.Sum(item => (double)item.Subtotal);
+        public decimal Total => Carrito.Sum(item => item.Subtotal);
 
         public VentasViewModel()
         {
@@ -90,8 +106,8 @@ namespace GGHardware.ViewModels
             Carrito = new ObservableCollection<CarritoItem>();
             TiposComprobante = new ObservableCollection<TipoComprobante>();
             MetodosPago = new ObservableCollection<MetodoPago>();
+            DetallesVenta = new ObservableCollection<DetalleVenta>();
 
-            // Suscribirse a cambios en el carrito para actualizar la vista de productos
             Carrito.CollectionChanged += (s, e) => OnPropertyChanged(nameof(Productos));
 
             CargarProductos();
@@ -195,27 +211,25 @@ namespace GGHardware.ViewModels
             ClienteSeleccionado = cliente;
         }
 
-        // NUEVO: Método para obtener stock disponible de un producto
-        public double ObtenerStockDisponible(int idProducto)
+        public int ObtenerStockDisponible(int idProducto)
         {
             var productoDb = _context.Producto.Find(idProducto);
             if (productoDb == null) return 0;
 
             var itemEnCarrito = Carrito.FirstOrDefault(c => c.IdProducto == idProducto);
-            double cantidadEnCarrito = (double)(itemEnCarrito?.Cantidad ?? 0);
+            int cantidadEnCarrito = itemEnCarrito?.Cantidad ?? 0;
 
-            return (double)productoDb.Stock - cantidadEnCarrito;
+            return (int)productoDb.Stock - cantidadEnCarrito;
         }
 
         public void AgregarProducto(Producto producto)
         {
-            // Obtener stock disponible actual
             var stockDisponible = ObtenerStockDisponible(producto.Id_Producto);
 
             if (stockDisponible <= 0)
             {
                 var cantidadEnCarrito = Carrito.FirstOrDefault(c => c.IdProducto == producto.Id_Producto)?.Cantidad ?? 0;
-                MessageBox.Show($"No hay más stock disponible de '{producto.Nombre}'.\nStock total: {producto.Stock}\nYa en carrito: {cantidadEnCarrito}",
+                MessageBox.Show($"No hay más stock disponible de '{producto.Nombre}'.\nStock total: {(int)producto.Stock}...Ya en carrito: {cantidadEnCarrito}",
                     "Stock insuficiente", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
@@ -232,20 +246,17 @@ namespace GGHardware.ViewModels
                 {
                     IdProducto = producto.Id_Producto,
                     Nombre = producto.Nombre,
-                    Precio = (double)producto.precio_venta,
+                    Precio = (int)producto.precio_venta,
                     Cantidad = 1
                 });
             }
 
             OnPropertyChanged(nameof(Total));
-
-            // Forzar actualización del DataGrid
             RefrescarProductos();
         }
 
         private void RefrescarProductos()
         {
-            // Crear lista temporal
             var tempList = Productos.ToList();
             Productos.Clear();
             foreach (var prod in tempList)
@@ -256,7 +267,6 @@ namespace GGHardware.ViewModels
 
         public void AgregarUnaUnidad(CarritoItem item)
         {
-            // Verificar stock disponible
             var stockDisponible = ObtenerStockDisponible(item.IdProducto);
 
             if (stockDisponible <= 0)
@@ -324,7 +334,6 @@ namespace GGHardware.ViewModels
                 return;
             }
 
-            // Validar monto recibido si es en efectivo
             if (MostrarCampoVuelto && MontoRecibido < Total)
             {
                 MessageBox.Show("El monto recibido no puede ser menor al total", "Advertencia",
@@ -334,7 +343,6 @@ namespace GGHardware.ViewModels
 
             try
             {
-                // 1. Validar stock ANTES de guardar
                 foreach (var item in Carrito)
                 {
                     var producto = _context.Producto.Find(item.IdProducto);
@@ -353,24 +361,22 @@ namespace GGHardware.ViewModels
                     }
                 }
 
-                // 2. Crear la venta (cabecera)
                 var venta = new Venta
                 {
                     id_Cliente = ClienteSeleccionado.id_cliente,
-                    id_Usuario = 1, // TODO: Obtener usuario logueado
+                    id_Usuario = 1,
                     Fecha = DateTime.Now,
                     Monto = Total,
-                    IdTipoComprobante = TipoComprobanteSeleccionado.id_tipo, // Ya es int, se asigna directamente
+                    IdTipoComprobante = TipoComprobanteSeleccionado.id_tipo,
                     MetodoPago = MetodoPagoSeleccionado?.nombre ?? string.Empty,
-                    MontoRecibido = MostrarCampoVuelto ? MontoRecibido : (double?)null,
+                    MontoRecibido = MostrarCampoVuelto ? MontoRecibido : (decimal?)null,
                     Observaciones = Observaciones ?? string.Empty,
                     Estado = "Completada"
                 };
 
                 _context.Venta.Add(venta);
-                _context.SaveChanges(); // Guardar para obtener el id_venta
+                _context.SaveChanges();
 
-                // 3. Crear los detalles de venta Y DESCONTAR STOCK
                 foreach (var item in Carrito)
                 {
                     var detalle = new DetalleVenta
@@ -379,17 +385,16 @@ namespace GGHardware.ViewModels
                         id_producto = item.IdProducto,
                         nombre_producto = item.Nombre ?? "Sin nombre",
                         cantidad = item.Cantidad,
-                        precio_unitario = (decimal)item.Precio,
-                        precio_con_descuento = item.PrecioConDescuento.HasValue ? (decimal)item.PrecioConDescuento.Value : (decimal)item.Precio,
+                        precio_unitario = item.Precio,
+                        precio_con_descuento = item.PrecioConDescuento ?? item.Precio,
                         Activo = true
                     };
                     _context.DetalleVenta.Add(detalle);
 
-                    // DESCONTAR STOCK
                     var producto = _context.Producto.Find(item.IdProducto);
                     if (producto != null)
                     {
-                        producto.Stock -= (int)item.Cantidad;
+                        producto.Stock -= item.Cantidad;
                     }
                 }
 
@@ -399,11 +404,8 @@ namespace GGHardware.ViewModels
                 MessageBox.Show($"Venta registrada correctamente\nTotal: {Total:C}{mensajeVuelto}",
                     "Venta Exitosa", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                // Limpiar todo y recargar productos para actualizar stock en la vista
                 CancelarVenta();
                 CargarProductos();
-
-                // Actualizar visualmente todos los productos
                 OnPropertyChanged(nameof(Productos));
             }
             catch (Exception ex)
@@ -414,7 +416,6 @@ namespace GGHardware.ViewModels
             }
         }
 
-        // NUEVO: Generar ticket/comprobante de venta
         public void GenerarTicket(int idVenta)
         {
             try
@@ -434,31 +435,74 @@ namespace GGHardware.ViewModels
                     return;
                 }
 
-                // Generar ticket en formato texto
-                var ticket = GenerarTextoTicket(venta);
-
-                // Mostrar en ventana o imprimir
-                var ventanaTicket = new Window
+                // Mostrar menú de opciones
+                var ventanaOpciones = new Window
                 {
-                    Title = "Comprobante de Venta",
-                    Width = 400,
-                    Height = 600,
-                    WindowStartupLocation = WindowStartupLocation.CenterScreen
+                    Title = "Opciones de Comprobante",
+                    Width = 350,
+                    Height = 250,
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                    ResizeMode = ResizeMode.NoResize
                 };
 
-                var scrollViewer = new System.Windows.Controls.ScrollViewer();
-                var textBlock = new System.Windows.Controls.TextBlock
+                var stack = new System.Windows.Controls.StackPanel
                 {
-                    Text = ticket,
-                    FontFamily = new System.Windows.Media.FontFamily("Courier New"),
-                    FontSize = 12,
-                    Padding = new Thickness(20),
-                    TextWrapping = TextWrapping.Wrap
+                    Margin = new Thickness(20)
                 };
 
-                scrollViewer.Content = textBlock;
-                ventanaTicket.Content = scrollViewer;
-                ventanaTicket.ShowDialog();
+                var titulo = new System.Windows.Controls.TextBlock
+                {
+                    Text = $"Comprobante de Venta #{venta.id_venta}",
+                    FontSize = 16,
+                    FontWeight = System.Windows.FontWeights.Bold,
+                    Margin = new Thickness(0, 0, 0, 20)
+                };
+                stack.Children.Add(titulo);
+
+                // Botón Ver en pantalla
+                var btnVer = new System.Windows.Controls.Button
+                {
+                    Content = "Ver en Pantalla",
+                    Height = 40,
+                    Margin = new Thickness(0, 5, 0, 5)
+                };
+                btnVer.Click += (s, e) =>
+                {
+                    MostrarEnPantalla(venta);
+                    ventanaOpciones.Close();
+                };
+                stack.Children.Add(btnVer);
+
+                // Botón Guardar como PDF
+                var btnPDF = new System.Windows.Controls.Button
+                {
+                    Content = "Guardar como PDF",
+                    Height = 40,
+                    Margin = new Thickness(0, 5, 0, 5)
+                };
+                btnPDF.Click += (s, e) =>
+                {
+                    GuardarComoPDF(venta);
+                    ventanaOpciones.Close();
+                };
+                stack.Children.Add(btnPDF);
+
+                // Botón Enviar por Email
+                var btnEmail = new System.Windows.Controls.Button
+                {
+                    Content = "Enviar por Email",
+                    Height = 40,
+                    Margin = new Thickness(0, 5, 0, 5)
+                };
+                btnEmail.Click += (s, e) =>
+                {
+                    EnviarComprobantePorEmail(venta);
+                    ventanaOpciones.Close();
+                };
+                stack.Children.Add(btnEmail);
+
+                ventanaOpciones.Content = stack;
+                ventanaOpciones.ShowDialog();
             }
             catch (Exception ex)
             {
@@ -472,27 +516,23 @@ namespace GGHardware.ViewModels
             var sb = new System.Text.StringBuilder();
             var ancho = 40;
 
-            // Encabezado
             sb.AppendLine(CentrarTexto("GGHardware", ancho));
             sb.AppendLine(CentrarTexto("9 de Julio 1890", ancho));
             sb.AppendLine(new string('=', ancho));
             sb.AppendLine();
 
-            // Información del comprobante
             sb.AppendLine($"Tipo: {venta.TipoComprobanteNombre}");
             sb.AppendLine($"Nro: {venta.NumeroComprobanteFormateado}");
             sb.AppendLine($"Fecha: {venta.Fecha:dd/MM/yyyy HH:mm}");
             sb.AppendLine($"Vendedor: {venta.Usuario?.Nombre ?? "N/A"}");
             sb.AppendLine();
 
-            // Cliente
             sb.AppendLine($"Cliente: {venta.ClienteNombre}");
             if (venta.Cliente != null && !string.IsNullOrEmpty(venta.Cliente.cuit))
                 sb.AppendLine($"CUIT: {venta.Cliente.cuit}");
             sb.AppendLine(new string('-', ancho));
             sb.AppendLine();
 
-            // Detalle de productos
             sb.AppendLine("PRODUCTOS");
             sb.AppendLine(new string('-', ancho));
 
@@ -510,11 +550,10 @@ namespace GGHardware.ViewModels
             sb.AppendLine(new string('-', ancho));
             sb.AppendLine();
 
-            // Totales
             var totalDescuentos = venta.Detalles.Sum(d => d.MontoDescuento);
             if (totalDescuentos > 0)
             {
-                var subtotal = venta.Detalles.Sum(d => (decimal)d.precio_unitario * d.cantidad);
+                var subtotal = venta.Detalles.Sum(d => d.precio_unitario * d.cantidad);
                 sb.AppendLine($"Subtotal:        {subtotal,15:C}");
                 sb.AppendLine($"Descuentos:      {totalDescuentos,15:C}");
             }
@@ -522,7 +561,6 @@ namespace GGHardware.ViewModels
             sb.AppendLine($"TOTAL:           {venta.Monto,15:C}");
             sb.AppendLine();
 
-            // Método de pago
             sb.AppendLine($"Método de pago: {venta.MetodoPago}");
             if (venta.MontoRecibido.HasValue)
             {
@@ -559,7 +597,6 @@ namespace GGHardware.ViewModels
                 Observaciones = string.Empty;
                 MontoRecibido = 0;
 
-                // Reseleccionar los valores por defecto
                 if (TiposComprobante.Any())
                     TipoComprobanteSeleccionado = TiposComprobante.First();
 
@@ -584,7 +621,6 @@ namespace GGHardware.ViewModels
                 return;
             }
 
-            // Buscar por código de barras, código interno o ID
             var producto = _context.Producto
                 .FirstOrDefault(p => p.codigo_barras == codigo ||
                                    p.codigo_interno == codigo ||
@@ -597,18 +633,15 @@ namespace GGHardware.ViewModels
                 return;
             }
 
-            // Agregar automáticamente al carrito
             AgregarProducto(producto);
         }
 
         public void BuscarProducto()
         {
-            // Abrir ventana de búsqueda avanzada (opcional, por ahora solo mensaje)
             MessageBox.Show("Funcionalidad de búsqueda avanzada\nUsa el campo 'Código' para búsqueda rápida",
                 "Búsqueda de productos", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        // NUEVO: Aplicar descuento a un item específico
         public void AplicarDescuentoAItem(CarritoItem item, double porcentaje)
         {
             if (item == null) return;
@@ -624,7 +657,6 @@ namespace GGHardware.ViewModels
             OnPropertyChanged(nameof(Total));
         }
 
-        // NUEVO: Aplicar descuento global a todos los items
         public void AplicarDescuentoGlobal(double porcentaje)
         {
             if (!Carrito.Any())
@@ -651,7 +683,142 @@ namespace GGHardware.ViewModels
                 "Descuento aplicado", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        // NUEVO: Quitar todos los descuentos
+
+
+        //Metodos para manejar envios de coomprobantes*******
+        private void MostrarEnPantalla(Venta venta)
+        {
+            var ticket = GenerarTextoTicket(venta);
+
+            var ventanaTicket = new Window
+            {
+                Title = "Comprobante de Venta",
+                Width = 400,
+                Height = 600,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+
+            var scrollViewer = new System.Windows.Controls.ScrollViewer();
+            var textBlock = new System.Windows.Controls.TextBlock
+            {
+                Text = ticket,
+                FontFamily = new System.Windows.Media.FontFamily("Courier New"),
+                FontSize = 12,
+                Padding = new Thickness(20),
+                TextWrapping = TextWrapping.Wrap
+            };
+
+            scrollViewer.Content = textBlock;
+            ventanaTicket.Content = scrollViewer;
+            ventanaTicket.ShowDialog();
+        }
+        
+        private void GuardarComoPDF(Venta venta)
+        {
+            var saveDialog = new SaveFileDialog
+            {
+                Filter = "PDF files (*.pdf)|*.pdf",
+                FileName = $"Comprobante_{venta.id_venta}_{DateTime.Now:yyyyMMdd_HHmmss}.pdf",
+                DefaultExt = "pdf"
+            };
+
+            if (saveDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    using (var writer = new PdfWriter(saveDialog.FileName))
+                    using (var pdf = new PdfDocument(writer))
+                    using (var document = new Document(pdf))
+                    {
+                        var font = PdfFontFactory.CreateFont(StandardFonts.COURIER);
+                        document.SetFont(font).SetFontSize(10);
+
+                        var texto = GenerarTextoTicket(venta);
+                        document.Add(new Paragraph(texto));
+                    }
+
+                    MessageBox.Show($"Comprobante guardado exitosamente en:\n{saveDialog.FileName}",
+                        "PDF Generado", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    if (MessageBox.Show("¿Desea abrir el archivo PDF?", "Abrir PDF",
+                        MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    {
+                        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                        {
+                            FileName = saveDialog.FileName,
+                            UseShellExecute = true
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error al guardar PDF:\n{ex.Message}",
+                        "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private void EnviarComprobantePorEmail(Venta venta)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(venta.Cliente?.email))
+                {
+                    MessageBox.Show("El cliente no tiene un email registrado.",
+                        "Email no disponible", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Generar el contenido del ticket
+                string contenidoTicket = GenerarTextoTicket(venta);
+
+                // Preparar asunto y cuerpo del email
+                string asunto = Uri.EscapeDataString($"Comprobante de Venta #{venta.id_venta} - GGHardware");
+
+                string cuerpoEmail = $"Estimado/a {venta.Cliente.NombreCompleto},\n\n" +
+                                   $"Adjuntamos el comprobante de su compra realizada el {venta.Fecha:dd/MM/yyyy HH:mm}.\n\n" +
+                                   "----------------------------------------\n\n" +
+                                   contenidoTicket + "\n\n" +
+                                   "----------------------------------------\n\n" +
+                                   "Gracias por su compra.\n\n" +
+                                   "Saludos,\nGGHardware";
+
+                string cuerpo = Uri.EscapeDataString(cuerpoEmail);
+
+                // Construir URL de Gmail
+                string gmailUrl = $"https://mail.google.com/mail/?view=cm&fs=1&to={venta.Cliente.email}&su={asunto}&body={cuerpo}";
+
+                // Abrir Gmail en el navegador
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = gmailUrl,
+                    UseShellExecute = true
+                });
+
+                MessageBox.Show($"Se abrió Gmail en su navegador para enviar el comprobante a:\n{venta.Cliente.email}\n\nPuede adjuntar el PDF manualmente si lo desea.",
+                    "Gmail Abierto", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir Gmail:\n{ex.Message}",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void GuardarPDFTemporal(Venta venta, string rutaArchivo)
+        {
+            using (var writer = new PdfWriter(rutaArchivo))
+            using (var pdf = new PdfDocument(writer))
+            using (var document = new Document(pdf))
+            {
+                var font = PdfFontFactory.CreateFont(StandardFonts.COURIER);
+                document.SetFont(font).SetFontSize(10);
+                var texto = GenerarTextoTicket(venta);
+                document.Add(new Paragraph(texto));
+            }
+        }
+
+        //************************************************/
         public void QuitarTodosLosDescuentos()
         {
             foreach (var item in Carrito)
@@ -666,5 +833,60 @@ namespace GGHardware.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+
+        private void CargarDetallesVenta()
+        {
+            DetallesVenta.Clear();
+
+            if (VentaSeleccionada == null) return;
+
+            try
+            {
+                var detalles = _context.DetalleVenta
+                    .Include(d => d.Producto)
+                    .Where(d => d.id_venta == VentaSeleccionada.id_venta && d.Activo)
+                    .ToList();
+
+                foreach (var detalle in detalles)
+                {
+                    DetallesVenta.Add(detalle);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar detalles:\n{ex.Message}",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private Venta _ventaSeleccionada;
+        public Venta VentaSeleccionada
+        {
+            get => _ventaSeleccionada;
+            set
+            {
+                _ventaSeleccionada = value;
+                OnPropertyChanged(nameof(VentaSeleccionada));
+                CargarDetallesVenta();
+            }
+        }
+        public void ReimprimirComprobante()
+        {
+            if (VentaSeleccionada == null)
+            {
+                MessageBox.Show("Seleccione una venta para imprimir",
+                    "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // Usar el mismo método del ViewModel de ventas
+            var ventasVM = new VentasViewModel();
+            ventasVM.GenerarTicket(VentaSeleccionada.id_venta);
+        }
+
+      
+
+
     }
 }

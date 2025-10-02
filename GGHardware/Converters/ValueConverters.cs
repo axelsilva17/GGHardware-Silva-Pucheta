@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Data;
 using System.Collections.ObjectModel;
 using GGHardware.Models;
-using GGHardware.Converters;
 
 namespace GGHardware.Converters
 {
@@ -15,7 +14,6 @@ namespace GGHardware.Converters
         {
             bool isInverse = parameter?.ToString() == "Inverse";
             bool isNull = value == null;
-
             if (isInverse)
             {
                 return isNull ? Visibility.Visible : Visibility.Collapsed;
@@ -25,7 +23,6 @@ namespace GGHardware.Converters
                 return isNull ? Visibility.Collapsed : Visibility.Visible;
             }
         }
-
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
@@ -38,7 +35,6 @@ namespace GGHardware.Converters
         {
             return value != null;
         }
-
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
@@ -51,14 +47,13 @@ namespace GGHardware.Converters
         {
             if (value is ObservableCollection<Venta> ventas)
             {
-                // Convertir explícitamente a decimal para evitar problemas de tipos
+                // Usar double en lugar de decimal para coincidir con el tipo de Monto
                 var total = ventas.Where(v => v.Estado != "Anulada")
-                                  .Sum(v => (decimal)v.Monto);
+                                  .Sum(v => v.Monto);
                 return total.ToString("C", culture);
             }
             return "$0.00";
         }
-
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();

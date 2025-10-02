@@ -12,6 +12,7 @@ namespace GGHardware.Models
         public int id_cliente { get; set; }
 
         public bool Activo { get; set; } = true;
+        public string ?email { get; set; }
 
         [MaxLength(11)]
         public required string cuit { get; set; }

@@ -12,7 +12,6 @@
         <!-- Convertidores -->
         <local:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
         <local:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
-        <local:SumMontoConverter x:Key="SumMontoConverter"/>
 
         <Style x:Key="CardStyle" TargetType="Border">
             <Setter Property="Background" Value="{DynamicResource Surface}"/>
@@ -133,7 +132,7 @@
 
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ID" Binding="{Binding id_venta}" Width="60"/>
-                            <DataGridTextColumn Header="Fecha" Binding="{Binding Fecha, StringFormat=dd/MM/yyyy HH:mm}" Width="140"/>
+                            <DataGridTextColumn Header="Fecha" Binding="{Binding Fecha, StringFormat='dd/MM/yyyy HH:mm'}" Width="140"/>
                             <DataGridTextColumn Header="Cliente" Binding="{Binding ClienteNombre}" Width="*"/>
                             <DataGridTextColumn Header="Total" Binding="{Binding Monto, StringFormat=C}" Width="100"/>
                             <DataGridTextColumn Header="Comprobante" Binding="{Binding TipoComprobanteNombre}" Width="120"/>
@@ -163,13 +162,13 @@
                         <StackPanel>
                             <!-- Informacion de la venta -->
                             <StackPanel Visibility="{Binding VentaSeleccionada, Converter={StaticResource NullToVisibilityConverter}}">
-                                <TextBlock Text="{Binding VentaSeleccionada.ClienteNombre, StringFormat='Cliente: {0}'}"
+                                <TextBlock Text="{Binding VentaSeleccionada.ClienteNombre, Mode=OneWay, StringFormat='Cliente: {0}'}"
                                            Margin="0,0,0,5"/>
-                                <TextBlock Text="{Binding VentaSeleccionada.Fecha, StringFormat='Fecha: {0:dd/MM/yyyy HH:mm}'}"
+                                <TextBlock Text="{Binding VentaSeleccionada.Fecha, Mode=OneWay, StringFormat='Fecha: {0:dd/MM/yyyy HH:mm}'}"
                                            Margin="0,0,0,5"/>
-                                <TextBlock Text="{Binding VentaSeleccionada.Usuario.Nombre, StringFormat='Vendedor: {0}'}"
+                                <TextBlock Text="{Binding VentaSeleccionada.Usuario.Nombre, Mode=OneWay, StringFormat='Vendedor: {0}'}"
                                            Margin="0,0,0,5"/>
-                                <TextBlock Text="{Binding VentaSeleccionada.MetodoPago, StringFormat='Metodo: {0}'}"
+                                <TextBlock Text="{Binding VentaSeleccionada.MetodoPago, Mode=OneWay, StringFormat='Metodo: {0}'}"
                                            Margin="0,0,0,5"/>
                                 <Separator Margin="0,10"/>
 
@@ -181,13 +180,13 @@
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <StackPanel Margin="0,5">
-                                                <TextBlock Text="{Binding nombre_producto}" FontWeight="SemiBold"/>
+                                                <TextBlock Text="{Binding nombre_producto, Mode=OneWay}" FontWeight="SemiBold"/>
                                                 <TextBlock>
-                                                    <Run Text="{Binding cantidad, StringFormat='Cant: {0}'}"/>
+                                                    <Run Text="{Binding cantidad, Mode=OneWay, StringFormat='Cant: {0}'}"/>
                                                     <Run Text=" x "/>
-                                                    <Run Text="{Binding precio_unitario, StringFormat={}{0:C}}"/>
+                                                    <Run Text="{Binding precio_unitario, Mode=OneWay, StringFormat={}{0:C}}"/>
                                                     <Run Text=" = "/>
-                                                    <Run Text="{Binding Subtotal, StringFormat={}{0:C}}" FontWeight="Bold"/>
+                                                    <Run Text="{Binding Subtotal, Mode=OneWay, StringFormat={}{0:C}}" FontWeight="Bold"/>
                                                 </TextBlock>
                                             </StackPanel>
                                         </DataTemplate>
@@ -195,7 +194,7 @@
                                 </ListBox>
 
                                 <Separator Margin="0,10"/>
-                                <TextBlock Text="{Binding VentaSeleccionada.Monto, StringFormat='TOTAL: {0:C}'}"
+                                <TextBlock Text="{Binding VentaSeleccionada.Monto, Mode=OneWay, StringFormat='TOTAL: {0:C}'}"
                                            FontSize="18"
                                            FontWeight="Bold"
                                            Foreground="{DynamicResource PrimaryBrush}"/>
@@ -212,7 +211,7 @@
 
                     <!-- Botones de accion -->
                     <StackPanel Grid.Row="2" Margin="0,15,0,0">
-                        <Button Content="Reimprimir Comprobante"
+                        <Button Content="Imprimir Comprobante"
                                 Style="{StaticResource PrimaryButton}"
                                 Click="ReimprimirComprobante_Click"
                                 Margin="0,0,0,10"
@@ -237,7 +236,11 @@
                 <TextBlock Text="Total ventas mostradas: " FontWeight="SemiBold" Margin="0,0,10,0"/>
                 <TextBlock Text="{Binding Ventas.Count}" FontWeight="Bold" Margin="0,0,30,0"/>
                 <TextBlock Text="Monto total: " FontWeight="SemiBold" Margin="0,0,10,0"/>
-                <TextBlock Text="{Binding MontoTotal, StringFormat=C}" FontWeight="Bold" Foreground="{DynamicResource PrimaryBrush}"/>
+                <TextBlock FontWeight="Bold" Foreground="{DynamicResource PrimaryBrush}">
+                    <TextBlock.Text>
+                        <Binding Path="MontoTotal" StringFormat="{}{0:C}"/>
+                    </TextBlock.Text>
+                </TextBlock>
             </StackPanel>
         </Border>
     </Grid>

@@ -7,40 +7,42 @@ using System.Runtime.CompilerServices;
 
 namespace GGHardware.Models
 {
-    [Table("Venta")] 
+    [Table("Venta")]
     public class Venta : INotifyPropertyChanged
     {
         [Key]
-        public int id_venta { get; set; } 
+        public int id_venta { get; set; }
 
         public DateTime Fecha { get; set; }
 
-        public double Monto { get; set; }
+        [Column(TypeName = "decimal(10,2)")]
+        public decimal Monto { get; set; }
 
         // Campos nuevos para comprobantes
         [MaxLength(20)]
-        public string ?NumeroComprobante { get; set; }
+        public string? NumeroComprobante { get; set; }
 
         public int? IdTipoComprobante { get; set; }
 
-        public int ?PuntoVenta { get; set; } = 1;
+        public int? PuntoVenta { get; set; } = 1;
 
         public int? NumeroSecuencial { get; set; }
 
         [MaxLength(50)]
-        public string ?MetodoPago { get; set; }
+        public string? MetodoPago { get; set; }
 
-        public double? MontoRecibido { get; set; }
+        [Column(TypeName = "decimal(10,2)")]
+        public decimal? MontoRecibido { get; set; }
 
         // Campo calculado para vuelto
         [NotMapped]
-        public double Vuelto => (MontoRecibido ?? 0) - Monto;
+        public decimal Vuelto => (MontoRecibido ?? 0) - Monto;
 
         [MaxLength(500)]
-        public string ?Observaciones { get; set; }
+        public string? Observaciones { get; set; }
 
         [MaxLength(20)]
-        public string ?Estado { get; set; } = "Completada";
+        public string? Estado { get; set; } = "Completada";
 
         // Claves foráneas
         public int id_Cliente { get; set; }
@@ -48,13 +50,13 @@ namespace GGHardware.Models
 
         // Propiedades de navegación
         [ForeignKey("id_Cliente")]
-        public virtual Cliente ?Cliente { get; set; } 
+        public virtual Cliente? Cliente { get; set; }
 
         [ForeignKey("id_Usuario")]
-        public virtual Usuario ?Usuario { get; set; } 
+        public virtual Usuario? Usuario { get; set; }
 
         [ForeignKey("IdTipoComprobante")]
-        public virtual TipoComprobante ?TipoComprobante { get; set; }
+        public virtual TipoComprobante? TipoComprobante { get; set; }
 
         // Relación con detalle
         public virtual ICollection<DetalleVenta> Detalles { get; set; } = new List<DetalleVenta>();
@@ -64,12 +66,12 @@ namespace GGHardware.Models
         public string ClienteNombre => Cliente?.NombreCompleto ?? "Cliente no especificado";
 
         [NotMapped]
-        public string TipoComprobanteNombre => TipoComprobante?.Nombre?? "Sin especificar";
+        public string TipoComprobanteNombre => TipoComprobante?.Nombre ?? "Sin especificar";
 
         [NotMapped]
         public string NumeroComprobanteFormateado => string.IsNullOrEmpty(NumeroComprobante) ? "Sin número" : NumeroComprobante;
 
-        public event PropertyChangedEventHandler ?PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

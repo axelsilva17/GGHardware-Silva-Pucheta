@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:GGHardware.Converters"
              mc:Ignorable="d"
              Background="{DynamicResource Background}"
              MinHeight="460" MinWidth="1000">
@@ -10,6 +11,7 @@
     <UserControl.Resources>
         <!-- Converter para visibilidad -->
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <local:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
 
         <Style x:Key="RightAlignedText" TargetType="TextBlock">
             <Setter Property="HorizontalAlignment" Value="Right"/>
@@ -632,8 +634,13 @@
                                     Foreground="{DynamicResource PrimaryBrush}"
                                     Width="120"
                                     Click="FinalizarVenta_Click"/>
+
+
+
                         </StackPanel>
+                      
                     </Grid>
+                    
                 </Border>
             </Grid>
         </Border>
