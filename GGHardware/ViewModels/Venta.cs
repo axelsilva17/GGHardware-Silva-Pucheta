@@ -97,7 +97,8 @@ namespace GGHardware.ViewModels
         public decimal Vuelto => MontoRecibido - Total;
 
         public decimal Total => Carrito.Sum(item => item.Subtotal);
-
+        
+        // Inicialización de campos en el constructor
         public VentasViewModel()
         {
             _context = new ApplicationDbContext();
@@ -107,6 +108,14 @@ namespace GGHardware.ViewModels
             TiposComprobante = new ObservableCollection<TipoComprobante>();
             MetodosPago = new ObservableCollection<MetodoPago>();
             DetallesVenta = new ObservableCollection<DetalleVenta>();
+
+            _clienteSeleccionado = null!;
+            _tipoComprobanteSeleccionado = null!;
+            _metodoPagoSeleccionado = null!;
+            _observaciones = string.Empty;
+            _ventaSeleccionada = null!;
+
+            PropertyChanged = delegate { };
 
             Carrito.CollectionChanged += (s, e) => OnPropertyChanged(nameof(Productos));
 
