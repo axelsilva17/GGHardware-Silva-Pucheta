@@ -36,7 +36,7 @@ namespace GGHardware.Models
 
         // Propiedades de navegación
         [ForeignKey("id_venta")]
-        public virtual Venta Venta { get; set; }
+        public virtual  Venta Venta { get; set; }
 
         [ForeignKey("id_producto")]
         public virtual Producto Producto { get; set; }

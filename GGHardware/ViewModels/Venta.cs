@@ -41,11 +41,11 @@ namespace GGHardware.ViewModels
             }
         }
 
- 
-       
-            
-         
-     
+
+
+
+
+
         private TipoComprobante _tipoComprobanteSeleccionado;
         public TipoComprobante TipoComprobanteSeleccionado
         {
@@ -97,7 +97,7 @@ namespace GGHardware.ViewModels
         public decimal Vuelto => MontoRecibido - Total;
 
         public decimal Total => Carrito.Sum(item => item.Subtotal);
-        
+
         // Inicialización de campos en el constructor
         public VentasViewModel()
         {
@@ -721,7 +721,7 @@ namespace GGHardware.ViewModels
             ventanaTicket.Content = scrollViewer;
             ventanaTicket.ShowDialog();
         }
-        
+
         private void GuardarComoPDF(Venta venta)
         {
             var saveDialog = new SaveFileDialog
@@ -892,7 +892,7 @@ namespace GGHardware.ViewModels
             ventasVM.GenerarTicket(VentaSeleccionada.id_venta);
         }
 
-      
+
 
 
     }
