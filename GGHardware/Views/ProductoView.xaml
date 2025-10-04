@@ -6,7 +6,6 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              Background="{DynamicResource MaterialDesignPaper}" Height="453" Width="864">
-
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -28,26 +27,101 @@
                 CornerRadius="8"
                 Padding="10">
             <DataGrid x:Name="dgProductos"
-            AutoGenerateColumns="False"
-            CanUserAddRows="False"
-            IsReadOnly="True"
-            SelectionMode="Single"
-            Style="{DynamicResource MaterialDesignDataGrid}">
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      IsReadOnly="True"
+                      SelectionMode="Single"
+                      Style="{DynamicResource MaterialDesignDataGrid}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding Id_Producto}" Width="60" />
                     <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="150" />
-                    <DataGridTextColumn Header="Precio" Binding="{Binding precio_venta}" Width="150" />
-                    <DataGridTextColumn Header="Stock Disponible" Binding="{Binding Stock}" Width="150" />
-                    <DataGridTextColumn Header="Categoria" Binding="{Binding NombreCategoria}" Width="150" />
-                    <DataGridTemplateColumn Header="Acciones" Width="150">
+                    <DataGridTextColumn Header="Precio" Binding="{Binding precio_venta, StringFormat=C}" Width="100" />
+                    <DataGridTextColumn Header="Stock" Binding="{Binding Stock}" Width="80" />
+                    <DataGridTextColumn Header="Categoría" Binding="{Binding NombreCategoria}" Width="120" />
+
+                    <!-- Nueva columna de Estado -->
+                    <DataGridTemplateColumn Header="Estado" Width="100">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <Button ToolTip="Editar" Click="btnEditar_Click">
-                                        <materialDesign:PackIcon Kind="Pencil" Foreground="{DynamicResource MaterialDesignBodyMediumBrush}"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Ellipse Width="10" Height="10" VerticalAlignment="Center" Margin="0,0,5,0">
+                                        <Ellipse.Style>
+                                            <Style TargetType="Ellipse">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Activo}" Value="True">
+                                                        <Setter Property="Fill" Value="#4CAF50"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Activo}" Value="False">
+                                                        <Setter Property="Fill" Value="#F44336"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Ellipse.Style>
+                                    </Ellipse>
+                                    <TextBlock VerticalAlignment="Center">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Activo}" Value="True">
+                                                        <Setter Property="Text" Value="Activo"/>
+                                                        <Setter Property="Foreground" Value="#4CAF50"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Activo}" Value="False">
+                                                        <Setter Property="Text" Value="Inactivo"/>
+                                                        <Setter Property="Foreground" Value="#F44336"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!-- Columna de Acciones mejorada -->
+                    <DataGridTemplateColumn Header="Acciones" Width="120">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button ToolTip="Editar" 
+                        Click="btnEditar_Click"
+                        Style="{StaticResource MaterialDesignIconButton}"
+                        Margin="2,0">
+                                        <materialDesign:PackIcon Kind="Pencil" />
                                     </Button>
-                                    <Button ToolTip="Activar/Desactivar" Click="btnActivarDesactivar_Click">
-                                        <materialDesign:PackIcon Kind="Power" Foreground="{DynamicResource MaterialDesignBodyMediumBrush}"/>
+
+                                    <Button Click="btnActivarDesactivar_Click"
+                        Margin="2,0">
+                                        <Button.Style>
+                                            <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignIconButton}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Activo}" Value="True">
+                                                        <Setter Property="ToolTip" Value="Desactivar producto"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Activo}" Value="False">
+                                                        <Setter Property="ToolTip" Value="Activar producto"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                        <materialDesign:PackIcon>
+                                            <materialDesign:PackIcon.Style>
+                                                <Style TargetType="materialDesign:PackIcon">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Activo}" Value="True">
+                                                            <Setter Property="Kind" Value="PowerOff"/>
+                                                            <Setter Property="Foreground" Value="#F44336"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Activo}" Value="False">
+                                                            <Setter Property="Kind" Value="PowerOn"/>
+                                                            <Setter Property="Foreground" Value="#4CAF50"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </materialDesign:PackIcon.Style>
+                                        </materialDesign:PackIcon>
                                     </Button>
                                 </StackPanel>
                             </DataTemplate>
@@ -66,7 +140,6 @@
                     Width="160" Height="35"
                     Margin="5,0"
                     Click="btnAltaProducto_Click"/>
-
         </StackPanel>
     </Grid>
 </UserControl>

@@ -203,7 +203,7 @@ namespace GGHardware.ViewModels
             }
 
             // Usar el mismo método del ViewModel de ventas
-            var ventasVM = new VentasViewModel();
+            var ventasVM = new VentasViewModel(MainWindow.UsuarioActual.id_usuario);
             ventasVM.GenerarTicket(VentaSeleccionada.id_venta);
         }
 

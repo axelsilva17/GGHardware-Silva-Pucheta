@@ -56,7 +56,29 @@ namespace GGHardware.Views
 
         private void btnActivarDesactivar_Click(object sender, RoutedEventArgs e)
         {
-            // Lógica para activar/desactivar el producto seleccionado
+            var button = sender as Button;
+            if (button?.DataContext is GGHardware.Models.Producto producto)
+            {
+                try
+                {
+                    using (var context = new ApplicationDbContext())
+                    {
+                        var prod = context.Producto.Find(producto.Id_Producto);
+
+                        if (prod != null)
+                        {
+                            prod.Activo = !prod.Activo;
+                            context.SaveChanges();
+                            CargarProductos(); // Recargar la lista
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error al cambiar el estado del producto:\n{ex.Message}",
+                        "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
         }
     }
 }

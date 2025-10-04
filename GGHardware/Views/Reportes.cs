@@ -40,8 +40,8 @@ namespace GGHardware.Views
                     return;
                 }
 
-                DateTime fechaInicio = dpFechaInicio.SelectedDate.Value;
-                DateTime fechaFin = dpFechaFin.SelectedDate.Value;
+                DateTime fechaInicio = dpFechaInicio.SelectedDate.Value.Date; // 00:00:00
+                DateTime fechaFin = dpFechaFin.SelectedDate.Value.Date.AddDays(1).AddTicks(-1); // 23:59:59.9999999
 
                 if (fechaInicio > fechaFin)
                 {

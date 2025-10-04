@@ -41,7 +41,16 @@ namespace GGHardware.ViewModels
             }
         }
 
-
+        private int _idUsuarioLogueado;
+        public int IdUsuarioLogueado
+        {
+            get => _idUsuarioLogueado;
+            set
+            {
+                _idUsuarioLogueado = value;
+                OnPropertyChanged(nameof(IdUsuarioLogueado));
+            }
+        }
 
 
 
@@ -99,7 +108,7 @@ namespace GGHardware.ViewModels
         public decimal Total => Carrito.Sum(item => item.Subtotal);
 
         // Inicialización de campos en el constructor
-        public VentasViewModel()
+        public VentasViewModel(int idUsuarioActual)
         {
             _context = new ApplicationDbContext();
             Productos = new ObservableCollection<Producto>();
@@ -108,6 +117,8 @@ namespace GGHardware.ViewModels
             TiposComprobante = new ObservableCollection<TipoComprobante>();
             MetodosPago = new ObservableCollection<MetodoPago>();
             DetallesVenta = new ObservableCollection<DetalleVenta>();
+
+            IdUsuarioLogueado = idUsuarioActual;
 
             _clienteSeleccionado = null!;
             _tipoComprobanteSeleccionado = null!;
@@ -373,7 +384,7 @@ namespace GGHardware.ViewModels
                 var venta = new Venta
                 {
                     id_Cliente = ClienteSeleccionado.id_cliente,
-                    id_Usuario = 1,
+                    id_Usuario = IdUsuarioLogueado,
                     Fecha = DateTime.Now,
                     Monto = Total,
                     IdTipoComprobante = TipoComprobanteSeleccionado.id_tipo,
@@ -888,12 +899,8 @@ namespace GGHardware.ViewModels
             }
 
             // Usar el mismo método del ViewModel de ventas
-            var ventasVM = new VentasViewModel();
+            var ventasVM = new VentasViewModel(MainWindow.UsuarioActual.id_usuario);
             ventasVM.GenerarTicket(VentaSeleccionada.id_venta);
         }
-
-
-
-
     }
 }

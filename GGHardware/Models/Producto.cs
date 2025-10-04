@@ -82,6 +82,8 @@ namespace GGHardware.Models
         [NotMapped]
         public bool StockBajo => Stock <= stock_min;
 
+        public bool Activo { get; set; } = true;
+
         [NotMapped]
         public string EstadoStock => Stock <= 0 ? "Sin Stock" :
                                     Stock <= stock_min ? "Stock Bajo" : "Disponible";

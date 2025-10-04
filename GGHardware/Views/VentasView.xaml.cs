@@ -12,10 +12,10 @@ namespace GGHardware.Views
         public VentasViewModel ViewModel { get; set; }
         private ListBox lstClientesSugerencias;
 
-        public VentasView()
+        public VentasView(int idUsuarioActual)
         {
             InitializeComponent();
-            ViewModel = new VentasViewModel();
+            ViewModel = new VentasViewModel(idUsuarioActual);
             this.DataContext = ViewModel;
 
             CrearListaClientes();

@@ -99,7 +99,7 @@ namespace GGHardware
         private void btnVentas_Click(object sender, RoutedEventArgs e)
         {
             MainContentBorder.Child = null;
-            VentasView ventasView = new VentasView();
+            VentasView ventasView = new VentasView(MainWindow.UsuarioActual.id_usuario);
             MainContentBorder.Child = ventasView;
         }
 
