@@ -250,7 +250,7 @@ namespace GGHardware.Views
             private static ClienteService _instance;
             public static ClienteService Instance => _instance ??= new ClienteService();
 
-            public event EventHandler<ClienteEventArgs> ClienteAgregado;
+            public event EventHandler<ClienteEventArgs>  ClienteAgregado;
             public event EventHandler<ClienteEventArgs> ClienteActualizado;
 
             public void NotificarClienteAgregado(Cliente cliente)
