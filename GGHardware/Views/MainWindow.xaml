@@ -254,6 +254,25 @@
                         </StackPanel>
                     </Button>
 
+                    <Button x:Name="btnProveedores" 
+                            Click="btnProveedores_Click" 
+                            Style="{StaticResource MenuButtonStyle}"
+                            HorizontalContentAlignment="Left"
+                            Foreground="{DynamicResource TextPrimary}"
+                            > 
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <materialDesign:PackIcon Kind="TruckDelivery" 
+                                         Width="20" Height="20" 
+                                         Margin="0,0,12,0"
+                                         Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
+                            <TextBlock Text="Proveedores" 
+                           FontSize="14"
+                           FontWeight="Medium"
+                           Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
+                        </StackPanel>
+                    </Button>
+
+
                     <!-- Separador -->
                     <Rectangle Height="1" 
                                Fill="{DynamicResource PrimaryBrush}" 

@@ -39,6 +39,11 @@ namespace GGHardware.Views
                         cmbCategoria.DisplayMemberPath = "nombre";
                         cmbCategoria.SelectedValuePath = "id_categoria";
 
+                        var proveedores = context.Proveedores.ToList();
+                        cmbProveedor.ItemsSource = proveedores;
+                        cmbProveedor.DisplayMemberPath = "razon_social";
+                        cmbProveedor.SelectedValuePath = "id_proveedor";
+
                         // Rellenar los campos del formulario con los datos del producto
                         txtIdProducto.Text = producto.Id_Producto.ToString();
                         txtNombre.Text = producto.Nombre;
@@ -54,6 +59,11 @@ namespace GGHardware.Views
                         if (producto.id_categoria != 0)
                         {
                             cmbCategoria.SelectedValue = producto.id_categoria;
+                        }
+
+                        if (producto.id_proveedor != 0)
+                        { 
+                            cmbProveedor.SelectedValue = producto.id_proveedor;
                         }
                     }
                     else
@@ -82,7 +92,7 @@ namespace GGHardware.Views
                 string.IsNullOrWhiteSpace(txtPrecioVenta.Text) ||
                 string.IsNullOrWhiteSpace(txtStock.Text) ||
                 string.IsNullOrWhiteSpace(txtStockMin.Text) ||
-                cmbCategoria.SelectedValue == null)
+                cmbCategoria.SelectedValue == null || cmbProveedor.SelectedValue == null)
             {
                 MessageBox.Show("Por favor, completa todos los campos obligatorios.", "Error de validación", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -117,6 +127,7 @@ namespace GGHardware.Views
                         producto.codigo_barras = txtCodigoBarras.Text;
                         producto.codigo_interno = txtCodigoInterno.Text;
                         producto.id_categoria = (int)cmbCategoria.SelectedValue;
+                        producto.id_proveedor = (int)cmbProveedor.SelectedValue;
 
                         context.SaveChanges();
 

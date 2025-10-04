@@ -90,6 +90,14 @@ namespace GGHardware.Models
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public int? id_proveedor { get; set; }
+
+        [ForeignKey("id_proveedor")]
+        public virtual Proveedor? Proveedor { get; set; }
+
+        [NotMapped]
+        public string NombreProveedor => Proveedor?.razon_social ?? "Sin proveedor";
+
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

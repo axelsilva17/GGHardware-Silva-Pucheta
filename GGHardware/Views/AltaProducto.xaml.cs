@@ -14,6 +14,7 @@ namespace GGHardware.Views
         {
             InitializeComponent();
             CargarCategorias();
+            CargarProveedores();
         }
 
         private void CargarCategorias()
@@ -34,6 +35,24 @@ namespace GGHardware.Views
             }
         }
 
+        private void CargarProveedores()
+        {
+            try
+            {
+                using (var context = new ApplicationDbContext())
+                {
+                    var proveedores = context.Proveedores.ToList();
+                    cmbProveedor.ItemsSource = proveedores;
+                    cmbProveedor.DisplayMemberPath = "razon_social";
+                    cmbProveedor.SelectedValuePath = "id_proveedor";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("❌ Error al cargar proveedores: " + ex.Message);
+            }
+        } 
+        
         private void btnGuardar_Click(object sender, RoutedEventArgs e)
         {
             // 🔹 Validaciones básicas

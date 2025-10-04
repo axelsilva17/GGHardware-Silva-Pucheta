@@ -130,6 +130,15 @@
                               Margin="0,0,0,25"
                               Style="{StaticResource MaterialDesignFilledComboBox}"/>
 
+                    <TextBlock Text="Proveedor"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextPrimary}"
+                               Margin="0,10,0,5"/>
+                    <ComboBox x:Name="cmbProveedor"
+                                materialDesign:HintAssist.Hint="Selecciona un Proveedor"
+                                Margin="0,0,0,25"
+                                Style="{StaticResource MaterialDesignFilledComboBox}"/>
+
                 </StackPanel>
             </ScrollViewer>
 

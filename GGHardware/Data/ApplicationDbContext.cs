@@ -15,15 +15,31 @@ namespace GGHardware.Data
         }
 
         // DbSets existentes
+        //  DbSets para Usuarios    
         public DbSet<Usuario> Usuarios { get; set; }
+
+        //  DbSets para Clientes 
         public DbSet<Cliente> Clientes { get; set; }
+
+        //  DbSets para ventas  
         public DbSet<Venta> Venta { get; set; }
+
+        //  DbSets para productos
         public DbSet<Producto> Producto { get; set; }
+
+        //  DbSets para categorías
         public DbSet<Categoria> Categoria { get; set; }
+
+        //  DbSets para proveedores
+        public DbSet<Proveedor> Proveedores { get; set; }
 
         //  DbSets para comprobantes
         public DbSet<TipoComprobante> TiposComprobante { get; set; }
+
+        //  DbSets para métodos de pago 
         public DbSet<MetodoPago> MetodosPago { get; set; }
+
+        //  DbSets para DetalleVenta
         public DbSet<DetalleVenta> DetalleVenta { get; set; }
 
         //DbSet para Reportes

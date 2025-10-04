@@ -28,44 +28,44 @@ namespace GGHardware
         {
             if (UsuarioActual == null) return;
 
-            // Todos los botones
-            var botones = new[] { btnProductos, btnVentas, btnRegistro, btnReportes, btnBackup };
+            // Ocultar todos por defecto
+            btnProductos.Visibility = Visibility.Collapsed;
+            btnVentas.Visibility = Visibility.Collapsed;
+            btnRegistro.Visibility = Visibility.Collapsed;
+            btnReportes.Visibility = Visibility.Collapsed;
+            btnBackup.Visibility = Visibility.Collapsed;
+            btnProveedores.Visibility = Visibility.Collapsed;
 
-            // Desactivar todo por defecto
-            foreach (var btn in botones)
-            {
-                btn.IsEnabled = false;
-                
-            }
-
-            // Activar botones según rol
+            // Mostrar botones según rol
             switch (UsuarioActual.RolId)
             {
                 case 1: // Supervisor
-                    btnProductos.IsEnabled = true;
-                    btnVentas.IsEnabled = false;
-                    btnRegistro.IsEnabled = true;
-                    btnReportes.IsEnabled = true;
-                    btnBackup.IsEnabled = false;
+                    btnProductos.Visibility = Visibility.Visible;
+                    btnRegistro.Visibility = Visibility.Visible;
+                    btnReportes.Visibility = Visibility.Visible;
+                    btnVentas.Visibility = Visibility.Visible;
                     break;
 
-                case 2: // Usuario
-                    btnProductos.IsEnabled = true;
-                    btnVentas.IsEnabled = true;
-                    btnRegistro.IsEnabled = true; // aquí solo se permitirá registrar clientes (se hace en la vista de registro)
+                case 2: // Usuario/Vendedor
+                    btnProductos.Visibility = Visibility.Visible;
+                    btnVentas.Visibility = Visibility.Visible;
+                    btnRegistro.Visibility = Visibility.Visible;
                     break;
 
                 case 3: // Cliente
-                        // Opcional: botones limitados o ninguno
+                        // Sin acceso al menú
                     break;
-                case 4: // Gerente  
-                    btnBackup.IsEnabled = true;
+
+                case 4: // Gerente
+                    btnBackup.Visibility = Visibility.Visible;
+                    btnProveedores.Visibility = Visibility.Visible;
                     break;
             }
 
+            // Habilitar y restaurar opacidad del menú
             mainMenu.IsEnabled = true;
+            mainMenu.Opacity = 1.0;
         }
-
 
 
         public MainWindow()
@@ -76,10 +76,13 @@ namespace GGHardware
             // Mostrar la vista de inicio por defecto
             MainContentBorder.Child = new InicioView();
 
-            // Deshabilitar los botones de navegación hasta que el usuario inicie sesión
-            // Deshabilita los botones y haz el menú semitransparente
-            mainMenu.IsEnabled = false; // mainMenu es el nombre de tu panel de navegación
-            mainMenu.Opacity = 0.5; // El valor 0.5 lo hace semitransparente
+            // Ocultar todos por defecto
+            btnProductos.Visibility = Visibility.Collapsed;
+            btnVentas.Visibility = Visibility.Collapsed;
+            btnRegistro.Visibility = Visibility.Collapsed;
+            btnReportes.Visibility = Visibility.Collapsed;
+            btnBackup.Visibility = Visibility.Collapsed;
+            btnProveedores.Visibility = Visibility.Collapsed;
         }
 
         private void btnProductos_Click(object sender, RoutedEventArgs e)
@@ -164,11 +167,19 @@ namespace GGHardware
 
         private void btnCerrarSesion_Click(object sender, RoutedEventArgs e)
         {
+            // Ocultar todos los botones
+            btnProductos.Visibility = Visibility.Collapsed;
+            btnVentas.Visibility = Visibility.Collapsed;
+            btnRegistro.Visibility = Visibility.Collapsed;
+            btnReportes.Visibility = Visibility.Collapsed;
+            btnBackup.Visibility = Visibility.Collapsed;
+            btnProveedores.Visibility = Visibility.Collapsed;
+
             UsuarioActual = null; // Limpiar sesión
             ActualizarSesion();
             mainMenu.IsEnabled = false;
             mainMenu.Opacity = 0.5;
-            MainContentBorder.Child = new InicioView(); // Volver al login
+            MainContentBorder.Child = new InicioView();
 
         }
 
@@ -182,6 +193,10 @@ namespace GGHardware
             MainContentBorder.Child = new GGHardware.Views.Backup();
         }
 
+        private void btnProveedores_Click(object sender, RoutedEventArgs e)
+        {
+            MainContentBorder.Child = new ProveedoresView();
+        }
         private void ToggleTheme_Click(object sender, RoutedEventArgs e)
         {
             _isDarkTheme = !_isDarkTheme;

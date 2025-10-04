@@ -50,6 +50,14 @@
                       DisplayMemberPath="nombre"
                       SelectedValuePath="id_categoria"
                       Height="30" Width="300" Margin="0,0,0,20"/>
+
+            <TextBlock Text="Proveedor:" Margin="0,0,0,5"/>
+            <ComboBox x:Name="cmbProveedor"
+                      DisplayMemberPath="nombre"
+                      SelectedValuePath="NombreProveedor"
+                      Height="30" Width="300" Margin="0,0,0,10"/>
+
+
         </StackPanel>
 
         <!-- Botones -->
