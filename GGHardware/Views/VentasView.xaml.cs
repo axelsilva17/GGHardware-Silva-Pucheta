@@ -1,9 +1,10 @@
-﻿using System;
+﻿using GGHardware.Data;
+using GGHardware.Models;
+using GGHardware.ViewModels;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using GGHardware.Models;
-using GGHardware.ViewModels;
 
 namespace GGHardware.Views
 {
@@ -124,7 +125,6 @@ namespace GGHardware.Views
                 }
             }
         }
-
         private void LstClientesSugerencias_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (lstClientesSugerencias.SelectedItem is Cliente clienteSeleccionado)
@@ -132,6 +132,9 @@ namespace GGHardware.Views
                 ViewModel.SeleccionarCliente(clienteSeleccionado);
                 txtBuscarCliente.Text = clienteSeleccionado.NombreCompleto;
                 lstClientesSugerencias.Visibility = Visibility.Collapsed;
+
+                // ⭐ NUEVO: Verificar si es cliente frecuente
+                VerificarClienteFrecuente(clienteSeleccionado);
             }
         }
 
@@ -226,7 +229,35 @@ namespace GGHardware.Views
             }
         }
 
-        // ACTUALIZADO: Botones de descuento globales
+        // Verificar si el cliente es frecuente y aplicar beneficios
+        private void VerificarClienteFrecuente(Cliente cliente)
+        {
+            if (cliente == null) return;
+
+            try
+            {
+                // Contar cuántas compras tiene el cliente
+                using (var context = new ApplicationDbContext())
+                {
+                    int totalCompras = context.Venta
+                        .Where(v => v.id_Cliente == cliente.id_cliente)
+                        .Count();
+
+                    if (totalCompras >= 20)
+                        ViewModel.AplicarDescuentoGlobal(15); // 15% para super VIP
+                    else if (totalCompras >= 10)
+                        ViewModel.AplicarDescuentoGlobal(10); // 10% para VIP
+                    else if (totalCompras >= 5)
+                        ViewModel.AplicarDescuentoGlobal(5);  // 5% para frecuentes
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error al verificar cliente frecuente: {ex.Message}");
+            }
+        }
+
+        //Botones de descuento globales
         private void AplicarDescuento5_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.AplicarDescuentoGlobal(5);

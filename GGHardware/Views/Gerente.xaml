@@ -12,6 +12,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -101,6 +102,7 @@
                 </Button>
 
                 <Button x:Name="btnActualizar"
+                        Click="btnActualizar_Click"
                         Background="{DynamicResource Surface}"
                         Foreground="{DynamicResource TextPrimary}"
                         BorderBrush="{DynamicResource PrimaryBrush}"
@@ -316,14 +318,73 @@
             </StackPanel>
         </Border>
 
+        <!-- DataGrid Clientes Frecuentes -->
+        <Border Grid.Row="3"
+                Background="{DynamicResource Surface}"
+                Padding="15"
+                Margin="0,0,0,20"
+                CornerRadius="10"
+                BorderBrush="#FF9800"
+                BorderThickness="1">
+            <Border.Effect>
+                <DropShadowEffect Color="Black" Direction="270" ShadowDepth="2" Opacity="0.1" BlurRadius="8"/>
+            </Border.Effect>
+            <StackPanel>
+                <TextBlock Text="Clientes Frecuentes"
+                           FontWeight="Bold"
+                           FontSize="16"
+                           Foreground="{DynamicResource TextPrimary}"
+                           Margin="0,0,0,15"/>
+                <DataGrid x:Name="dgClientesFrecuentes"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          HeadersVisibility="Column"
+                          GridLinesVisibility="None"
+                          Background="Transparent"
+                          BorderThickness="0"
+                          RowBackground="{DynamicResource Surface}"
+                          AlternatingRowBackground="{DynamicResource Background}"
+                          Height="180">
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="#FF9800"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
+                            <Setter Property="Padding" Value="10,8"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Cliente" Binding="{Binding Nombre}" Width="*"/>
+                        <DataGridTextColumn Header="Compras" Binding="{Binding TotalCompras}" Width="100">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Total Gastado" Binding="{Binding MontoTotal}" Width="150">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+        </Border>
+
         <!-- Productos más vendidos y gráfico -->
-        <Grid Grid.Row="3">
+        <Grid Grid.Row="4">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- DataGrid -->
+            <!-- DataGrid Productos -->
             <Border Background="{DynamicResource Surface}"
                     Padding="15"
                     Margin="0,0,10,0"

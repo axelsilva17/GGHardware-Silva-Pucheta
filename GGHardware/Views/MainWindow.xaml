@@ -236,6 +236,8 @@
                                        Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
                         </StackPanel>
                     </Button>
+                    
+                    
 
                     <Button x:Name="btnBackup" 
                             Click="btnBackup_Click" 

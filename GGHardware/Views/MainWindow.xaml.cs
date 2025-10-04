@@ -35,15 +35,16 @@ namespace GGHardware
             btnReportes.Visibility = Visibility.Collapsed;
             btnBackup.Visibility = Visibility.Collapsed;
             btnProveedores.Visibility = Visibility.Collapsed;
+            
 
             // Mostrar botones según rol
             switch (UsuarioActual.RolId)
             {
                 case 1: // Supervisor
-                    btnProductos.Visibility = Visibility.Visible;
+                  
                     btnRegistro.Visibility = Visibility.Visible;
                     btnReportes.Visibility = Visibility.Visible;
-                    btnVentas.Visibility = Visibility.Visible;
+                  
                     break;
 
                 case 2: // Usuario/Vendedor
@@ -57,8 +58,10 @@ namespace GGHardware
                     break;
 
                 case 4: // Gerente
+                    btnInicio.Visibility = Visibility.Visible;
                     btnBackup.Visibility = Visibility.Visible;
                     btnProveedores.Visibility = Visibility.Visible;
+                   
                     break;
             }
 
@@ -83,6 +86,7 @@ namespace GGHardware
             btnReportes.Visibility = Visibility.Collapsed;
             btnBackup.Visibility = Visibility.Collapsed;
             btnProveedores.Visibility = Visibility.Collapsed;
+            btnInicio.Visibility = Visibility.Collapsed;
         }
 
         private void btnProductos_Click(object sender, RoutedEventArgs e)
