@@ -7,400 +7,332 @@
              mc:Ignorable="d" 
              Background="{DynamicResource Background}">
 
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+    <!-- SCROLL PRINCIPAL-->
+    <ScrollViewer VerticalScrollBarVisibility="Auto" 
+                  HorizontalScrollBarVisibility="Disabled">
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <!-- Header con badge de Gerente -->
-        <Grid Grid.Row="0" Margin="0,0,0,20">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
+            <!-- Header con badge de Gerente -->
+            <Grid Grid.Row="0" Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <materialDesign:PackIcon Kind="ChartBoxOutline"
-                                         Width="32" Height="32"
-                                         Foreground="{DynamicResource PrimaryBrush}"
-                                         VerticalAlignment="Center"
-                                         Margin="0,0,12,0"/>
-                <TextBlock Text="Dashboard Ejecutivo"
-                           FontSize="28"
-                           FontWeight="Bold"
-                           Foreground="{DynamicResource TextPrimary}"
-                           VerticalAlignment="Center"/>
-            </StackPanel>
-
-            <!-- Badge de rol -->
-            <Border Grid.Column="1"
-                    Background="{DynamicResource PrimaryBrush}"
-                    CornerRadius="12"
-                    Padding="12,4"
-                    HorizontalAlignment="Left"
-                    Margin="15,0,0,0"
-                    VerticalAlignment="Center">
-                <StackPanel Orientation="Horizontal">
-                    <materialDesign:PackIcon Kind="ShieldCrown"
-                                             Width="16" Height="16"
-                                             Foreground="{DynamicResource PrimaryForegroundBrush}"
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <materialDesign:PackIcon Kind="ChartBoxOutline"
+                                             Width="32" Height="32"
+                                             Foreground="{DynamicResource PrimaryBrush}"
                                              VerticalAlignment="Center"
-                                             Margin="0,0,6,0"/>
-                    <TextBlock Text="GERENTE"
-                               FontSize="11"
+                                             Margin="0,0,12,0"/>
+                    <TextBlock Text="Dashboard Ejecutivo"
+                               FontSize="28"
                                FontWeight="Bold"
-                               Foreground="{DynamicResource PrimaryForegroundBrush}"
+                               Foreground="{DynamicResource TextPrimary}"
                                VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <Border Grid.Column="1"
+                        Background="{DynamicResource PrimaryBrush}"
+                        CornerRadius="12"
+                        Padding="12,4"
+                        HorizontalAlignment="Left"
+                        Margin="15,0,0,0"
+                        VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="ShieldCrown"
+                                                 Width="16" Height="16"
+                                                 Foreground="{DynamicResource PrimaryForegroundBrush}"
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,6,0"/>
+                        <TextBlock Text="GERENTE"
+                                   FontSize="11"
+                                   FontWeight="Bold"
+                                   Foreground="{DynamicResource PrimaryForegroundBrush}"
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <Button x:Name="btnExportarExcel"
+                            Click="btnExportarExcel_Click"
+                            Background="{DynamicResource PrimaryBrush}"
+                            Foreground="{DynamicResource PrimaryForegroundBrush}"
+                            BorderThickness="0"
+                            Padding="15,8"
+                            Margin="0,0,10,0"
+                            Cursor="Hand">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}"
+                                                    CornerRadius="6"
+                                                    Padding="{TemplateBinding Padding}">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <materialDesign:PackIcon Kind="FileExcel"
+                                                                             Width="18" Height="18"
+                                                                             Foreground="{TemplateBinding Foreground}"
+                                                                             VerticalAlignment="Center"
+                                                                             Margin="0,0,8,0"/>
+                                                    <TextBlock Text="Exportar Excel"
+                                                               Foreground="{TemplateBinding Foreground}"
+                                                               FontWeight="Medium"
+                                                               VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Opacity" Value="0.85"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <Button x:Name="btnActualizar"
+                            Click="btnActualizar_Click"
+                            Background="{DynamicResource Surface}"
+                            Foreground="{DynamicResource TextPrimary}"
+                            BorderBrush="{DynamicResource PrimaryBrush}"
+                            BorderThickness="1"
+                            Padding="12,8"
+                            Cursor="Hand">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}"
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    CornerRadius="6"
+                                                    Padding="{TemplateBinding Padding}">
+                                                <materialDesign:PackIcon Kind="Refresh"
+                                                                         Width="18" Height="18"
+                                                                         Foreground="{TemplateBinding Foreground}"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="{DynamicResource Background}"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+            </Grid>
+
+            <!-- Estadísticas generales -->
+            <UniformGrid Grid.Row="1" Columns="4" Margin="0,0,0,20">
+                <Border Background="{DynamicResource Surface}"
+                        Padding="20"
+                        Margin="5"
+                        CornerRadius="10"
+                        BorderBrush="{DynamicResource PrimaryBrush}"
+                        BorderThickness="2">
+                    <Border.Effect>
+                        <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" Opacity="0.15" BlurRadius="10"/>
+                    </Border.Effect>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <materialDesign:PackIcon Kind="CurrencyUsd"
+                                                 Width="28" Height="28"
+                                                 Foreground="{DynamicResource PrimaryBrush}"
+                                                 HorizontalAlignment="Left"/>
+                        <TextBlock Grid.Row="1"
+                                   Text="Total Ventas"
+                                   FontSize="13"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextSecondary}"
+                                   Margin="0,10,0,5"/>
+                        <TextBlock Grid.Row="2"
+                                   x:Name="txtTotalVentas"
+                                   Text="$0"
+                                   FontSize="24"
+                                   FontWeight="Bold"
+                                   Foreground="{DynamicResource PrimaryBrush}"/>
+                    </Grid>
+                </Border>
+
+                <Border Background="{DynamicResource Surface}"
+                        Padding="20"
+                        Margin="5"
+                        CornerRadius="10"
+                        BorderBrush="#4CAF50"
+                        BorderThickness="2">
+                    <Border.Effect>
+                        <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" Opacity="0.15" BlurRadius="10"/>
+                    </Border.Effect>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <materialDesign:PackIcon Kind="AccountCheck"
+                                                 Width="28" Height="28"
+                                                 Foreground="#4CAF50"
+                                                 HorizontalAlignment="Left"/>
+                        <TextBlock Grid.Row="1"
+                                   Text="Usuarios Activos"
+                                   FontSize="13"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextSecondary}"
+                                   Margin="0,10,0,5"/>
+                        <TextBlock Grid.Row="2"
+                                   x:Name="txtUsuariosActivos"
+                                   Text="0"
+                                   FontSize="24"
+                                   FontWeight="Bold"
+                                   Foreground="#4CAF50"/>
+                    </Grid>
+                </Border>
+
+                <Border Background="{DynamicResource Surface}"
+                        Padding="20"
+                        Margin="5"
+                        CornerRadius="10"
+                        BorderBrush="#FF5252"
+                        BorderThickness="2">
+                    <Border.Effect>
+                        <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" Opacity="0.15" BlurRadius="10"/>
+                    </Border.Effect>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <materialDesign:PackIcon Kind="AccountOff"
+                                                 Width="28" Height="28"
+                                                 Foreground="#FF5252"
+                                                 HorizontalAlignment="Left"/>
+                        <TextBlock Grid.Row="1"
+                                   Text="Usuarios Inactivos"
+                                   FontSize="13"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextSecondary}"
+                                   Margin="0,10,0,5"/>
+                        <TextBlock Grid.Row="2"
+                                   x:Name="txtUsuariosInactivos"
+                                   Text="0"
+                                   FontSize="24"
+                                   FontWeight="Bold"
+                                   Foreground="#FF5252"/>
+                    </Grid>
+                </Border>
+
+                <Border Background="{DynamicResource Surface}"
+                        Padding="20"
+                        Margin="5"
+                        CornerRadius="10"
+                        BorderBrush="#FF9800"
+                        BorderThickness="2">
+                    <Border.Effect>
+                        <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" Opacity="0.15" BlurRadius="10"/>
+                    </Border.Effect>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <materialDesign:PackIcon Kind="AccountStar"
+                                                 Width="28" Height="28"
+                                                 Foreground="#FF9800"
+                                                 HorizontalAlignment="Left"/>
+                        <TextBlock Grid.Row="1"
+                                   Text="Clientes Frecuentes"
+                                   FontSize="13"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextSecondary}"
+                                   Margin="0,10,0,5"/>
+                        <TextBlock Grid.Row="2"
+                                   x:Name="txtClientesFrecuentes"
+                                   Text="0"
+                                   FontSize="24"
+                                   FontWeight="Bold"
+                                   Foreground="#FF9800"/>
+                    </Grid>
+                </Border>
+            </UniformGrid>
+
+            <!-- Filtros -->
+            <Border Grid.Row="2"
+                    Background="{DynamicResource Surface}"
+                    Padding="15"
+                    Margin="0,0,0,20"
+                    CornerRadius="8"
+                    BorderBrush="{DynamicResource TextSecondary}"
+                    BorderThickness="1">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Período:"
+                               VerticalAlignment="Center"
+                               Margin="0,0,10,0"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextPrimary}"/>
+                    <ComboBox Width="150"
+                              Margin="0,0,20,0"
+                              SelectedIndex="0">
+                        <ComboBoxItem Content="Últimos 7 días"/>
+                        <ComboBoxItem Content="Último mes"/>
+                        <ComboBoxItem Content="Último año"/>
+                        <ComboBoxItem Content="Personalizado"/>
+                    </ComboBox>
+
+                    <TextBlock Text="Categoría:"
+                               VerticalAlignment="Center"
+                               Margin="0,0,10,0"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextPrimary}"/>
+                    <ComboBox Width="150"
+                              SelectedIndex="0">
+                        <ComboBoxItem Content="Todas"/>
+                        <ComboBoxItem Content="Hardware"/>
+                        <ComboBoxItem Content="Periféricos"/>
+                        <ComboBoxItem Content="Componentes"/>
+                    </ComboBox>
                 </StackPanel>
             </Border>
 
-            <!-- Botones de acción -->
-            <StackPanel Grid.Column="2" Orientation="Horizontal">
-                <Button x:Name="btnExportarExcel"
-                        Click="btnExportarExcel_Click"
-                        Background="{DynamicResource PrimaryBrush}"
-                        Foreground="{DynamicResource PrimaryForegroundBrush}"
-                        BorderThickness="0"
-                        Padding="15,8"
-                        Margin="0,0,10,0"
-                        Cursor="Hand">
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="Button">
-                                        <Border Background="{TemplateBinding Background}"
-                                                CornerRadius="6"
-                                                Padding="{TemplateBinding Padding}">
-                                            <StackPanel Orientation="Horizontal">
-                                                <materialDesign:PackIcon Kind="FileExcel"
-                                                                         Width="18" Height="18"
-                                                                         Foreground="{TemplateBinding Foreground}"
-                                                                         VerticalAlignment="Center"
-                                                                         Margin="0,0,8,0"/>
-                                                <TextBlock Text="Exportar Excel"
-                                                           Foreground="{TemplateBinding Foreground}"
-                                                           FontWeight="Medium"
-                                                           VerticalAlignment="Center"/>
-                                            </StackPanel>
-                                        </Border>
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Opacity" Value="0.85"/>
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </Button.Style>
-                </Button>
-
-                <Button x:Name="btnActualizar"
-                        Click="btnActualizar_Click"
-                        Background="{DynamicResource Surface}"
-                        Foreground="{DynamicResource TextPrimary}"
-                        BorderBrush="{DynamicResource PrimaryBrush}"
-                        BorderThickness="1"
-                        Padding="12,8"
-                        Cursor="Hand">
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="Button">
-                                        <Border Background="{TemplateBinding Background}"
-                                                BorderBrush="{TemplateBinding BorderBrush}"
-                                                BorderThickness="{TemplateBinding BorderThickness}"
-                                                CornerRadius="6"
-                                                Padding="{TemplateBinding Padding}">
-                                            <materialDesign:PackIcon Kind="Refresh"
-                                                                     Width="18" Height="18"
-                                                                     Foreground="{TemplateBinding Foreground}"/>
-                                        </Border>
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="{DynamicResource Background}"/>
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </Button.Style>
-                </Button>
-            </StackPanel>
-        </Grid>
-
-        <!-- Estadísticas generales con diseño premium -->
-        <UniformGrid Grid.Row="1" Columns="4" Margin="0,0,0,20">
-            <!-- Total Ventas -->
-            <Border Background="{DynamicResource Surface}"
-                    Padding="20"
-                    Margin="5"
-                    CornerRadius="10"
-                    BorderBrush="{DynamicResource PrimaryBrush}"
-                    BorderThickness="2">
-                <Border.Effect>
-                    <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" Opacity="0.15" BlurRadius="10"/>
-                </Border.Effect>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <materialDesign:PackIcon Kind="CurrencyUsd"
-                                             Width="28" Height="28"
-                                             Foreground="{DynamicResource PrimaryBrush}"
-                                             HorizontalAlignment="Left"/>
-                    <TextBlock Grid.Row="1"
-                               Text="Total Ventas"
-                               FontSize="13"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource TextSecondary}"
-                               Margin="0,10,0,5"/>
-                    <TextBlock Grid.Row="2"
-                               x:Name="txtTotalVentas"
-                               Text="$0"
-                               FontSize="24"
-                               FontWeight="Bold"
-                               Foreground="{DynamicResource PrimaryBrush}"/>
-                </Grid>
-            </Border>
-
-            <!-- Usuarios Activos -->
-            <Border Background="{DynamicResource Surface}"
-                    Padding="20"
-                    Margin="5"
-                    CornerRadius="10"
-                    BorderBrush="#4CAF50"
-                    BorderThickness="2">
-                <Border.Effect>
-                    <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" Opacity="0.15" BlurRadius="10"/>
-                </Border.Effect>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <materialDesign:PackIcon Kind="AccountCheck"
-                                             Width="28" Height="28"
-                                             Foreground="#4CAF50"
-                                             HorizontalAlignment="Left"/>
-                    <TextBlock Grid.Row="1"
-                               Text="Usuarios Activos"
-                               FontSize="13"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource TextSecondary}"
-                               Margin="0,10,0,5"/>
-                    <TextBlock Grid.Row="2"
-                               x:Name="txtUsuariosActivos"
-                               Text="0"
-                               FontSize="24"
-                               FontWeight="Bold"
-                               Foreground="#4CAF50"/>
-                </Grid>
-            </Border>
-
-            <!-- Usuarios Inactivos -->
-            <Border Background="{DynamicResource Surface}"
-                    Padding="20"
-                    Margin="5"
-                    CornerRadius="10"
-                    BorderBrush="#FF5252"
-                    BorderThickness="2">
-                <Border.Effect>
-                    <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" Opacity="0.15" BlurRadius="10"/>
-                </Border.Effect>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <materialDesign:PackIcon Kind="AccountOff"
-                                             Width="28" Height="28"
-                                             Foreground="#FF5252"
-                                             HorizontalAlignment="Left"/>
-                    <TextBlock Grid.Row="1"
-                               Text="Usuarios Inactivos"
-                               FontSize="13"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource TextSecondary}"
-                               Margin="0,10,0,5"/>
-                    <TextBlock Grid.Row="2"
-                               x:Name="txtUsuariosInactivos"
-                               Text="0"
-                               FontSize="24"
-                               FontWeight="Bold"
-                               Foreground="#FF5252"/>
-                </Grid>
-            </Border>
-
-            <!-- Clientes Frecuentes -->
-            <Border Background="{DynamicResource Surface}"
-                    Padding="20"
-                    Margin="5"
+            <!-- DataGrid Clientes Frecuentes -->
+            <Border Grid.Row="3"
+                    Background="{DynamicResource Surface}"
+                    Padding="15"
+                    Margin="0,0,0,20"
                     CornerRadius="10"
                     BorderBrush="#FF9800"
-                    BorderThickness="2">
-                <Border.Effect>
-                    <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" Opacity="0.15" BlurRadius="10"/>
-                </Border.Effect>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <materialDesign:PackIcon Kind="AccountStar"
-                                             Width="28" Height="28"
-                                             Foreground="#FF9800"
-                                             HorizontalAlignment="Left"/>
-                    <TextBlock Grid.Row="1"
-                               Text="Clientes Frecuentes"
-                               FontSize="13"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource TextSecondary}"
-                               Margin="0,10,0,5"/>
-                    <TextBlock Grid.Row="2"
-                               x:Name="txtClientesFrecuentes"
-                               Text="0"
-                               FontSize="24"
-                               FontWeight="Bold"
-                               Foreground="#FF9800"/>
-                </Grid>
-            </Border>
-        </UniformGrid>
-
-        <!-- Filtros avanzados -->
-        <Border Grid.Row="2"
-                Background="{DynamicResource Surface}"
-                Padding="15"
-                Margin="0,0,0,20"
-                CornerRadius="8"
-                BorderBrush="{DynamicResource TextSecondary}"
-                BorderThickness="1">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Período:"
-                           VerticalAlignment="Center"
-                           Margin="0,0,10,0"
-                           FontWeight="SemiBold"
-                           Foreground="{DynamicResource TextPrimary}"/>
-                <ComboBox Width="150"
-                          Margin="0,0,20,0"
-                          SelectedIndex="0">
-                    <ComboBoxItem Content="Últimos 7 días"/>
-                    <ComboBoxItem Content="Último mes"/>
-                    <ComboBoxItem Content="Último año"/>
-                    <ComboBoxItem Content="Personalizado"/>
-                </ComboBox>
-
-                <TextBlock Text="Categoría:"
-                           VerticalAlignment="Center"
-                           Margin="0,0,10,0"
-                           FontWeight="SemiBold"
-                           Foreground="{DynamicResource TextPrimary}"/>
-                <ComboBox Width="150"
-                          SelectedIndex="0">
-                    <ComboBoxItem Content="Todas"/>
-                    <ComboBoxItem Content="Hardware"/>
-                    <ComboBoxItem Content="Periféricos"/>
-                    <ComboBoxItem Content="Componentes"/>
-                </ComboBox>
-            </StackPanel>
-        </Border>
-
-        <!-- DataGrid Clientes Frecuentes -->
-        <Border Grid.Row="3"
-                Background="{DynamicResource Surface}"
-                Padding="15"
-                Margin="0,0,0,20"
-                CornerRadius="10"
-                BorderBrush="#FF9800"
-                BorderThickness="1">
-            <Border.Effect>
-                <DropShadowEffect Color="Black" Direction="270" ShadowDepth="2" Opacity="0.1" BlurRadius="8"/>
-            </Border.Effect>
-            <StackPanel>
-                <TextBlock Text="Clientes Frecuentes"
-                           FontWeight="Bold"
-                           FontSize="16"
-                           Foreground="{DynamicResource TextPrimary}"
-                           Margin="0,0,0,15"/>
-                <DataGrid x:Name="dgClientesFrecuentes"
-                          AutoGenerateColumns="False"
-                          IsReadOnly="True"
-                          HeadersVisibility="Column"
-                          GridLinesVisibility="None"
-                          Background="Transparent"
-                          BorderThickness="0"
-                          RowBackground="{DynamicResource Surface}"
-                          AlternatingRowBackground="{DynamicResource Background}"
-                          Height="180">
-                    <DataGrid.ColumnHeaderStyle>
-                        <Style TargetType="DataGridColumnHeader">
-                            <Setter Property="Background" Value="#FF9800"/>
-                            <Setter Property="Foreground" Value="White"/>
-                            <Setter Property="FontWeight" Value="Bold"/>
-                            <Setter Property="Padding" Value="10,8"/>
-                            <Setter Property="BorderThickness" Value="0"/>
-                        </Style>
-                    </DataGrid.ColumnHeaderStyle>
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Cliente" Binding="{Binding Nombre}" Width="*"/>
-                        <DataGridTextColumn Header="Compras" Binding="{Binding TotalCompras}" Width="100">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Center"/>
-                                    <Setter Property="FontWeight" Value="SemiBold"/>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn Header="Total Gastado" Binding="{Binding MontoTotal}" Width="150">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Right"/>
-                                    <Setter Property="FontWeight" Value="SemiBold"/>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </StackPanel>
-        </Border>
-
-        <!-- Productos más vendidos y gráfico -->
-        <Grid Grid.Row="4">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="3*"/>
-            </Grid.ColumnDefinitions>
-
-            <!-- DataGrid Productos -->
-            <Border Background="{DynamicResource Surface}"
-                    Padding="15"
-                    Margin="0,0,10,0"
-                    CornerRadius="10"
-                    BorderBrush="{DynamicResource PrimaryBrush}"
                     BorderThickness="1">
                 <Border.Effect>
                     <DropShadowEffect Color="Black" Direction="270" ShadowDepth="2" Opacity="0.1" BlurRadius="8"/>
                 </Border.Effect>
                 <StackPanel>
-                    <TextBlock Text="Top Productos Vendidos"
+                    <TextBlock Text="Clientes Frecuentes"
                                FontWeight="Bold"
                                FontSize="16"
                                Foreground="{DynamicResource TextPrimary}"
                                Margin="0,0,0,15"/>
-                    <DataGrid x:Name="dgProductosVendidos"
+                    <DataGrid x:Name="dgClientesFrecuentes"
                               AutoGenerateColumns="False"
                               IsReadOnly="True"
                               HeadersVisibility="Column"
@@ -409,22 +341,30 @@
                               BorderThickness="0"
                               RowBackground="{DynamicResource Surface}"
                               AlternatingRowBackground="{DynamicResource Background}"
-                              Height="380">
+                              MaxHeight="200">
                         <DataGrid.ColumnHeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
-                                <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundBrush}"/>
+                                <Setter Property="Background" Value="#FF9800"/>
+                                <Setter Property="Foreground" Value="White"/>
                                 <Setter Property="FontWeight" Value="Bold"/>
                                 <Setter Property="Padding" Value="10,8"/>
                                 <Setter Property="BorderThickness" Value="0"/>
                             </Style>
                         </DataGrid.ColumnHeaderStyle>
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Producto" Binding="{Binding Nombre}" Width="*"/>
-                            <DataGridTextColumn Header="Cantidad" Binding="{Binding Cantidad}" Width="100">
+                            <DataGridTextColumn Header="Cliente" Binding="{Binding Nombre}" Width="*"/>
+                            <DataGridTextColumn Header="Compras" Binding="{Binding TotalCompras}" Width="100">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="FontWeight" Value="SemiBold"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Total Gastado" Binding="{Binding MontoTotal}" Width="150">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Right"/>
                                         <Setter Property="FontWeight" Value="SemiBold"/>
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
@@ -434,52 +374,108 @@
                 </StackPanel>
             </Border>
 
-            <!-- Gráfico visual -->
-            <Border Grid.Column="1"
-                    Background="{DynamicResource Surface}"
-                    Padding="15"
-                    CornerRadius="10"
-                    BorderBrush="{DynamicResource PrimaryBrush}"
-                    BorderThickness="1">
-                <Border.Effect>
-                    <DropShadowEffect Color="Black" Direction="270" ShadowDepth="2" Opacity="0.1" BlurRadius="8"/>
-                </Border.Effect>
-                <StackPanel>
-                    <TextBlock Text="Análisis Visual de Ventas"
-                               FontWeight="Bold"
-                               FontSize="16"
-                               Foreground="{DynamicResource TextPrimary}"
-                               Margin="0,0,0,15"/>
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" Height="380">
-                        <ItemsControl x:Name="icGraficoProductos">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border Margin="0,8" Padding="10" Background="{DynamicResource Background}" CornerRadius="6">
-                                        <StackPanel>
-                                            <Grid Margin="0,0,0,5">
-                                                <TextBlock Text="{Binding Nombre}"
-                                                           FontWeight="SemiBold"
-                                                           Foreground="{DynamicResource TextPrimary}"
-                                                           HorizontalAlignment="Left"/>
-                                                <TextBlock Text="{Binding Cantidad}"
-                                                           FontWeight="Bold"
-                                                           Foreground="{DynamicResource PrimaryBrush}"
-                                                           HorizontalAlignment="Right"/>
-                                            </Grid>
-                                            <ProgressBar Value="{Binding Cantidad}"
-                                                         Maximum="100"
-                                                         Height="18"
-                                                         Foreground="{DynamicResource PrimaryBrush}"
-                                                         Background="#20000000"
-                                                         BorderThickness="0"/>
-                                        </StackPanel>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </ScrollViewer>
-                </StackPanel>
-            </Border>
+            <!-- Productos más vendidos y gráfico -->
+            <Grid Grid.Row="4" Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Background="{DynamicResource Surface}"
+                        Padding="15"
+                        Margin="0,0,10,0"
+                        CornerRadius="10"
+                        BorderBrush="{DynamicResource PrimaryBrush}"
+                        BorderThickness="1">
+                    <Border.Effect>
+                        <DropShadowEffect Color="Black" Direction="270" ShadowDepth="2" Opacity="0.1" BlurRadius="8"/>
+                    </Border.Effect>
+                    <StackPanel>
+                        <TextBlock Text="Top Productos Vendidos"
+                                   FontWeight="Bold"
+                                   FontSize="16"
+                                   Foreground="{DynamicResource TextPrimary}"
+                                   Margin="0,0,0,15"/>
+                        <DataGrid x:Name="dgProductosVendidos"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  HeadersVisibility="Column"
+                                  GridLinesVisibility="None"
+                                  Background="Transparent"
+                                  BorderThickness="0"
+                                  RowBackground="{DynamicResource Surface}"
+                                  AlternatingRowBackground="{DynamicResource Background}"
+                                  MaxHeight="300">
+                            <DataGrid.ColumnHeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundBrush}"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="Padding" Value="10,8"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                </Style>
+                            </DataGrid.ColumnHeaderStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Producto" Binding="{Binding Nombre}" Width="*"/>
+                                <DataGridTextColumn Header="Cantidad" Binding="{Binding Cantidad}" Width="100">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                                            <Setter Property="FontWeight" Value="SemiBold"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="1"
+                        Background="{DynamicResource Surface}"
+                        Padding="15"
+                        CornerRadius="10"
+                        BorderBrush="{DynamicResource PrimaryBrush}"
+                        BorderThickness="1">
+                    <Border.Effect>
+                        <DropShadowEffect Color="Black" Direction="270" ShadowDepth="2" Opacity="0.1" BlurRadius="8"/>
+                    </Border.Effect>
+                    <StackPanel>
+                        <TextBlock Text="Análisis Visual de Ventas"
+                                   FontWeight="Bold"
+                                   FontSize="16"
+                                   Foreground="{DynamicResource TextPrimary}"
+                                   Margin="0,0,0,15"/>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="300">
+                            <ItemsControl x:Name="icGraficoProductos">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Margin="0,8" Padding="10" Background="{DynamicResource Background}" CornerRadius="6">
+                                            <StackPanel>
+                                                <Grid Margin="0,0,0,5">
+                                                    <TextBlock Text="{Binding Nombre}"
+                                                               FontWeight="SemiBold"
+                                                               Foreground="{DynamicResource TextPrimary}"
+                                                               HorizontalAlignment="Left"/>
+                                                    <TextBlock Text="{Binding Cantidad}"
+                                                               FontWeight="Bold"
+                                                               Foreground="{DynamicResource PrimaryBrush}"
+                                                               HorizontalAlignment="Right"/>
+                                                </Grid>
+                                                <ProgressBar Value="{Binding Cantidad}"
+                                                             Maximum="100"
+                                                             Height="18"
+                                                             Foreground="{DynamicResource PrimaryBrush}"
+                                                             Background="#20000000"
+                                                             BorderThickness="0"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </StackPanel>
+                </Border>
+            </Grid>
         </Grid>
-    </Grid>
+    </ScrollViewer>
 </UserControl>
