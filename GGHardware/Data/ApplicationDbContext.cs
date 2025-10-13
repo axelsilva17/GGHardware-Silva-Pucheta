@@ -1,6 +1,7 @@
 ﻿using GGHardware.Models;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace GGHardware.Data
 {
     public partial class ApplicationDbContext : DbContext
@@ -46,7 +47,8 @@ namespace GGHardware.Data
         public DbSet<Reporte> Reportes { get; set; }
 
         // DbSet para BackupRegistro
-        public DbSet<BackupRegistro> Backups { get; set; }
+        public DbSet<Backup> Backups { get; set; }
+        public DbSet<SolicitudRestauracion> SolicitudRestauraciones { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

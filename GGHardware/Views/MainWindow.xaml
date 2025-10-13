@@ -236,8 +236,6 @@
                                        Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
                         </StackPanel>
                     </Button>
-                    
-                    
 
                     <Button x:Name="btnBackup" 
                             Click="btnBackup_Click" 
@@ -256,12 +254,28 @@
                         </StackPanel>
                     </Button>
 
+                    <Button x:Name="btnRestauracion" 
+                            Click="btnRestauracion_Click" 
+                            Style="{StaticResource MenuButtonStyle}"
+                            HorizontalContentAlignment="Left"
+                            Foreground="{DynamicResource TextPrimary}">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <materialDesign:PackIcon Kind="Download" 
+                                                     Width="20" Height="20" 
+                                                     Margin="0,0,12,0"
+                                                     Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
+                            <TextBlock Text="Solicitud de Restauración" 
+                                       FontSize="14"
+                                       FontWeight="Medium"
+                                       Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
+                        </StackPanel>
+                    </Button>
+
                     <Button x:Name="btnProveedores" 
                             Click="btnProveedores_Click" 
                             Style="{StaticResource MenuButtonStyle}"
                             HorizontalContentAlignment="Left"
-                            Foreground="{DynamicResource TextPrimary}"
-                            > 
+                            Foreground="{DynamicResource TextPrimary}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <materialDesign:PackIcon Kind="TruckDelivery" 
                                          Width="20" Height="20" 
@@ -274,20 +288,12 @@
                         </StackPanel>
                     </Button>
 
-
                     <!-- Separador -->
                     <Rectangle Height="1" 
                                Fill="{DynamicResource PrimaryBrush}" 
                                Opacity="0.3" 
                                Margin="15,20"/>
 
-                    <!-- Título de configuración -->
-                    <TextBlock Text="CONFIGURACIÓN"
-                               FontWeight="Bold"
-                               FontSize="12"
-                               Foreground="{DynamicResource TextSecondary}"
-                               Margin="20,10,20,10"
-                               Opacity="0.8"/>
 
                     <Button x:Name="btnModoOscuro" 
                             Click="ToggleTheme_Click" 

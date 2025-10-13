@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using GGHardware.Services;
+using GGHardware.ViewModels;
 using static MaterialDesignThemes.Wpf.Theme.ToolBar;
 
 namespace GGHardware
@@ -35,7 +37,8 @@ namespace GGHardware
             btnReportes.Visibility = Visibility.Collapsed;
             btnBackup.Visibility = Visibility.Collapsed;
             btnProveedores.Visibility = Visibility.Collapsed;
-            
+            btnRestauracion.Visibility = Visibility.Collapsed;
+
 
             // Mostrar botones según rol
             switch (UsuarioActual.RolId)
@@ -45,7 +48,8 @@ namespace GGHardware
                     btnRegistro.Visibility = Visibility.Visible;
                     btnReportes.Visibility = Visibility.Visible;
                     btnProductos.Visibility = Visibility.Visible;
-                  
+                    btnRestauracion.Visibility = Visibility.Visible;
+
                     break;
 
                 case 2: // Usuario/Vendedor
@@ -244,6 +248,39 @@ namespace GGHardware
             UpdateThemeButtonContent(true); // true = modo claro activo, mostrar opción para oscuro
         }
 
+
+        private void btnRestauracion_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (UsuarioActual == null)
+                {
+                    MessageBox.Show("Debe iniciar sesión primero", "Advertencia",
+                                  MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                var context = new GGHardware.Data.ApplicationDbContext();
+                var service = new GGHardware.Services.SolicitudRestauracionService(context);
+                var solicitudView = new GGHardware.Views.SolicitudRestauracionView();
+
+                // Usa UsuarioActual.id_usuario directamente
+                var viewModel = new GGHardware.ViewModels.SolicitudRestauracionViewModel(
+                    service,
+                    UsuarioActual.id_usuario  // ← Aquí usas directamente la propiedad
+                );
+
+                solicitudView.DataContext = viewModel;
+                MainContentBorder.Child = solicitudView;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Error",
+                              MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+       
         private void UpdateThemeButtonContent(bool isLightMode)
         {
             var stackPanel = new StackPanel { Orientation = Orientation.Horizontal };

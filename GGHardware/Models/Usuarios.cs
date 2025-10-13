@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+
 namespace GGHardware.Models
 {
     [Table("Usuarios")] // <-- Nombre de la tabla en SQL (ajústalo si es distinto)
@@ -36,6 +37,20 @@ namespace GGHardware.Models
 
         [Required]
         public required int RolId { get; set; }
+
+        // Solicitudes donde es supervisor
+        [InverseProperty("Supervisor")]
+        public virtual ICollection<SolicitudRestauracion> SolicitudesComoSupervisor { get; set; }
+
+        // Solicitudes donde es gerente
+        [InverseProperty("Gerente")]
+        public virtual ICollection<SolicitudRestauracion> SolicitudesComoGerente { get; set; }
+
+        public Usuario()
+        {
+            SolicitudesComoSupervisor = new List<SolicitudRestauracion>();
+            SolicitudesComoGerente = new List<SolicitudRestauracion>();
+        }
 
         [Column(TypeName = "date")]
        public DateTime? fecha_Nacimiento { get; set; } 

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace GGHardware.Models
 {
     [Table("Backups")]
-    public class BackupRegistro
+    public class Backup
     {
         public int Id { get; set; }
         public string NombreArchivo { get; set; }
