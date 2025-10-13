@@ -45,6 +45,10 @@ namespace GGHardware.Data
         //DbSet para Reportes
         public DbSet<Reporte> Reportes { get; set; }
 
+        // DbSet para BackupRegistro
+        public DbSet<BackupRegistro> Backups { get; set; }
+
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)

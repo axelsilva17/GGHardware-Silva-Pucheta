@@ -99,11 +99,11 @@ namespace GGHardware.Views
                     var producto = new Producto
                     {
                         Nombre = txtNombre.Text,
-                        precio_costo = precioCosto,
-                        precio_venta = precioVenta,
+                        precio_costo = (decimal)precioCosto,
+                        precio_venta = (decimal)precioVenta,
                         descripcion = txtDescripcion.Text,
-                        Stock = stock,
-                        stock_min = stockMin,
+                        Stock = (int)stock,
+                        stock_min = (int)stockMin,
                         codigo_barras = txtCodigoBarras.Text,
                         codigo_interno = txtCodigoInterno.Text,
                         id_categoria = (int)cmbCategoria.SelectedValue, 

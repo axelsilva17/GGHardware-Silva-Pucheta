@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Data.SqlClient;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
 using Microsoft.Data.SqlClient;
 using GGHardware.Data;
 using Microsoft.EntityFrameworkCore;
-
-
 
 namespace GGHardware.Views
 {
@@ -16,8 +14,21 @@ namespace GGHardware.Views
         public Backup()
         {
             InitializeComponent();
+            CargarHistorial();
         }
 
+        // Cargar el historial de backups en el DataGrid
+        private void CargarHistorial()
+        {
+            using (var context = new ApplicationDbContext())
+            {
+                dgBackups.ItemsSource = context.Backups
+                                               .OrderByDescending(b => b.Fecha)
+                                               .ToList();
+            }
+        }
+
+        // Seleccionar ruta para guardar backup
         private void btnSeleccionarRuta_Click(object sender, RoutedEventArgs e)
         {
             var dlg = new SaveFileDialog
@@ -32,17 +43,17 @@ namespace GGHardware.Views
                 txtRuta.Text = dlg.FileName;
             }
         }
+
+        // Realizar backup y guardar registro
         private void btnBackup_Click(object sender, RoutedEventArgs e)
         {
-            // Verifica si se ha seleccionado una ruta de archivo
-            if (string.IsNullOrEmpty(txtRuta.Text) || txtRuta.Text.Contains("Seleccione una ubicacion"))
+            if (string.IsNullOrEmpty(txtRuta.Text))
             {
-                MessageBox.Show("Por favor, selecciona una ubicación para guardar el backup.",
+                MessageBox.Show("Seleccione una ubicación para guardar el backup.",
                                 "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            // Actualiza el estado en la interfaz de usuario
             lblEstado.Text = "🔄 Realizando backup...";
             lblEstado.Foreground = System.Windows.Media.Brushes.Orange;
 
@@ -51,20 +62,17 @@ namespace GGHardware.Views
 
             try
             {
-                // Obtener la cadena de conexión del contexto de Entity Framework Core
                 string connectionString;
                 using (var context = new ApplicationDbContext())
                 {
-                    // Esta es la línea corregida para EF Core
                     connectionString = context.Database.GetDbConnection().ConnectionString;
                 }
 
                 using (SqlConnection con = new SqlConnection(connectionString))
                 {
                     con.Open();
-
-                    // Comando SQL para realizar el backup
-                    string backupQuery = $"BACKUP DATABASE [{databaseName}] TO DISK = '{backupPath}' WITH NOFORMAT, NOINIT, NAME = '{databaseName}-Full Backup', SKIP, NOREWIND, NOUNLOAD, STATS = 10";
+                    string backupQuery = $"BACKUP DATABASE [{databaseName}] TO DISK = '{backupPath}' " +
+                                         "WITH NOFORMAT, NOINIT, NAME = '{databaseName}-Full Backup', SKIP, NOREWIND, NOUNLOAD, STATS = 10";
 
                     using (SqlCommand cmd = new SqlCommand(backupQuery, con))
                     {
@@ -72,29 +80,82 @@ namespace GGHardware.Views
                     }
                 }
 
-                // Muestra un mensaje de éxito y actualiza el estado
-                MessageBox.Show("¡Backup realizado exitosamente!",
-                                "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+                // Guardar registro del backup en la DB
+                using (var context = new ApplicationDbContext())
+                {
+                    context.Backups.Add(new Models.BackupRegistro
+                    {
+                        NombreArchivo = System.IO.Path.GetFileName(backupPath),
+                        Fecha = DateTime.Now,
+                        RutaArchivo = backupPath
+                    });
+                    context.SaveChanges();
+                }
 
                 lblEstado.Text = "✅ Backup realizado correctamente";
                 lblEstado.Foreground = System.Windows.Media.Brushes.Green;
-            }
-            catch (SqlException ex)
-            {
-                MessageBox.Show($"Error al realizar el backup: {ex.Message}\n\nAsegúrate de que el usuario de Windows o el servicio de SQL Server tenga permisos de escritura en la carpeta seleccionada.",
-                                "Error de Backup", MessageBoxButton.OK, MessageBoxImage.Error);
 
-                lblEstado.Text = "❌ Error al realizar el backup";
-                lblEstado.Foreground = System.Windows.Media.Brushes.Red;
+                CargarHistorial();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ocurrió un error inesperado: {ex.Message}",
-                                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-
-                lblEstado.Text = "❌ Error inesperado";
+                lblEstado.Text = "❌ Error al realizar el backup";
                 lblEstado.Foreground = System.Windows.Media.Brushes.Red;
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        // Restaurar backup seleccionado
+        private void RestaurarBackup_Click(object sender, RoutedEventArgs e)
+        {
+            var backup = dgBackups.SelectedItem as Models.BackupRegistro;
+            if (backup == null) return;
+
+            if (MessageBox.Show($"¿Desea restaurar el backup '{backup.NombreArchivo}'? Esto reemplazará la base de datos actual.",
+                                "Confirmar restauración", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
+                return;
+
+            string databaseName = "GGHardware";
+            string ruta = backup.RutaArchivo;
+
+            try
+            {
+                string connectionString;
+                using (var context = new ApplicationDbContext())
+                {
+                    connectionString = context.Database.GetDbConnection().ConnectionString;
+                }
+
+                // NUEVO CÓDIGO: Conectarse a master
+                var builder = new SqlConnectionStringBuilder(connectionString)
+                {
+                    InitialCatalog = "master"
+                };
+
+                using (SqlConnection con = new SqlConnection(builder.ConnectionString))
+                {
+                    con.Open();
+                    string sql = $@"
+                ALTER DATABASE [{databaseName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+                RESTORE DATABASE [{databaseName}] FROM DISK = N'{ruta}' WITH REPLACE;
+                ALTER DATABASE [{databaseName}] SET MULTI_USER;
+            ";
+
+                    using (SqlCommand cmd = new SqlCommand(sql, con))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                MessageBox.Show("Base de datos restaurada correctamente.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+                CargarHistorial();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al restaurar: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+
     }
 }

@@ -56,7 +56,9 @@ namespace GGHardware.Models
             (precio_unitario - precio_con_descuento.Value) * cantidad : 0;
 
         [NotMapped]
-        public double PorcentajeDescuento => TieneDescuento ?
-            (double)(((precio_unitario - precio_con_descuento.Value) / precio_unitario) * 100) : 0;
+        public decimal PorcentajeDescuento => TieneDescuento
+        ? ((precio_unitario - precio_con_descuento.Value) / precio_unitario) * 100
+        : 0;
+
     }
 }

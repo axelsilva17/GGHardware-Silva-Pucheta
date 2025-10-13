@@ -120,10 +120,10 @@ namespace GGHardware.Views
                         // Actualizar las propiedades del producto
                         producto.Nombre = txtNombre.Text;
                         producto.descripcion = txtDescripcion.Text;
-                        producto.precio_costo = precioCosto;
-                        producto.precio_venta = precioVenta;
-                        producto.Stock = stock;
-                        producto.stock_min = stockMin;
+                        producto.precio_costo = (decimal)precioCosto;
+                        producto.precio_venta = (decimal)precioVenta;
+                        producto.Stock = (int)stock;
+                        producto.stock_min = (int)stockMin;
                         producto.codigo_barras = txtCodigoBarras.Text;
                         producto.codigo_interno = txtCodigoInterno.Text;
                         producto.id_categoria = (int)cmbCategoria.SelectedValue;

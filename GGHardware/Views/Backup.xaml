@@ -21,31 +21,38 @@
                            Margin="0 0 0 20"/>
 
                 <StackPanel Grid.Row="1" VerticalAlignment="Top">
+                    <!-- Tu seccion actual de seleccion de ruta y backup -->
                     <StackPanel Orientation="Horizontal" Margin="0 0 0 15">
-                        <TextBox x:Name="txtRuta"
-                                 Width="350"
-                                 Margin="0 0 10 0"
-                                 IsReadOnly="True"
-                                 materialDesign:HintAssist.Hint="Seleccione una ubicacion para guardar"/>
-                        <Button x:Name="btnSeleccionarRuta"
-                                Content="Buscar..."
-                                Width="100"
-                                Style="{DynamicResource MaterialDesignRaisedButton}"
-                                Click="btnSeleccionarRuta_Click"/>
+                        <TextBox x:Name="txtRuta" Width="350" Margin="0 0 10 0" IsReadOnly="True"
+                 materialDesign:HintAssist.Hint="Seleccione una ubicacion para guardar"/>
+                        <Button x:Name="btnSeleccionarRuta" Content="Buscar..." Width="100"
+                Style="{DynamicResource MaterialDesignRaisedButton}" Click="btnSeleccionarRuta_Click"/>
                     </StackPanel>
 
-                    <Button x:Name="btnBackup"
-                            Content="Realizar Backup"
-                            Width="150" Height="40"
-                            Style="{DynamicResource MaterialDesignRaisedButton}"
-                            FontWeight="Bold"
-                            Click="btnBackup_Click"
-                            Margin="0 0 0 15"/>
+                    <Button x:Name="btnBackup" Content="Realizar Backup" Width="150" Height="40"
+            Style="{DynamicResource MaterialDesignRaisedButton}" FontWeight="Bold"
+            Click="btnBackup_Click" Margin="0 0 0 15"/>
+                    <TextBlock x:Name="lblEstado" FontSize="14" Foreground="{DynamicResource MaterialDesignBody}"/>
 
-                    <TextBlock x:Name="lblEstado"
-                               FontSize="14"
-                               Foreground="{DynamicResource MaterialDesignBody}"/>
+                    <!-- DataGrid para historial -->
+                    <DataGrid x:Name="dgBackups" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
+              Height="200" Margin="0 20 0 0">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto"/>
+                            <DataGridTextColumn Header="Archivo" Binding="{Binding NombreArchivo}" Width="*"/>
+                            <DataGridTextColumn Header="Fecha" Binding="{Binding Fecha}" Width="*"/>
+                            <DataGridTextColumn Header="Ruta" Binding="{Binding RutaArchivo}" Width="*"/>
+                            <DataGridTemplateColumn Header="Acciones">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="Restaurar" Click="RestaurarBackup_Click"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </StackPanel>
+
             </Grid>
         </Border>
     </Grid>

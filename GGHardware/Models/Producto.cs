@@ -25,26 +25,26 @@ namespace GGHardware.Models
             }
         }
 
-        public double precio_costo { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal precio_costo { get; set; }
 
-        private double _precio_venta;
-        public double precio_venta
+        private decimal _precio_venta;
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal precio_venta
         {
             get => _precio_venta;
-            set
-            {
-                _precio_venta = value;
-                OnPropertyChanged();
-            }
+            set { _precio_venta = value; OnPropertyChanged(); }
+
         }
 
         [MaxLength(255)]
         public string descripcion { get; set; }
 
-        public double stock_min { get; set; }
+        public int stock_min { get; set; }
 
-        private double _stock;
-        public double Stock
+        private int _stock;
+        public int Stock
         {
             get => _stock;
             set
@@ -55,7 +55,7 @@ namespace GGHardware.Models
             }
         }
 
-       
+
         public int id_categoria { get; set; }   // FK
         [ForeignKey("id_categoria")]
         public Categoria Categoria { get; set; }

@@ -44,6 +44,7 @@ namespace GGHardware
                   
                     btnRegistro.Visibility = Visibility.Visible;
                     btnReportes.Visibility = Visibility.Visible;
+                    btnProductos.Visibility = Visibility.Visible;
                   
                     break;
 

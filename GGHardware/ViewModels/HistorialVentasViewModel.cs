@@ -137,7 +137,8 @@ namespace GGHardware.ViewModels
                     .Include(v => v.Usuario)
                     .Include(v => v.TipoComprobante)
                     .Include(v => v.Detalles)
-                    .Where(v => v.Fecha >= FechaDesde && v.Fecha <= FechaHasta.AddDays(1));
+                    .Where(v => v.Fecha >= FechaDesde && v.Fecha <= FechaHasta.AddDays(1))
+                    .AsNoTracking(); // AGREGAR ESTO para mejor performance
 
                 // Filtro por cliente (solo si se seleccionó uno)
                 if (ClienteFiltro != null && ClienteFiltro.id_cliente > 0)
@@ -151,9 +152,10 @@ namespace GGHardware.ViewModels
                     query = query.Where(v => v.Estado == EstadoFiltro);
                 }
 
-                var ventas = query.OrderByDescending(v => v.Fecha).ToList();
+                // CAMBIO AQUÍ: Ejecutar la consulta antes de agregar a ObservableCollection
+                var ventasList = query.OrderByDescending(v => v.Fecha).ToList();
 
-                foreach (var venta in ventas)
+                foreach (var venta in ventasList)
                 {
                     Ventas.Add(venta);
                 }
@@ -163,7 +165,7 @@ namespace GGHardware.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al buscar ventas:\n{ex.Message}\n\nStack Trace:\n{ex.StackTrace}",
+                MessageBox.Show($"Error al buscar ventas:\n{ex.Message}\n\nDetalle:\n{ex.InnerException?.Message}",
                     "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
