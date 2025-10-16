@@ -12,7 +12,7 @@ namespace GGHardware.Models
     {
         public int Id { get; set; }
         public string NombreArchivo { get; set; }
-        public DateTime Fecha { get; set; }
+        public DateTime? Fecha { get; set; }
         public string RutaArchivo { get; set; }
     }
 

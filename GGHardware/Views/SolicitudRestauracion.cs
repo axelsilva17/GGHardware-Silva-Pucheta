@@ -12,6 +12,21 @@ namespace GGHardware.Views
             InitializeComponent();
         }
 
+        private void SolicitudRestauracionView_Loaded(object sender, RoutedEventArgs e)
+        {
+            CargarSolicitudes();
+        }
+
+        private void CargarSolicitudes()
+        {
+            var viewModel = DataContext as SolicitudRestauracionViewModel;
+            if (viewModel != null)
+            {
+                // Ejecutar el comando, NO llamar al método directamente
+                viewModel.CargarMisSolicitudesCommand?.Execute(null);
+            }
+        }
+
         private void btnCancelar_Click(object sender, RoutedEventArgs e)
         {
             var viewModel = DataContext as SolicitudRestauracionViewModel;
@@ -22,6 +37,11 @@ namespace GGHardware.Views
                 viewModel.FechaRestauracion = DateTime.Now;
                 viewModel.Mensaje = string.Empty;
             }
+        }
+
+        public void RefrescarSolicitudes()
+        {
+            CargarSolicitudes();
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using GGHardware.Models;
-using GGHardware.Views;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -24,33 +22,28 @@ namespace GGHardware.Models
         [ForeignKey("Backup")]
         public int id_backup { get; set; }
 
-        [Required]
-        public DateTime fecha_solicitud { get; set; }
+        public DateTime? fecha_solicitud { get; set; }
+        public DateTime? fecha_backup { get; set; }
 
-        [Required]
-        public DateTime fecha_backup { get; set; }
-
-        [Required]
         [StringLength(50)]
-        public string estado { get; set; } // Pendiente, Aprobada, Rechazada, Completada, EnRestauracion
+        public string? estado { get; set; }
 
         [StringLength(500)]
-        public string motivo_solicitud { get; set; }
+        public string? motivo_solicitud { get; set; }
 
         [StringLength(500)]
-        public string observaciones_gerente { get; set; }
+        public string? observaciones_gerente { get; set; }
 
         public DateTime? fecha_aprobacion { get; set; }
-
         public DateTime? fecha_restauracion { get; set; }
 
-        // Propiedades de navegación
+        // SOLUCIÓN: Propiedades de navegación NULLABLE
         [InverseProperty("SolicitudesComoSupervisor")]
-        public virtual Usuario Supervisor { get; set; }
+        public virtual Usuario? Supervisor { get; set; }
 
         [InverseProperty("SolicitudesComoGerente")]
-        public virtual Usuario Gerente { get; set; }
+        public virtual Usuario? Gerente { get; set; }
 
-        public virtual Backup Backup { get; set; }
+        public virtual Backup? Backup { get; set; }
     }
 }

@@ -1,12 +1,11 @@
-﻿using GGHardware.Models;
-using GGHardware.Services;
+﻿using GGHardware.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using static GGHardware.Services.SolicitudRestauracionService;
+
 namespace GGHardware.ViewModels
 {
     public class SolicitudRestauracionViewModel : INotifyPropertyChanged
@@ -115,54 +114,87 @@ namespace GGHardware.ViewModels
             CargarBackupsCommand = new RelayCommand(async _ => await CargarBackups());
             CargarMisSolicitudesCommand = new RelayCommand(async _ => await CargarMisSolicitudes());
 
-            // Cargar datos al inicializar
-            CargarBackupsCommand.Execute(null);
-            CargarMisSolicitudesCommand.Execute(null);
+            // SOLUCIÓN: Cargar datos de forma secuencial usando Task.Run
+            Task.Run(async () => await InicializarDatos());
         }
 
-        private async System.Threading.Tasks.Task CargarBackups()
+        // Método para cargar datos iniciales de forma secuencial
+        private async Task InicializarDatos()
+        {
+            try
+            {
+                // Cargar backups primero
+                await CargarBackups();
+
+                // Luego cargar solicitudes
+                await CargarMisSolicitudes();
+            }
+            catch (Exception ex)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    MessageBox.Show($"Error al inicializar datos: {ex.Message}",
+                                  "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                });
+            }
+        }
+
+        private async Task CargarBackups()
         {
             try
             {
                 var backups = await _service.ObtenerBackupsDisponibles();
 
-                BackupsDisponibles.Clear();
-                foreach (var backup in backups)
+                // Actualizar en el hilo UI
+                Application.Current.Dispatcher.Invoke(() =>
                 {
-                    BackupsDisponibles.Add(backup);
-                }
+                    BackupsDisponibles.Clear();
+                    foreach (var backup in backups)
+                    {
+                        BackupsDisponibles.Add(backup);
+                    }
+                });
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar backups: {ex.Message}",
-                              "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    MessageBox.Show($"Error al cargar backups: {ex.Message}",
+                                  "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                });
             }
         }
 
-        private async System.Threading.Tasks.Task CargarMisSolicitudes()
+        private async Task CargarMisSolicitudes()
         {
             try
             {
                 var solicitudes = await _service.ObtenerSolicitudesPorSupervisor(_id_usuario_actual);
 
-                MisSolicitudes.Clear();
-                foreach (var solicitud in solicitudes)
+                // Actualizar en el hilo UI
+                Application.Current.Dispatcher.Invoke(() =>
                 {
-                    MisSolicitudes.Add(solicitud);
-                }
+                    MisSolicitudes.Clear();
+                    foreach (var solicitud in solicitudes)
+                    {
+                        MisSolicitudes.Add(solicitud);
+                    }
+                });
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar solicitudes: {ex.Message}",
-                              "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    MessageBox.Show($"Error al cargar solicitudes: {ex.Message}",
+                                  "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                });
             }
         }
 
-        private async System.Threading.Tasks.Task EnviarSolicitud()
+        private async Task EnviarSolicitud()
         {
             try
             {
-                // Validaciones
                 if (BackupSeleccionado == null)
                 {
                     MessageBox.Show("Debe seleccionar un backup",
@@ -177,7 +209,6 @@ namespace GGHardware.ViewModels
                     return;
                 }
 
-                // Crear solicitud
                 int id_solicitud = await _service.CrearSolicitud(
                     _id_usuario_actual,
                     BackupSeleccionado.id,
@@ -187,13 +218,11 @@ namespace GGHardware.ViewModels
                 MessageBox.Show($"Solicitud enviada exitosamente.\nID de solicitud: {id_solicitud}",
                               "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                // Limpiar formulario
                 BackupSeleccionado = null;
                 Motivo = string.Empty;
                 FechaRestauracion = DateTime.Now;
                 Mensaje = string.Empty;
 
-                // Recargar solicitudes
                 await CargarMisSolicitudes();
             }
             catch (Exception ex)
@@ -211,7 +240,6 @@ namespace GGHardware.ViewModels
         }
     }
 
-    // RelayCommand simple para MVVM
     public class RelayCommand : ICommand
     {
         private readonly Action<object> _execute;

@@ -39,7 +39,6 @@ namespace GGHardware
             btnProveedores.Visibility = Visibility.Collapsed;
             btnRestauracion.Visibility = Visibility.Collapsed;
 
-
             // Mostrar botones según rol
             switch (UsuarioActual.RolId)
             {
@@ -92,6 +91,7 @@ namespace GGHardware
             btnBackup.Visibility = Visibility.Collapsed;
             btnProveedores.Visibility = Visibility.Collapsed;
             btnInicio.Visibility = Visibility.Collapsed;
+            btnRestauracion.Visibility = Visibility.Collapsed;
         }
 
         private void btnProductos_Click(object sender, RoutedEventArgs e)

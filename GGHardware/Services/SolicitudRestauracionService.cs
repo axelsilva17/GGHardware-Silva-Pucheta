@@ -17,7 +17,6 @@ namespace GGHardware.Services
             _context = context;
         }
 
-        // Supervisor crea solicitud de restauración
         public async Task<int> CrearSolicitud(int id_supervisor, int id_backup, string motivo)
         {
             var backup = await _context.Backups
@@ -42,29 +41,65 @@ namespace GGHardware.Services
             return solicitud.id_solicitud;
         }
 
-        // Obtener solicitudes pendientes para gerentes (devuelve ViewModel)
         public async Task<List<SolicitudRestauracionVM>> ObtenerSolicitudesPendientes()
         {
-            return await _context.SolicitudRestauraciones
-                .Where(s => s.estado == "Pendiente")
-                .Include(s => s.Supervisor)
-                .Include(s => s.Backup)
-                .Select(s => new SolicitudRestauracionVM
+            try
+            {
+                var solicitudes = await _context.SolicitudRestauraciones
+                    .Where(s => s.estado == "Pendiente")
+                    .OrderByDescending(s => s.fecha_solicitud)
+                    .ToListAsync();
+
+                if (!solicitudes.Any())
+                    return new List<SolicitudRestauracionVM>();
+
+                var supervisorIds = solicitudes.Select(s => s.id_supervisor).Distinct().ToList();
+                var backupIds = solicitudes.Select(s => s.id_backup).Distinct().ToList();
+
+                var supervisores = await _context.Usuarios
+                    .Where(u => supervisorIds.Contains(u.id_usuario))
+                    .Select(u => new { u.id_usuario, u.Nombre, u.apellido })
+                    .ToDictionaryAsync(u => u.id_usuario);
+
+                var backups = await _context.Backups
+                    .Where(b => backupIds.Contains(b.Id))
+                    .Select(b => new { b.Id, b.NombreArchivo, b.RutaArchivo })
+                    .ToDictionaryAsync(b => b.Id);
+
+                var resultado = solicitudes.Select(s =>
                 {
-                    id_solicitud = s.id_solicitud,
-                    id_supervisor = s.id_supervisor,
-                    nombre_supervisor = s.Supervisor != null ? (s.Supervisor.Nombre + " " + s.Supervisor.apellido) : "N/A",
-                    nombre_archivo_backup = s.Backup != null ? s.Backup.NombreArchivo : "N/A",
-                    fecha_backup = s.fecha_backup,
-                    ruta_archivo = s.Backup != null ? s.Backup.RutaArchivo : "",
-                    fecha_solicitud = s.fecha_solicitud,
-                    estado = s.estado,
-                    motivo_solicitud = s.motivo_solicitud ?? ""
-                })
-                .ToListAsync();
+                    string nombreSupervisor = "N/A";
+                    if (supervisores.TryGetValue(s.id_supervisor, out var supervisor))
+                    {
+                        nombreSupervisor = $"{supervisor.Nombre ?? ""} {supervisor.apellido ?? ""}".Trim();
+                        if (string.IsNullOrWhiteSpace(nombreSupervisor))
+                            nombreSupervisor = "Sin nombre";
+                    }
+
+                    backups.TryGetValue(s.id_backup, out var backup);
+
+                    return new SolicitudRestauracionVM
+                    {
+                        id_solicitud = s.id_solicitud,
+                        id_supervisor = s.id_supervisor,
+                        nombre_supervisor = nombreSupervisor,
+                        nombre_archivo_backup = backup?.NombreArchivo ?? "N/A",
+                        fecha_backup = s.fecha_backup,
+                        ruta_archivo = backup?.RutaArchivo ?? "",
+                        fecha_solicitud = s.fecha_solicitud,
+                        estado = s.estado ?? "Pendiente",
+                        motivo_solicitud = s.motivo_solicitud ?? ""
+                    };
+                }).ToList();
+
+                return resultado;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al obtener solicitudes pendientes: {ex.Message}", ex);
+            }
         }
 
-        // Gerente aprueba o rechaza solicitud
         public async Task<bool> ProcesarSolicitud(int id_solicitud, int id_gerente, bool aprobar, string observaciones)
         {
             var solicitud = await _context.SolicitudRestauraciones
@@ -92,7 +127,6 @@ namespace GGHardware.Services
             return aprobar;
         }
 
-        // Restaurar base de datos
         public async Task<bool> RestaurarBaseDatos(int id_solicitud, string connectionString)
         {
             var solicitud = await _context.SolicitudRestauraciones
@@ -111,7 +145,6 @@ namespace GGHardware.Services
                 _context.SolicitudRestauraciones.Update(solicitud);
                 await _context.SaveChangesAsync();
 
-                // Aquí va la lógica de restauración de la BD
                 await EjecutarRestauracion(solicitud.Backup.RutaArchivo, connectionString);
 
                 solicitud.estado = "Completada";
@@ -131,55 +164,97 @@ namespace GGHardware.Services
             }
         }
 
-        // Obtener backups disponibles para selector
         public async Task<List<BackupDTO>> ObtenerBackupsDisponibles()
         {
-            return await _context.Backups
-                .Select(b => new BackupDTO
+            try
+            {
+                var backups = await _context.Backups
+                    .Where(b => b.Fecha != null)
+                    .OrderByDescending(b => b.Fecha)
+                    .ToListAsync();
+
+                return backups.Select(b => new BackupDTO
                 {
                     id = b.Id,
-                    nombre_archivo = b.NombreArchivo,
-                    fecha = b.Fecha,
-                    ruta_archivo = b.RutaArchivo
-                })
-                .OrderByDescending(b => b.fecha)
-                .ToListAsync();
+                    nombre_archivo = b.NombreArchivo ?? "Sin nombre",
+                    fecha = b.Fecha ?? DateTime.MinValue,
+                    ruta_archivo = b.RutaArchivo ?? ""
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al obtener backups disponibles: {ex.Message}", ex);
+            }
         }
 
-        // Obtener solicitudes por usuario (supervisor) - devuelve ViewModel
         public async Task<List<SolicitudRestauracionVM>> ObtenerSolicitudesPorSupervisor(int id_supervisor)
         {
-            return await _context.SolicitudRestauraciones
-                .Where(s => s.id_supervisor == id_supervisor)
-                .Include(s => s.Gerente)
-                .Include(s => s.Backup)
-                .OrderByDescending(s => s.fecha_solicitud)
-                .Select(s => new SolicitudRestauracionVM
+            try
+            {
+                var solicitudes = await _context.SolicitudRestauraciones
+                    .Where(s => s.id_supervisor == id_supervisor)
+                    .OrderByDescending(s => s.fecha_solicitud)
+                    .ToListAsync();
+
+                if (!solicitudes.Any())
+                    return new List<SolicitudRestauracionVM>();
+
+                var backupIds = solicitudes.Select(s => s.id_backup).Distinct().ToList();
+                var gerenteIds = solicitudes.Where(s => s.id_gerente.HasValue)
+                                           .Select(s => s.id_gerente.Value)
+                                           .Distinct()
+                                           .ToList();
+
+                var backups = await _context.Backups
+                    .Where(b => backupIds.Contains(b.Id))
+                    .Select(b => new { b.Id, b.NombreArchivo, b.RutaArchivo })
+                    .ToDictionaryAsync(b => b.Id);
+
+                var gerentes = await _context.Usuarios
+                    .Where(u => gerenteIds.Contains(u.id_usuario))
+                    .Select(u => new { u.id_usuario, u.Nombre, u.apellido })
+                    .ToDictionaryAsync(u => u.id_usuario);
+
+                var resultado = solicitudes.Select(s =>
                 {
-                    id_solicitud = s.id_solicitud,
-                    nombre_archivo_backup = s.Backup != null ? s.Backup.NombreArchivo : "N/A",
-                    fecha_backup = s.fecha_backup,
-                    fecha_solicitud = s.fecha_solicitud,
-                    estado = s.estado,
-                    motivo_solicitud = s.motivo_solicitud ?? "",
-                    nombre_gerente = s.Gerente != null ? (s.Gerente.Nombre + " " + s.Gerente.apellido) : "Sin asignar",
-                    observaciones_gerente = s.observaciones_gerente ?? ""
-                })
-                .ToListAsync();
+                    backups.TryGetValue(s.id_backup, out var backup);
+
+                    string nombreGerente = "Sin asignar";
+                    if (s.id_gerente.HasValue && gerentes.TryGetValue(s.id_gerente.Value, out var gerente))
+                    {
+                        nombreGerente = $"{gerente.Nombre ?? ""} {gerente.apellido ?? ""}".Trim();
+                        if (string.IsNullOrWhiteSpace(nombreGerente))
+                            nombreGerente = "Sin nombre";
+                    }
+
+                    return new SolicitudRestauracionVM
+                    {
+                        id_solicitud = s.id_solicitud,
+                        nombre_archivo_backup = backup?.NombreArchivo ?? "N/A",
+                        ruta_archivo = backup?.RutaArchivo ?? "",
+                        fecha_backup = s.fecha_backup,
+                        fecha_solicitud = s.fecha_solicitud,
+                        estado = s.estado ?? "Desconocido",
+                        motivo_solicitud = s.motivo_solicitud ?? "",
+                        nombre_gerente = nombreGerente,
+                        observaciones_gerente = s.observaciones_gerente ?? ""
+                    };
+                }).ToList();
+
+                return resultado;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al obtener solicitudes del supervisor: {ex.Message}", ex);
+            }
         }
 
-        // Método privado para restauración
         private async Task EjecutarRestauracion(string rutaBackup, string connectionString)
         {
-            // Implementar según tu motor de BD y tipo de backup
-            // Ejemplo con SQL Server:
-            // RESTORE DATABASE [NombreBD] FROM DISK = 'ruta.bak' WITH REPLACE;
-
-            await Task.Delay(1000); // Simular proceso
+            await Task.Delay(1000);
         }
     }
 
-    // DTO para Backup
     public class BackupDTO
     {
         public int id { get; set; }
@@ -188,7 +263,6 @@ namespace GGHardware.Services
         public string ruta_archivo { get; set; }
     }
 
-    // ViewModel para solicitudes
     public class SolicitudRestauracionVM
     {
         public int id_solicitud { get; set; }
@@ -196,8 +270,8 @@ namespace GGHardware.Services
         public string nombre_supervisor { get; set; }
         public string nombre_archivo_backup { get; set; }
         public string ruta_archivo { get; set; }
-        public DateTime fecha_solicitud { get; set; }
-        public DateTime fecha_backup { get; set; }
+        public DateTime? fecha_solicitud { get; set; }
+        public DateTime? fecha_backup { get; set; }
         public string estado { get; set; }
         public string nombre_gerente { get; set; }
         public string motivo_solicitud { get; set; }
