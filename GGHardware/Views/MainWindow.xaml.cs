@@ -183,7 +183,9 @@ namespace GGHardware
             btnReportes.Visibility = Visibility.Collapsed;
             btnBackup.Visibility = Visibility.Collapsed;
             btnProveedores.Visibility = Visibility.Collapsed;
-
+            btnRestauracion.Visibility = Visibility.Collapsed;
+            btnInicio.Visibility = Visibility.Collapsed;
+            
             UsuarioActual = null; // Limpiar sesión
             ActualizarSesion();
             mainMenu.IsEnabled = false;

@@ -166,29 +166,39 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
                         <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="4">
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="4">
                             <Grid>
                                 <ScrollViewer x:Name="PART_ContentHost"
-                                            Padding="{TemplateBinding Padding}"/>
+                                    Padding="{TemplateBinding Padding}"/>
                                 <TextBlock x:Name="PlaceholderText"
-                                        Text="Buscar Cliente (CUIT/Nombre)"
-                                         Foreground="Gray"
-                                         Padding="{TemplateBinding Padding}"
-                                         IsHitTestVisible="False"
-                                         VerticalAlignment="Center"/>
+                                Text="Buscar Cliente (CUIT/Nombre)"
+                                 Foreground="Gray"
+                                 Padding="{TemplateBinding Padding}"
+                                 IsHitTestVisible="False"
+                                 VerticalAlignment="Center"
+                                 Visibility="Collapsed"/>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
+                            <!-- Mostrar placeholder solo cuando está vacío Y sin foco -->
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Text" Value=""/>
+                                    <Condition Property="IsFocused" Value="False"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="PlaceholderText" Property="Visibility" Value="Visible"/>
+                            </MultiTrigger>
+
+                            <!-- Ocultar cuando tiene foco -->
                             <Trigger Property="IsFocused" Value="True">
                                 <Setter TargetName="PlaceholderText" Property="Visibility" Value="Collapsed"/>
                             </Trigger>
-                            <Trigger Property="Text" Value="">
-                                <Setter TargetName="PlaceholderText" Property="Visibility" Value="Visible"/>
-                            </Trigger>
+
+                            <!-- Ocultar cuando tiene texto (no vacío y no null) -->
                             <Trigger Property="Text" Value="{x:Null}">
-                                <Setter TargetName="PlaceholderText" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="PlaceholderText" Property="Visibility" Value="Collapsed"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
