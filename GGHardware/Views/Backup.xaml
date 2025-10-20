@@ -93,8 +93,8 @@
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="ID" Binding="{Binding id_solicitud}" Width="Auto"/>
                                     <DataGridTextColumn Header="Supervisor" Binding="{Binding nombre_supervisor}" Width="150"/>
-                                    <DataGridTextColumn Header="Archivo Backup" Binding="{Binding nombre_archivo_backup}" Width="*"/>
-                                    <DataGridTextColumn Header="Fecha Backup" Binding="{Binding fecha_backup, StringFormat=dd/MM/yyyy}" Width="120"/>
+                                    <DataGridTextColumn Header="Archivo Backup" Binding="{Binding nombre_archivo_backup}" Width="150"/>
+                                    <DataGridTextColumn Header="Fecha Backup" Binding="{Binding fecha_backup, StringFormat=dd/MM/yyyy}" Width="150"/>
                                     <DataGridTextColumn Header="Fecha Solicitud" Binding="{Binding fecha_solicitud, StringFormat=dd/MM/yyyy HH:mm}" Width="150"/>
                                     <DataGridTextColumn Header="Motivo" Binding="{Binding motivo_solicitud}" Width="200"/>
                                     <DataGridTextColumn Header="Estado" Binding="{Binding estado}" Width="100"/>
