@@ -33,6 +33,9 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
 
@@ -41,7 +44,25 @@
                                        Foreground="{DynamicResource MaterialDesignBody}"
                                        Margin="0 0 0 15"/>
 
-                            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0 0 0 15">
+                            <!-- Selector de Instancia -->
+                            <StackPanel Grid.Row="1" Margin="0 0 0 15">
+                                <TextBlock Text="Instancia de SQL Server:" FontWeight="SemiBold" Margin="0 0 0 5"/>
+                                <ComboBox x:Name="cmbInstancia" Width="350" HorizontalAlignment="Left"
+                                         materialDesign:HintAssist.Hint="Seleccione la instancia"
+                                         Height="40" Padding="10"
+                                         SelectionChanged="cmbInstancia_SelectionChanged"/>
+                            </StackPanel>
+
+                            <!-- Selector de Base de Datos -->
+                            <StackPanel Grid.Row="2" Margin="0 0 0 15">
+                                <TextBlock Text="Base de Datos:" FontWeight="SemiBold" Margin="0 0 0 5"/>
+                                <ComboBox x:Name="cmbBaseDatos" Width="350" HorizontalAlignment="Left"
+                                         materialDesign:HintAssist.Hint="Seleccione la base de datos"
+                                         Height="40" Padding="10"/>
+                            </StackPanel>
+
+                            <!-- Ruta del Backup -->
+                            <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0 0 0 15">
                                 <TextBox x:Name="txtRuta" Width="350" Margin="0 0 10 0" IsReadOnly="True"
                                          materialDesign:HintAssist.Hint="Seleccione una ubicacion para guardar"
                                          Height="40" Padding="10"/>
@@ -50,17 +71,19 @@
                                         Click="btnSeleccionarRuta_Click"/>
                             </StackPanel>
 
-                            <Button x:Name="btnBackup" Content="Realizar Backup" Width="150" Height="40"
+                            <!-- Boton de Backup -->
+                            <Button x:Name="btnBackup" Grid.Row="4" Content="Realizar Backup" Width="150" Height="40"
                                     Style="{DynamicResource MaterialDesignRaisedButton}" FontWeight="Bold"
                                     Click="btnBackup_Click" Margin="0 0 0 15"
                                     Background="#2196F3" Foreground="White"/>
 
-                            <TextBlock x:Name="lblEstado" Grid.Row="2"
+                            <!-- Estado del Backup -->
+                            <TextBlock x:Name="lblEstado" Grid.Row="5"
                                        FontSize="14" Foreground="{DynamicResource MaterialDesignBody}"
                                        TextWrapping="Wrap" Margin="0 0 0 15"/>
 
                             <!-- DataGrid para historial -->
-                            <DataGrid Grid.Row="3" x:Name="dgBackups" AutoGenerateColumns="False" IsReadOnly="True" 
+                            <DataGrid Grid.Row="6" x:Name="dgBackups" AutoGenerateColumns="False" IsReadOnly="True" 
                                       SelectionMode="Single">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="ID" Binding="{Binding id}" Width="Auto"/>

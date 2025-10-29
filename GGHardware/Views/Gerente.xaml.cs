@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
 using GGHardware.Data;
 using GGHardware.Models;
 using Microsoft.Win32;
@@ -13,11 +14,139 @@ namespace GGHardware.Views
     public partial class Gerente : UserControl
     {
         private readonly ApplicationDbContext _context;
+        private DateTime? fechaDesde;
+        private DateTime? fechaHasta;
+        private string categoriaSeleccionada;
 
         public Gerente()
         {
             InitializeComponent();
             _context = new ApplicationDbContext();
+
+            // Inicializar fechas por defecto (últimos 7 días)
+            fechaHasta = DateTime.Now;
+            fechaDesde = fechaHasta.Value.AddDays(-7);
+            categoriaSeleccionada = "Todas";
+
+            // Cargar categorías desde la base de datos
+            CargarCategorias();
+
+            // Cargar datos iniciales
+            CargarDatos();
+        }
+
+        private void CargarCategorias()
+        {
+            try
+            {
+                // Agregar "Todas" como primera opción
+                cmbCategoria.Items.Clear();
+                cmbCategoria.Items.Add(new ComboBoxItem { Content = "Todas" });
+
+                // Obtener categorías únicas desde la tabla Categorias
+                var categorias = _context.Categoria
+                    .Select(c => c.nombre)
+                    .Distinct()
+                    .OrderBy(c => c)
+                    .ToList();
+
+                foreach (var categoria in categorias)
+                {
+                    if (!string.IsNullOrEmpty(categoria))
+                    {
+                        cmbCategoria.Items.Add(new ComboBoxItem { Content = categoria });
+                    }
+                }
+
+                cmbCategoria.SelectedIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar categorías: {ex.Message}",
+                    "Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+        }
+
+        private void cmbPeriodo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // CRÍTICO: Verificar que los controles estén inicializados antes de usarlos
+            if (pnlFechasPersonalizadas == null || dpFechaDesde == null || dpFechaHasta == null)
+                return;
+
+            if (cmbPeriodo.SelectedIndex == 3) // Personalizado
+            {
+                pnlFechasPersonalizadas.Visibility = Visibility.Visible;
+
+                // Establecer fechas por defecto en los DatePickers
+                dpFechaDesde.SelectedDate = fechaDesde;
+                dpFechaHasta.SelectedDate = fechaHasta;
+            }
+            else
+            {
+                pnlFechasPersonalizadas.Visibility = Visibility.Collapsed;
+
+                // Calcular fechas según selección
+                fechaHasta = DateTime.Now;
+
+                switch (cmbPeriodo.SelectedIndex)
+                {
+                    case 0: // Últimos 7 días
+                        fechaDesde = fechaHasta.Value.AddDays(-7);
+                        break;
+                    case 1: // Último mes
+                        fechaDesde = fechaHasta.Value.AddMonths(-1);
+                        break;
+                    case 2: // Último año
+                        fechaDesde = fechaHasta.Value.AddYears(-1);
+                        break;
+                }
+            }
+        }
+
+        private void cmbCategoria_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Verificar que el control esté inicializado
+            if (cmbCategoria?.SelectedItem == null)
+                return;
+
+            if (cmbCategoria.SelectedItem is ComboBoxItem item)
+            {
+                categoriaSeleccionada = item.Content.ToString();
+            }
+        }
+
+        private void btnAplicarFiltros_Click(object sender, RoutedEventArgs e)
+        {
+            // Si es personalizado, obtener fechas de los DatePickers
+            if (cmbPeriodo.SelectedIndex == 3)
+            {
+                if (dpFechaDesde.SelectedDate.HasValue && dpFechaHasta.SelectedDate.HasValue)
+                {
+                    fechaDesde = dpFechaDesde.SelectedDate.Value;
+                    fechaHasta = dpFechaHasta.SelectedDate.Value;
+
+                    if (fechaDesde > fechaHasta)
+                    {
+                        MessageBox.Show("La fecha 'Desde' no puede ser mayor que la fecha 'Hasta'.",
+                            "Error de Validación",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Warning);
+                        return;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Debe seleccionar ambas fechas para el período personalizado.",
+                        "Error de Validación",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
+                    return;
+                }
+            }
+
+            // Recargar datos con los filtros aplicados
             CargarDatos();
         }
 
@@ -25,22 +154,61 @@ namespace GGHardware.Views
         {
             try
             {
-                // Estadísticas generales
-                decimal totalVentas = _context.Venta.Sum(v => (decimal?)v.Monto) ?? 0;
+                // Obtener ventas filtradas por fecha
+                var ventasFiltradas = _context.Venta
+                    .Where(v => v.Fecha >= fechaDesde && v.Fecha <= fechaHasta)
+                    .ToList();
+
+                // Obtener IDs de ventas filtradas
+                var idsVentasFiltradas = ventasFiltradas.Select(v => v.id_venta).ToList();
+
+                // Obtener detalles de venta filtrados
+                var detallesFiltrados = _context.DetalleVenta
+                    .Where(dv => idsVentasFiltradas.Contains(dv.id_venta))
+                    .ToList();
+
+                // Aplicar filtro de categoría si no es "Todas"
+                if (categoriaSeleccionada != "Todas")
+                {
+                    // Obtener el ID de la categoría seleccionada
+                    var categoriaObj = _context.Categoria
+                        .FirstOrDefault(c => c.nombre == categoriaSeleccionada);
+
+                    if (categoriaObj != null)
+                    {
+                        // CORREGIDO: Obtener los IDs de PRODUCTOS (no categorías)
+                        var productosCategoria = _context.Producto
+                            .Where(p => p.id_categoria == categoriaObj.id_categoria)
+                            .Select(p => p.Id_Producto)  // ← AQUÍ ESTABA EL ERROR
+                            .ToList();
+
+                        detallesFiltrados = detallesFiltrados
+                            .Where(dv => productosCategoria.Contains(dv.id_producto))
+                            .ToList();
+
+                        // Recalcular ventas según productos de la categoría
+                        var ventasConCategoria = detallesFiltrados.Select(dv => dv.id_venta).Distinct().ToList();
+                        ventasFiltradas = ventasFiltradas.Where(v => ventasConCategoria.Contains(v.id_venta)).ToList();
+                    }
+                }
+
+                // Estadísticas generales (con filtros aplicados)
+                decimal totalVentas = ventasFiltradas.Sum(v => (decimal?)v.Monto) ?? 0;
                 txtTotalVentas.Text = "$" + totalVentas.ToString("N2");
 
+                // Usuarios activos e inactivos (sin filtro de fecha)
                 txtUsuariosActivos.Text = _context.Usuarios.Count(u => u.Activo).ToString();
                 txtUsuariosInactivos.Text = _context.Usuarios.Count(u => !u.Activo).ToString();
 
-                // Clientes frecuentes
-                int clientesFrecuentes = _context.Venta
+                // Clientes frecuentes (con filtros aplicados)
+                int clientesFrecuentes = ventasFiltradas
                     .GroupBy(v => v.id_Cliente)
                     .Where(g => g.Count() >= 5)
                     .Count();
                 txtClientesFrecuentes.Text = clientesFrecuentes.ToString();
 
-                // Productos más vendidos
-                var productos = _context.DetalleVenta
+                // Productos más vendidos (con filtros aplicados)
+                var productos = detallesFiltrados
                     .GroupBy(v => v.nombre_producto)
                     .Select(g => new ProductoVendidos
                     {
@@ -53,8 +221,8 @@ namespace GGHardware.Views
 
                 dgProductosVendidos.ItemsSource = productos;
 
-                // Cargar clientes frecuentes con detalle
-                var clientesFrecuentesDetalle = _context.Venta
+                // Cargar clientes frecuentes con detalle (con filtros aplicados)
+                var clientesFrecuentesDetalle = ventasFiltradas
                     .GroupBy(v => v.id_Cliente)
                     .Where(g => g.Count() >= 5)
                     .Select(g => new
@@ -75,7 +243,7 @@ namespace GGHardware.Views
 
                 dgClientesFrecuentes.ItemsSource = clientesFrecuentesDetalle;
 
-                // Llenar gráfico con ProgressBars
+                // Llenar gráfico con ProgressBars (con filtros aplicados)
                 if (productos.Any())
                 {
                     int maxCantidad = productos.Max(p => p.Cantidad);
@@ -86,6 +254,10 @@ namespace GGHardware.Views
                     }).ToList();
 
                     icGraficoProductos.ItemsSource = barras;
+                }
+                else
+                {
+                    icGraficoProductos.ItemsSource = null;
                 }
             }
             catch (Exception ex)
@@ -151,8 +323,15 @@ namespace GGHardware.Views
                 worksheet.Range("A2:F2").Merge();
                 worksheet.Cell("A2").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
 
+                // Información de filtros aplicados
+                worksheet.Cell("A3").Value = $"Período: {fechaDesde:dd/MM/yyyy} - {fechaHasta:dd/MM/yyyy} | Categoría: {categoriaSeleccionada}";
+                worksheet.Range("A3:F3").Merge();
+                worksheet.Cell("A3").Style
+                    .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
+                    .Font.SetItalic(true);
+
                 // ESTADÍSTICAS GENERALES
-                int row = 4;
+                int row = 5;
                 worksheet.Cell($"A{row}").Value = "ESTADÍSTICAS GENERALES";
                 worksheet.Range($"A{row}:B{row}").Merge();
                 worksheet.Cell($"A{row}").Style.Font.SetBold(true).Font.SetFontSize(14);
@@ -230,7 +409,12 @@ namespace GGHardware.Views
                     .Font.SetFontColor(XLColor.White)
                     .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
 
-                var clientesFrecuentes = _context.Venta
+                // Obtener ventas filtradas
+                var ventasFiltradas = _context.Venta
+                    .Where(v => v.Fecha >= fechaDesde && v.Fecha <= fechaHasta)
+                    .ToList();
+
+                var clientesFrecuentes = ventasFiltradas
                     .GroupBy(v => v.id_Cliente)
                     .Where(g => g.Count() >= 5)
                     .Select(g => new
@@ -257,6 +441,8 @@ namespace GGHardware.Views
                 }
 
                 worksheet.Columns().AdjustToContents();
+                // PROTEGER LA HOJA PARA QUE SEA DE SOLO LECTURA
+                worksheet.Protect("GGHardware2024");
                 workbook.SaveAs(rutaArchivo);
             }
         }

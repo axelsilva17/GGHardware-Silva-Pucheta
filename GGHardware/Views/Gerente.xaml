@@ -285,33 +285,92 @@
                     CornerRadius="8"
                     BorderBrush="{DynamicResource TextSecondary}"
                     BorderThickness="1">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Período:"
-                               VerticalAlignment="Center"
-                               Margin="0,0,10,0"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource TextPrimary}"/>
-                    <ComboBox Width="150"
-                              Margin="0,0,20,0"
-                              SelectedIndex="0">
-                        <ComboBoxItem Content="Últimos 7 días"/>
-                        <ComboBoxItem Content="Último mes"/>
-                        <ComboBoxItem Content="Último año"/>
-                        <ComboBoxItem Content="Personalizado"/>
-                    </ComboBox>
+                <StackPanel>
+                    <!-- Primera fila de filtros -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <TextBlock Text="Período:"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,10,0"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextPrimary}"/>
+                        <ComboBox x:Name="cmbPeriodo"
+                                  Width="150"
+                                  Margin="0,0,20,0"
+                                  SelectedIndex="0"
+                                  SelectionChanged="cmbPeriodo_SelectionChanged">
+                            <ComboBoxItem Content="Últimos 7 días"/>
+                            <ComboBoxItem Content="Último mes"/>
+                            <ComboBoxItem Content="Último año"/>
+                            <ComboBoxItem Content="Personalizado"/>
+                        </ComboBox>
 
-                    <TextBlock Text="Categoría:"
-                               VerticalAlignment="Center"
-                               Margin="0,0,10,0"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource TextPrimary}"/>
-                    <ComboBox Width="150"
-                              SelectedIndex="0">
-                        <ComboBoxItem Content="Todas"/>
-                        <ComboBoxItem Content="Hardware"/>
-                        <ComboBoxItem Content="Periféricos"/>
-                        <ComboBoxItem Content="Componentes"/>
-                    </ComboBox>
+                        <TextBlock Text="Categoría:"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,10,0"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextPrimary}"/>
+                        <ComboBox x:Name="cmbCategoria"
+                                  Width="150"
+                                  SelectedIndex="0"
+                                  SelectionChanged="cmbCategoria_SelectionChanged">
+                            <ComboBoxItem Content="Todas"/>
+                        </ComboBox>
+
+                        <Button x:Name="btnAplicarFiltros"
+                                Content="Aplicar Filtros"
+                                Click="btnAplicarFiltros_Click"
+                                Background="{DynamicResource PrimaryBrush}"
+                                Foreground="{DynamicResource PrimaryForegroundBrush}"
+                                Margin="20,0,0,0"
+                                Padding="15,5"
+                                BorderThickness="0"
+                                Cursor="Hand">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}"
+                                                        CornerRadius="4"
+                                                        Padding="{TemplateBinding Padding}">
+                                                    <ContentPresenter HorizontalAlignment="Center"
+                                                                      VerticalAlignment="Center"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Opacity" Value="0.85"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
+
+                    <!-- Panel de fechas personalizadas (oculto por defecto) -->
+                    <StackPanel x:Name="pnlFechasPersonalizadas"
+                                Orientation="Horizontal"
+                                Visibility="Collapsed"
+                                Margin="0,10,0,0">
+                        <TextBlock Text="Desde:"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,10,0"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextPrimary}"/>
+                        <DatePicker x:Name="dpFechaDesde"
+                                    Width="150"
+                                    Margin="0,0,20,0"/>
+
+                        <TextBlock Text="Hasta:"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,10,0"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextPrimary}"/>
+                        <DatePicker x:Name="dpFechaHasta"
+                                    Width="150"/>
+                    </StackPanel>
                 </StackPanel>
             </Border>
 

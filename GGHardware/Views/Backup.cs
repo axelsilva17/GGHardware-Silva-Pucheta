@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,8 +15,109 @@ namespace GGHardware.Views
         public Backup()
         {
             InitializeComponent();
+            CargarInstancias();
+            CargarBasesDeDatos();
             CargarHistorial();
             CargarSolicitudesPendientes();
+        }
+
+        // Cargar lista de instancias y bases de datos disponibles
+        private void CargarInstancias()
+        {
+            try
+            {
+                string connectionString;
+                using (var context = new ApplicationDbContext())
+                {
+                    connectionString = context.Database.GetDbConnection().ConnectionString;
+                }
+
+                var builder = new SqlConnectionStringBuilder(connectionString);
+                string servidorActual = builder.DataSource;
+
+                // Lista de instancias disponibles
+                var instancias = new List<string>
+                {
+                    "localhost",           // Instancia por defecto
+                    "localhost\\SQLOLD",   // Instancia de respaldo
+                    servidorActual         // Instancia actual
+                };
+
+                // Eliminar duplicados
+                instancias = instancias.Distinct().ToList();
+
+                cmbInstancia.ItemsSource = instancias;
+                cmbInstancia.SelectedItem = servidorActual;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar instancias: {ex.Message}",
+                              "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        // Cargar bases de datos de la instancia seleccionada
+        private void CargarBasesDeDatos()
+        {
+            try
+            {
+                if (cmbInstancia.SelectedItem == null)
+                {
+                    return;
+                }
+
+                string instanciaSeleccionada = cmbInstancia.SelectedItem.ToString();
+                string connectionString;
+
+                using (var context = new ApplicationDbContext())
+                {
+                    connectionString = context.Database.GetDbConnection().ConnectionString;
+                }
+
+                // Cambiar a la instancia seleccionada
+                var builder = new SqlConnectionStringBuilder(connectionString)
+                {
+                    DataSource = instanciaSeleccionada,
+                    InitialCatalog = "master"
+                };
+
+                using (SqlConnection con = new SqlConnection(builder.ConnectionString))
+                {
+                    con.Open();
+                    string query = @"SELECT name FROM sys.databases 
+                                   WHERE name NOT IN ('master', 'tempdb', 'model', 'msdb')
+                                   AND state_desc = 'ONLINE'
+                                   ORDER BY name";
+
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        var databases = new List<string>();
+                        while (reader.Read())
+                        {
+                            databases.Add(reader["name"].ToString());
+                        }
+
+                        cmbBaseDatos.ItemsSource = databases;
+
+                        if (databases.Count > 0)
+                        {
+                            cmbBaseDatos.SelectedIndex = 0;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar bases de datos: {ex.Message}",
+                              "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        // Evento cuando cambia la instancia seleccionada
+        private void cmbInstancia_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            CargarBasesDeDatos();
         }
 
         // Cargar el historial de backups en el DataGrid
@@ -67,11 +169,14 @@ namespace GGHardware.Views
         // Seleccionar ruta para guardar backup
         private void btnSeleccionarRuta_Click(object sender, RoutedEventArgs e)
         {
+            string instancia = cmbInstancia.SelectedItem?.ToString()?.Replace("\\", "_") ?? "Instance";
+            string databaseName = cmbBaseDatos.SelectedItem?.ToString() ?? "Database";
+
             var dlg = new SaveFileDialog
             {
                 Title = "Guardar Backup",
                 Filter = "Archivo de respaldo (*.bak)|*.bak",
-                FileName = $"Backup_{DateTime.Now:yyyyMMdd_HHmm}.bak"
+                FileName = $"Backup_{instancia}_{databaseName}_{DateTime.Now:yyyyMMdd_HHmm}.bak"
             };
 
             if (dlg.ShowDialog() == true)
@@ -83,6 +188,20 @@ namespace GGHardware.Views
         // Realizar backup y guardar registro
         private void btnBackup_Click(object sender, RoutedEventArgs e)
         {
+            if (cmbInstancia.SelectedItem == null)
+            {
+                MessageBox.Show("Seleccione una instancia de SQL Server.",
+                                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (cmbBaseDatos.SelectedItem == null)
+            {
+                MessageBox.Show("Seleccione una base de datos para hacer backup.",
+                                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             if (string.IsNullOrEmpty(txtRuta.Text))
             {
                 MessageBox.Show("Seleccione una ubicación para guardar el backup.",
@@ -93,7 +212,8 @@ namespace GGHardware.Views
             lblEstado.Text = "🔄 Realizando backup...";
             lblEstado.Foreground = System.Windows.Media.Brushes.Orange;
 
-            string databaseName = "GGHardware";
+            string instanciaSeleccionada = cmbInstancia.SelectedItem.ToString();
+            string databaseName = cmbBaseDatos.SelectedItem.ToString();
             string backupPath = txtRuta.Text;
 
             try
@@ -104,14 +224,22 @@ namespace GGHardware.Views
                     connectionString = context.Database.GetDbConnection().ConnectionString;
                 }
 
-                using (SqlConnection con = new SqlConnection(connectionString))
+                // Cambiar a la instancia y BD seleccionadas
+                var builder = new SqlConnectionStringBuilder(connectionString)
+                {
+                    DataSource = instanciaSeleccionada,
+                    InitialCatalog = databaseName
+                };
+
+                using (SqlConnection con = new SqlConnection(builder.ConnectionString))
                 {
                     con.Open();
                     string backupQuery = $"BACKUP DATABASE [{databaseName}] TO DISK = '{backupPath}' " +
-                                         "WITH NOFORMAT, NOINIT, NAME = '{databaseName}-Full Backup', SKIP, NOREWIND, NOUNLOAD, STATS = 10";
+                                         $"WITH NOFORMAT, NOINIT, NAME = '{databaseName}-Full Backup', SKIP, NOREWIND, NOUNLOAD, STATS = 10";
 
                     using (SqlCommand cmd = new SqlCommand(backupQuery, con))
                     {
+                        cmd.CommandTimeout = 300; // 5 minutos timeout
                         cmd.ExecuteNonQuery();
                     }
                 }
@@ -128,7 +256,7 @@ namespace GGHardware.Views
                     context.SaveChanges();
                 }
 
-                lblEstado.Text = "✅ Backup realizado correctamente";
+                lblEstado.Text = $"✅ Backup de '{instanciaSeleccionada}\\{databaseName}' realizado correctamente";
                 lblEstado.Foreground = System.Windows.Media.Brushes.Green;
 
                 CargarHistorial();
@@ -304,6 +432,7 @@ namespace GGHardware.Views
 
                 using (SqlCommand cmd = new SqlCommand(sql, con))
                 {
+                    cmd.CommandTimeout = 300;
                     cmd.ExecuteNonQuery();
                 }
             }
