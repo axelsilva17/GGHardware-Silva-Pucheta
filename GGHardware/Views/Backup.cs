@@ -37,11 +37,10 @@ namespace GGHardware.Views
 
                 // Lista de instancias disponibles
                 var instancias = new List<string>
-                {
-                    "localhost",           // Instancia por defecto
-                    "localhost\\SQLOLD",   // Instancia de respaldo
-                    servidorActual         // Instancia actual
-                };
+        {
+            servidorActual,              // Instancia actual (para backups)
+            "localhost\\SQLEXPRESS"      // Instancia de respaldo (para restauraciones)
+        };
 
                 // Eliminar duplicados
                 instancias = instancias.Distinct().ToList();
@@ -406,47 +405,99 @@ namespace GGHardware.Views
         }
 
         // Método auxiliar para ejecutar la restauración
+        // Método auxiliar para ejecutar la restauración EN LA INSTANCIA SQLEXPRESS
         private void EjecutarRestauracion(string rutaBackup, int idSolicitud)
         {
-            string databaseName = "GGHardware";
+            string databaseName = "GGHardware_Restored";
+            string instanciaRestauracion = "localhost\\SQLEXPRESS";
 
-            string connectionString;
-            using (var context = new ApplicationDbContext())
+            try
             {
-                connectionString = context.Database.GetDbConnection().ConnectionString;
-            }
+                string connectionString;
+                using (var context = new ApplicationDbContext())
+                {
+                    connectionString = context.Database.GetDbConnection().ConnectionString;
+                }
 
-            var builder = new SqlConnectionStringBuilder(connectionString)
-            {
-                InitialCatalog = "master"
-            };
+                var builder = new SqlConnectionStringBuilder(connectionString)
+                {
+                    DataSource = instanciaRestauracion,
+                    InitialCatalog = "master"
+                };
 
-            using (SqlConnection con = new SqlConnection(builder.ConnectionString))
-            {
-                con.Open();
-                string sql = $@"
+                using (SqlConnection con = new SqlConnection(builder.ConnectionString))
+                {
+                    con.Open();
+
+                    // 1. Verificar si la BD ya existe y eliminarla
+                    string checkDbQuery = $@"
+                IF EXISTS (SELECT name FROM sys.databases WHERE name = N'{databaseName}')
+                BEGIN
                     ALTER DATABASE [{databaseName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-                    RESTORE DATABASE [{databaseName}] FROM DISK = N'{rutaBackup}' WITH REPLACE;
-                    ALTER DATABASE [{databaseName}] SET MULTI_USER;
-                ";
+                    DROP DATABASE [{databaseName}];
+                END
+            ";
 
-                using (SqlCommand cmd = new SqlCommand(sql, con))
-                {
-                    cmd.CommandTimeout = 300;
-                    cmd.ExecuteNonQuery();
+                    using (SqlCommand cmd = new SqlCommand(checkDbQuery, con))
+                    {
+                        cmd.CommandTimeout = 300;
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // 2. Restaurar con los nombres lógicos correctos
+                    string restoreQuery = $@"
+                RESTORE DATABASE [{databaseName}] 
+                FROM DISK = N'{rutaBackup}' 
+                WITH MOVE 'GGHardware' TO 'C:\Program Files\Microsoft SQL Server\MSSQL16.SQLEXPRESS\MSSQL\DATA\{databaseName}.mdf',
+                     MOVE 'GGHardware_log' TO 'C:\Program Files\Microsoft SQL Server\MSSQL16.SQLEXPRESS\MSSQL\DATA\{databaseName}_log.ldf',
+                     REPLACE;
+            ";
+
+                    using (SqlCommand cmd = new SqlCommand(restoreQuery, con))
+                    {
+                        cmd.CommandTimeout = 300;
+                        cmd.ExecuteNonQuery();
+                    }
                 }
+
+                // Actualizar estado a Completada
+                using (var context = new ApplicationDbContext())
+                {
+                    var solicitud = context.SolicitudRestauraciones.Find(idSolicitud);
+                    if (solicitud != null)
+                    {
+                        solicitud.estado = "Completada";
+                        solicitud.fecha_restauracion = DateTime.Now;
+                        solicitud.observaciones_gerente = $"✅ Restaurado en {instanciaRestauracion} como '{databaseName}'";
+                        context.SaveChanges();
+                    }
+                }
+
+                MessageBox.Show(
+                    $"✅ BACKUP RESTAURADO EXITOSAMENTE\n\n" +
+                    $"📍 Instancia: {instanciaRestauracion}\n" +
+                    $"💾 Base de datos: {databaseName}\n\n" +
+                    $"ℹ️ La base de datos restaurada está disponible en la instancia SQLEXPRESS.\n" +
+                    $"La base de datos en producción NO fue afectada.",
+                    "Restauración Exitosa",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
             }
-
-            // Actualizar estado a Completada
-            using (var context = new ApplicationDbContext())
+            catch (Exception ex)
             {
-                var solicitud = context.SolicitudRestauraciones.Find(idSolicitud);
-                if (solicitud != null)
+                // Actualizar estado a Fallida
+                using (var context = new ApplicationDbContext())
                 {
-                    solicitud.estado = "Completada";
-                    solicitud.fecha_restauracion = DateTime.Now;
-                    context.SaveChanges();
+                    var solicitud = context.SolicitudRestauraciones.Find(idSolicitud);
+                    if (solicitud != null)
+                    {
+                        solicitud.estado = "Fallida";
+                        solicitud.observaciones_gerente = $"❌ Error: {ex.Message}";
+                        context.SaveChanges();
+                    }
                 }
+
+                throw;
             }
         }
     }

@@ -449,6 +449,104 @@ namespace GGHardware.Views
                     worksheet.Cell($"D{row}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
                 }
 
+                // RENDIMIENTO DE VENDEDORES
+                row += 3;
+                worksheet.Cell($"A{row}").Value = "RENDIMIENTO DE VENDEDORES";
+                worksheet.Range($"A{row}:E{row}").Merge();
+                worksheet.Cell($"A{row}").Style.Font.SetBold(true).Font.SetFontSize(14);
+
+                row += 2;
+                worksheet.Cell($"A{row}").Value = "Posición";
+                worksheet.Cell($"B{row}").Value = "Vendedor";
+                worksheet.Cell($"C{row}").Value = "Cant. Ventas";
+                worksheet.Cell($"D{row}").Value = "Monto Total";
+                worksheet.Cell($"E{row}").Value = "Promedio por Venta";
+
+                var headerVendedores = worksheet.Range($"A{row}:E{row}");
+                headerVendedores.Style
+                    .Font.SetBold(true)
+                    .Fill.SetBackgroundColor(XLColor.FromHtml("#4CAF50"))
+                    .Font.SetFontColor(XLColor.White)
+                    .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+
+                // Obtener rendimiento de vendedores
+                var rendimientoVendedores = _context.Usuarios
+                    .Where(u => u.Activo && u.RolId == 2) // Solo vendedores activos (ajusta el RolId según tu sistema)
+                    .Select(u => new
+                    {
+                        NombreVendedor = u.Nombre + " " + u.apellido,
+                        CantidadVentas = _context.Venta
+                            .Count(v => v.id_Usuario == u.id_usuario
+                                     && v.Estado != "Anulada"
+                                     && v.Fecha >= fechaDesde
+                                     && v.Fecha <= fechaHasta),
+                        MontoTotal = _context.Venta
+                            .Where(v => v.id_Usuario == u.id_usuario
+                                     && v.Estado != "Anulada"
+                                     && v.Fecha >= fechaDesde
+                                     && v.Fecha <= fechaHasta)
+                            .Sum(v => (decimal?)v.Monto) ?? 0
+                    })
+                    .ToList()
+                    .Select(v => new
+                    {
+                        v.NombreVendedor,
+                        v.CantidadVentas,
+                        v.MontoTotal,
+                        PromedioVenta = v.CantidadVentas > 0 ? v.MontoTotal / v.CantidadVentas : 0
+                    })
+                    .OrderByDescending(v => v.MontoTotal)
+                    .ToList();
+
+                int posicionVendedor = 1;
+                foreach (var vendedor in rendimientoVendedores)
+                {
+                    row++;
+                    worksheet.Cell($"A{row}").Value = posicionVendedor++;
+                    worksheet.Cell($"B{row}").Value = vendedor.NombreVendedor;
+                    worksheet.Cell($"C{row}").Value = vendedor.CantidadVentas;
+                    worksheet.Cell($"D{row}").Value = "$" + vendedor.MontoTotal.ToString("N2");
+                    worksheet.Cell($"E{row}").Value = "$" + vendedor.PromedioVenta.ToString("N2");
+
+                    worksheet.Cell($"A{row}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                    worksheet.Cell($"C{row}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                    worksheet.Cell($"D{row}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
+                    worksheet.Cell($"E{row}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
+
+                    // Resaltar al mejor vendedor
+                    if (posicionVendedor == 2) // Primer lugar
+                    {
+                        worksheet.Range($"A{row}:E{row}").Style
+                            .Fill.SetBackgroundColor(XLColor.FromHtml("#FFD700")) // Dorado
+                            .Font.SetBold(true);
+                    }
+                }
+
+                // Agregar totales de vendedores
+                if (rendimientoVendedores.Any())
+                {
+                    row += 2;
+                    worksheet.Cell($"A{row}").Value = "TOTALES";
+                    worksheet.Cell($"A{row}").Style.Font.SetBold(true);
+
+                    worksheet.Cell($"C{row}").Value = rendimientoVendedores.Sum(v => v.CantidadVentas);
+                    worksheet.Cell($"D{row}").Value = "$" + rendimientoVendedores.Sum(v => v.MontoTotal).ToString("N2");
+
+                    var promedioGeneral = rendimientoVendedores.Sum(v => v.CantidadVentas) > 0
+                        ? rendimientoVendedores.Sum(v => v.MontoTotal) / rendimientoVendedores.Sum(v => v.CantidadVentas)
+                        : 0;
+                    worksheet.Cell($"E{row}").Value = "$" + promedioGeneral.ToString("N2");
+
+                    worksheet.Range($"A{row}:E{row}").Style
+                        .Font.SetBold(true)
+                        .Fill.SetBackgroundColor(XLColor.LightGray);
+
+                    worksheet.Cell($"C{row}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                    worksheet.Cell($"D{row}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
+                    worksheet.Cell($"E{row}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
+                }
+
+
                 worksheet.Columns().AdjustToContents();
                 // PROTEGER LA HOJA PARA QUE SEA DE SOLO LECTURA
                 worksheet.Protect("GGHardware2024");
