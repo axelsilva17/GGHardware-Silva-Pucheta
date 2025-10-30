@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GGHardware.Models
 {
-    [Table("Usuarios")] // <-- Nombre de la tabla en SQL (ajústalo si es distinto)
+    [Table("Usuarios")] 
     public class Usuario
     {
         [Key]
@@ -15,7 +15,7 @@ namespace GGHardware.Models
         public bool Activo { get; set; } = true;
 
         [Required]
-        [MaxLength(11)] // ajusta según el tamaño de tu BD
+        [MaxLength(11)] 
         public int dni { get; set; } 
 
         [Required]

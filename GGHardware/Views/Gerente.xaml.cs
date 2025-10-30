@@ -150,6 +150,15 @@ namespace GGHardware.Views
             CargarDatos();
         }
 
+        private void btnVerVendedores_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Window.GetWindow(this) as MainWindow;
+            if (mainWindow != null)
+            {
+                mainWindow.MainContentBorder.Child = new RendimientoVendedoresView();
+            }
+        }
+
         private void CargarDatos()
         {
             try

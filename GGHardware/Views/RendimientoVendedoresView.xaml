@@ -1,0 +1,321 @@
+﻿<UserControl x:Class="GGHardware.Views.RendimientoVendedoresView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+             Background="{DynamicResource Background}">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Orientation="Horizontal">
+                <materialDesign:PackIcon Kind="AccountGroup"
+                                         Width="32" Height="32"
+                                         Foreground="{DynamicResource PrimaryBrush}"
+                                         VerticalAlignment="Center"
+                                         Margin="0,0,12,0"/>
+                <TextBlock Text="Rendimiento de Vendedores"
+                           FontSize="28"
+                           FontWeight="Bold"
+                           Foreground="{DynamicResource TextPrimary}"
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <Button Grid.Column="1"
+                    Content="← Volver al Dashboard"
+                    Click="btnVolver_Click"
+                    Background="{DynamicResource PrimaryBrush}"
+                    Foreground="{DynamicResource PrimaryForegroundBrush}"
+                    Padding="15,8"
+                    BorderThickness="0"
+                    FontWeight="SemiBold"
+                    Cursor="Hand">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}"
+                                            CornerRadius="4"
+                                            Padding="{TemplateBinding Padding}">
+                                        <ContentPresenter HorizontalAlignment="Center"
+                                                          VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Opacity" Value="0.85"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </Grid>
+
+        <!-- Filtros de período -->
+        <Border Grid.Row="1"
+                Background="{DynamicResource Surface}"
+                Padding="15"
+                Margin="0,0,0,20"
+                CornerRadius="8"
+                BorderBrush="{DynamicResource PrimaryBrush}"
+                BorderThickness="1">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Período:"
+                               VerticalAlignment="Center"
+                               Margin="0,0,10,0"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextPrimary}"/>
+                    <ComboBox x:Name="cmbPeriodo"
+                              Width="150"
+                              Margin="0,0,20,0"
+                              SelectedIndex="0"
+                              SelectionChanged="cmbPeriodo_SelectionChanged">
+                        <ComboBoxItem Content="Hoy"/>
+                        <ComboBoxItem Content="Esta semana"/>
+                        <ComboBoxItem Content="Este mes"/>
+                        <ComboBoxItem Content="Este año"/>
+                        <ComboBoxItem Content="Personalizado"/>
+                    </ComboBox>
+
+                    <!-- Panel de fechas personalizadas -->
+                    <StackPanel x:Name="pnlFechasPersonalizadas"
+                                Orientation="Horizontal"
+                                Visibility="Collapsed">
+                        <TextBlock Text="Desde:"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,10,0"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextPrimary}"/>
+                        <DatePicker x:Name="dpFechaDesde"
+                                    Width="150"
+                                    Margin="0,0,20,0"/>
+
+                        <TextBlock Text="Hasta:"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,10,0"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextPrimary}"/>
+                        <DatePicker x:Name="dpFechaHasta"
+                                    Width="150"
+                                    Margin="0,0,20,0"/>
+                    </StackPanel>
+
+                    <Button Content="Aplicar"
+                            Click="btnAplicar_Click"
+                            Background="{DynamicResource PrimaryBrush}"
+                            Foreground="{DynamicResource PrimaryForegroundBrush}"
+                            Padding="15,5"
+                            BorderThickness="0"
+                            Cursor="Hand">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}"
+                                                    CornerRadius="4"
+                                                    Padding="{TemplateBinding Padding}">
+                                                <ContentPresenter HorizontalAlignment="Center"
+                                                                  VerticalAlignment="Center"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Opacity" Value="0.85"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Resumen general -->
+        <UniformGrid Grid.Row="2" Columns="3" Margin="0,0,0,20">
+            <!-- Total Ventas -->
+            <Border Background="{DynamicResource Surface}"
+                    Padding="20"
+                    Margin="5"
+                    CornerRadius="10"
+                    BorderBrush="{DynamicResource PrimaryBrush}"
+                    BorderThickness="2">
+                <Border.Effect>
+                    <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" Opacity="0.15" BlurRadius="10"/>
+                </Border.Effect>
+                <StackPanel>
+                    <materialDesign:PackIcon Kind="CashMultiple"
+                                           Width="28" Height="28"
+                                           Foreground="{DynamicResource PrimaryBrush}"
+                                           HorizontalAlignment="Center"
+                                           Margin="0,0,0,10"/>
+                    <TextBlock Text="Total Vendido"
+                               FontSize="13"
+                               FontWeight="SemiBold"
+                               HorizontalAlignment="Center"
+                               Foreground="{DynamicResource TextSecondary}"
+                               Margin="0,0,0,5"/>
+                    <TextBlock x:Name="txtTotalVendido"
+                               Text="$0"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               Foreground="{DynamicResource PrimaryBrush}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Total Cantidad Ventas -->
+            <Border Background="{DynamicResource Surface}"
+                    Padding="20"
+                    Margin="5"
+                    CornerRadius="10"
+                    BorderBrush="#4CAF50"
+                    BorderThickness="2">
+                <Border.Effect>
+                    <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" Opacity="0.15" BlurRadius="10"/>
+                </Border.Effect>
+                <StackPanel>
+                    <materialDesign:PackIcon Kind="Receipt"
+                                           Width="28" Height="28"
+                                           Foreground="#4CAF50"
+                                           HorizontalAlignment="Center"
+                                           Margin="0,0,0,10"/>
+                    <TextBlock Text="Total Ventas"
+                               FontSize="13"
+                               FontWeight="SemiBold"
+                               HorizontalAlignment="Center"
+                               Foreground="{DynamicResource TextSecondary}"
+                               Margin="0,0,0,5"/>
+                    <TextBlock x:Name="txtTotalVentas"
+                               Text="0"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               Foreground="#4CAF50"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Promedio por Venta -->
+            <Border Background="{DynamicResource Surface}"
+                    Padding="20"
+                    Margin="5"
+                    CornerRadius="10"
+                    BorderBrush="#FF9800"
+                    BorderThickness="2">
+                <Border.Effect>
+                    <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" Opacity="0.15" BlurRadius="10"/>
+                </Border.Effect>
+                <StackPanel>
+                    <materialDesign:PackIcon Kind="ChartLine"
+                                           Width="28" Height="28"
+                                           Foreground="#FF9800"
+                                           HorizontalAlignment="Center"
+                                           Margin="0,0,0,10"/>
+                    <TextBlock Text="Promedio por Venta"
+                               FontSize="13"
+                               FontWeight="SemiBold"
+                               HorizontalAlignment="Center"
+                               Foreground="{DynamicResource TextSecondary}"
+                               Margin="0,0,0,5"/>
+                    <TextBlock x:Name="txtPromedioVenta"
+                               Text="$0"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               Foreground="#FF9800"/>
+                </StackPanel>
+            </Border>
+        </UniformGrid>
+
+        <!-- DataGrid de vendedores -->
+        <Border Grid.Row="3"
+                Background="{DynamicResource Surface}"
+                Padding="15"
+                CornerRadius="10"
+                BorderBrush="{DynamicResource PrimaryBrush}"
+                BorderThickness="1">
+            <Border.Effect>
+                <DropShadowEffect Color="Black" Direction="270" ShadowDepth="2" Opacity="0.1" BlurRadius="8"/>
+            </Border.Effect>
+            <StackPanel>
+                <TextBlock Text="Detalle por Vendedor"
+                           FontWeight="Bold"
+                           FontSize="16"
+                           Foreground="{DynamicResource TextPrimary}"
+                           Margin="0,0,0,15"/>
+
+                <DataGrid x:Name="dgVendedores"
+          AutoGenerateColumns="False"
+          IsReadOnly="True"
+          HeadersVisibility="Column"
+          GridLinesVisibility="None"
+          Background="Transparent"
+          BorderThickness="0"
+          RowBackground="{DynamicResource Surface}"
+          AlternatingRowBackground="{DynamicResource Background}">
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundBrush}"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
+                            <Setter Property="Padding" Value="10,8"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.Columns>
+                        <!-- ELIMINAMOS LA COLUMNA # QUE CAUSABA EL ERROR -->
+
+                        <DataGridTextColumn Header="Vendedor" Binding="{Binding NombreVendedor}" Width="*"/>
+
+                        <DataGridTextColumn Header="Cant. Ventas" Binding="{Binding CantidadVentas}" Width="120">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="Monto Total" Binding="{Binding MontoTotal, StringFormat=C}" Width="150">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource PrimaryBrush}"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="Promedio" Binding="{Binding PromedioVenta, StringFormat=C}" Width="120">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>
