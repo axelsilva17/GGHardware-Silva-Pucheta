@@ -67,7 +67,7 @@
                     <ComboBox x:Name="cmbRol" Grid.Row="3" Grid.Column="1" materialDesign:HintAssist.Hint="Rol"
                     SelectedValuePath="Tag" DisplayMemberPath="Content" TabIndex="6" SelectionChanged="cmbRol_SelectionChanged">
                         <ComboBoxItem Content="Supervisor" Tag="1"/>
-                        <ComboBoxItem Content="Gerente" Tag="2"/>
+                        <ComboBoxItem Content="Usuario" Tag="2"/>
                     </ComboBox>
 
                 </Grid>
