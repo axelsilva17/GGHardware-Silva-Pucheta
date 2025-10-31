@@ -65,10 +65,9 @@
 
                     <materialDesign:PackIcon Grid.Row="3" Grid.Column="0" Kind="AccountGroup" VerticalAlignment="Center" Margin="0,0,10,10"/>
                     <ComboBox x:Name="cmbRol" Grid.Row="3" Grid.Column="1" materialDesign:HintAssist.Hint="Rol"
-                    SelectedValuePath="Tag" DisplayMemberPath="Content" TabIndex="6">
+                    SelectedValuePath="Tag" DisplayMemberPath="Content" TabIndex="6" SelectionChanged="cmbRol_SelectionChanged">
                         <ComboBoxItem Content="Supervisor" Tag="1"/>
-                        <ComboBoxItem Content="Usuario" Tag="2"/>
-                        <ComboBoxItem Content="Cliente" Tag="3"/>
+                        <ComboBoxItem Content="Gerente" Tag="2"/>
                     </ComboBox>
 
                 </Grid>

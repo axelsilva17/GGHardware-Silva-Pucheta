@@ -5,6 +5,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using static QuestPDF.Helpers.Colors;
 
 namespace GGHardware.Views
 {
@@ -275,7 +276,8 @@ namespace GGHardware.Views
 
         private void BuscarProducto_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.BuscarProducto();
+            string codigo = txtCodigoProducto.Text;
+            ViewModel.BuscarProductoPorCodigo(codigo);
         }
 
         private void VerHistorial_Click(object sender, RoutedEventArgs e)

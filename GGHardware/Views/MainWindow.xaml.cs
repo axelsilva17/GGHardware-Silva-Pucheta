@@ -52,7 +52,6 @@ namespace GGHardware
                     break;
 
                 case 2: // Usuario/Vendedor
-                    btnProductos.Visibility = Visibility.Visible;
                     btnVentas.Visibility = Visibility.Visible;
                     btnRegistro.Visibility = Visibility.Visible;
                     break;
@@ -165,10 +164,10 @@ namespace GGHardware
             switch (usuarioLogueado.RolId)
             {
                 case 4: // gerente
-                    MainContentBorder.Child = new Gerente(); // tu UserControl Gerente
+                    MainContentBorder.Child = new Gerente(); 
                     break;
                 default:
-                    MainContentBorder.Child = new DashboardView(); // otras vistas
+                    MainContentBorder.Child = new DashboardView(); 
                     break;
             }
         }

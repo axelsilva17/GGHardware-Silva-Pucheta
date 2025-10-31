@@ -6,15 +6,6 @@ using System.Windows;
 using GGHardware.Data;
 using GGHardware.Models;
 using Microsoft.EntityFrameworkCore;
-using System.IO;
-using System.Net;
-using System.Net.Mail;
-using Microsoft.Win32;
-using iText.Kernel.Pdf;
-using iText.Layout;
-using iText.Layout.Element;
-using iText.Kernel.Font;
-using iText.IO.Font.Constants;
 
 namespace GGHardware.ViewModels
 {
@@ -28,7 +19,6 @@ namespace GGHardware.ViewModels
         public ObservableCollection<TipoComprobante> TiposComprobante { get; set; }
         public ObservableCollection<MetodoPago> MetodosPago { get; set; }
         public ObservableCollection<DetalleVenta> DetallesVenta { get; set; }
-
 
         private Cliente _clienteSeleccionado;
         public Cliente ClienteSeleccionado
@@ -51,9 +41,6 @@ namespace GGHardware.ViewModels
                 OnPropertyChanged(nameof(IdUsuarioLogueado));
             }
         }
-
-
-
 
         private TipoComprobante _tipoComprobanteSeleccionado;
         public TipoComprobante TipoComprobanteSeleccionado
@@ -102,12 +89,9 @@ namespace GGHardware.ViewModels
         }
 
         public bool MostrarCampoVuelto => MetodoPagoSeleccionado?.nombre?.ToLower() == "efectivo";
-
         public decimal Vuelto => MontoRecibido - Total;
-
         public decimal Total => Carrito.Sum(item => item.Subtotal);
 
-        // Inicialización de campos en el constructor
         public VentasViewModel(int idUsuarioActual)
         {
             _context = new ApplicationDbContext();
@@ -455,12 +439,12 @@ namespace GGHardware.ViewModels
                     return;
                 }
 
-                // Mostrar menú de opciones
+                // Mostrar menú de opciones (solo 2 opciones ahora)
                 var ventanaOpciones = new Window
                 {
                     Title = "Opciones de Comprobante",
                     Width = 350,
-                    Height = 250,
+                    Height = 200,
                     WindowStartupLocation = WindowStartupLocation.CenterScreen,
                     ResizeMode = ResizeMode.NoResize
                 };
@@ -492,20 +476,6 @@ namespace GGHardware.ViewModels
                     ventanaOpciones.Close();
                 };
                 stack.Children.Add(btnVer);
-
-                // Botón Guardar como PDF
-                var btnPDF = new System.Windows.Controls.Button
-                {
-                    Content = "Guardar como PDF",
-                    Height = 40,
-                    Margin = new Thickness(0, 5, 0, 5)
-                };
-                btnPDF.Click += (s, e) =>
-                {
-                    GuardarComoPDF(venta);
-                    ventanaOpciones.Close();
-                };
-                stack.Children.Add(btnPDF);
 
                 // Botón Enviar por Email
                 var btnEmail = new System.Windows.Controls.Button
@@ -608,6 +578,71 @@ namespace GGHardware.ViewModels
             return new string(' ', espacios) + texto;
         }
 
+        private void MostrarEnPantalla(Venta venta)
+        {
+            var ticket = GenerarTextoTicket(venta);
+
+            var ventanaTicket = new Window
+            {
+                Title = "Comprobante de Venta",
+                Width = 700,
+                Height = 800,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+
+            var scrollViewer = new System.Windows.Controls.ScrollViewer();
+            var textBlock = new System.Windows.Controls.TextBlock
+            {
+                Text = ticket,
+                FontFamily = new System.Windows.Media.FontFamily("Courier New"),
+                FontSize = 12,
+                Padding = new Thickness(20),
+                TextWrapping = TextWrapping.Wrap
+            };
+
+            scrollViewer.Content = textBlock;
+            ventanaTicket.Content = scrollViewer;
+            ventanaTicket.ShowDialog();
+        }
+
+        private void EnviarComprobantePorEmail(Venta venta)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(venta.Cliente?.email))
+                {
+                    MessageBox.Show("El cliente no tiene un email registrado.",
+                        "Email no disponible", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                string contenidoTicket = GenerarTextoTicket(venta);
+                string asunto = Uri.EscapeDataString($"Comprobante de Venta #{venta.id_venta} - GGHardware");
+
+                string cuerpoEmail = $"Estimado/a {venta.Cliente.NombreCompleto},\n\n" +
+                                   $"Adjuntamos el comprobante de su compra realizada el {venta.Fecha:dd/MM/yyyy HH:mm}.\n\n" +
+                                   "----------------------------------------\n\n" +
+                                   contenidoTicket + "\n\n" +
+                                   "----------------------------------------\n\n" +
+                                   "Gracias por su compra.\n\n" +
+                                   "Saludos,\nGGHardware";
+
+                string cuerpo = Uri.EscapeDataString(cuerpoEmail);
+                string gmailUrl = $"https://mail.google.com/mail/?view=cm&fs=1&to={venta.Cliente.email}&su={asunto}&body={cuerpo}";
+
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = gmailUrl,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir Gmail:\n{ex.Message}",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         public void CancelarVenta()
         {
             try
@@ -641,10 +676,14 @@ namespace GGHardware.ViewModels
                 return;
             }
 
+            string codigoNormalizado = codigo.Trim().ToLower();
+
             var producto = _context.Producto
-                .FirstOrDefault(p => p.codigo_barras == codigo ||
-                                   p.codigo_interno == codigo ||
-                                   p.Id_Producto.ToString() == codigo);
+                .AsNoTracking()
+                .FirstOrDefault(p =>
+                    (p.codigo_barras != null && p.codigo_barras.ToLower() == codigoNormalizado) ||
+                    (p.codigo_interno != null && p.codigo_interno.ToLower() == codigoNormalizado) ||
+                    p.Id_Producto.ToString() == codigoNormalizado);
 
             if (producto == null)
             {
@@ -653,7 +692,9 @@ namespace GGHardware.ViewModels
                 return;
             }
 
-            AgregarProducto(producto);
+            // Limpiamos la lista actual y mostramos solo el producto encontrado
+            Productos.Clear();
+            Productos.Add(producto);
         }
 
         public void BuscarProducto()
@@ -703,140 +744,6 @@ namespace GGHardware.ViewModels
                 "Descuento aplicado", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-
-
-        //Metodos para manejar envios de coomprobantes*******
-        private void MostrarEnPantalla(Venta venta)
-        {
-            var ticket = GenerarTextoTicket(venta);
-
-            var ventanaTicket = new Window
-            {
-                Title = "Comprobante de Venta",
-                Width = 400,
-                Height = 600,
-                WindowStartupLocation = WindowStartupLocation.CenterScreen
-            };
-
-            var scrollViewer = new System.Windows.Controls.ScrollViewer();
-            var textBlock = new System.Windows.Controls.TextBlock
-            {
-                Text = ticket,
-                FontFamily = new System.Windows.Media.FontFamily("Courier New"),
-                FontSize = 12,
-                Padding = new Thickness(20),
-                TextWrapping = TextWrapping.Wrap
-            };
-
-            scrollViewer.Content = textBlock;
-            ventanaTicket.Content = scrollViewer;
-            ventanaTicket.ShowDialog();
-        }
-
-        private void GuardarComoPDF(Venta venta)
-        {
-            var saveDialog = new SaveFileDialog
-            {
-                Filter = "PDF files (*.pdf)|*.pdf",
-                FileName = $"Comprobante_{venta.id_venta}_{DateTime.Now:yyyyMMdd_HHmmss}.pdf",
-                DefaultExt = "pdf"
-            };
-
-            if (saveDialog.ShowDialog() == true)
-            {
-                try
-                {
-                    using (var writer = new PdfWriter(saveDialog.FileName))
-                    using (var pdf = new PdfDocument(writer))
-                    using (var document = new Document(pdf))
-                    {
-                        var font = PdfFontFactory.CreateFont(StandardFonts.COURIER);
-                        document.SetFont(font).SetFontSize(10);
-
-                        var texto = GenerarTextoTicket(venta);
-                        document.Add(new Paragraph(texto));
-                    }
-
-                    MessageBox.Show($"Comprobante guardado exitosamente en:\n{saveDialog.FileName}",
-                        "PDF Generado", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                    if (MessageBox.Show("¿Desea abrir el archivo PDF?", "Abrir PDF",
-                        MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                    {
-                        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-                        {
-                            FileName = saveDialog.FileName,
-                            UseShellExecute = true
-                        });
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Error al guardar PDF:\n{ex.Message}",
-                        "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-        }
-
-        private void EnviarComprobantePorEmail(Venta venta)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(venta.Cliente?.email))
-                {
-                    MessageBox.Show("El cliente no tiene un email registrado.",
-                        "Email no disponible", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                // Generar el contenido del ticket
-                string contenidoTicket = GenerarTextoTicket(venta);
-
-                // Preparar asunto y cuerpo del email
-                string asunto = Uri.EscapeDataString($"Comprobante de Venta #{venta.id_venta} - GGHardware");
-
-                string cuerpoEmail = $"Estimado/a {venta.Cliente.NombreCompleto},\n\n" +
-                                   $"Adjuntamos el comprobante de su compra realizada el {venta.Fecha:dd/MM/yyyy HH:mm}.\n\n" +
-                                   "----------------------------------------\n\n" +
-                                   contenidoTicket + "\n\n" +
-                                   "----------------------------------------\n\n" +
-                                   "Gracias por su compra.\n\n" +
-                                   "Saludos,\nGGHardware";
-
-                string cuerpo = Uri.EscapeDataString(cuerpoEmail);
-
-                // Construir URL de Gmail
-                string gmailUrl = $"https://mail.google.com/mail/?view=cm&fs=1&to={venta.Cliente.email}&su={asunto}&body={cuerpo}";
-
-                // Abrir Gmail en el navegador
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-                {
-                    FileName = gmailUrl,
-                    UseShellExecute = true
-                });
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error al abrir Gmail:\n{ex.Message}",
-                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private void GuardarPDFTemporal(Venta venta, string rutaArchivo)
-        {
-            using (var writer = new PdfWriter(rutaArchivo))
-            using (var pdf = new PdfDocument(writer))
-            using (var document = new Document(pdf))
-            {
-                var font = PdfFontFactory.CreateFont(StandardFonts.COURIER);
-                document.SetFont(font).SetFontSize(10);
-                var texto = GenerarTextoTicket(venta);
-                document.Add(new Paragraph(texto));
-            }
-        }
-
-        //************************************************/
         public void QuitarTodosLosDescuentos()
         {
             foreach (var item in Carrito)
@@ -845,13 +752,6 @@ namespace GGHardware.ViewModels
             }
             OnPropertyChanged(nameof(Total));
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
 
         private void CargarDetallesVenta()
         {
@@ -889,6 +789,7 @@ namespace GGHardware.ViewModels
                 CargarDetallesVenta();
             }
         }
+
         public void ReimprimirComprobante()
         {
             if (VentaSeleccionada == null)
@@ -898,9 +799,14 @@ namespace GGHardware.ViewModels
                 return;
             }
 
-            // Usar el mismo método del ViewModel de ventas
             var ventasVM = new VentasViewModel(MainWindow.UsuarioActual.id_usuario);
             ventasVM.GenerarTicket(VentaSeleccionada.id_venta);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

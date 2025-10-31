@@ -225,6 +225,9 @@ namespace GGHardware.Views
             }
         }
 
+        private void cmbRol_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
 
+        }
     }
 }
