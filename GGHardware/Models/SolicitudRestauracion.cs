@@ -37,7 +37,6 @@ namespace GGHardware.Models
         public DateTime? fecha_aprobacion { get; set; }
         public DateTime? fecha_restauracion { get; set; }
 
-        // SOLUCIÓN: Propiedades de navegación NULLABLE
         [InverseProperty("SolicitudesComoSupervisor")]
         public virtual Usuario? Supervisor { get; set; }
 

@@ -76,8 +76,7 @@ namespace GGHardware.Views
                     foreach (var u in usuarios)
                     {
                         u.NombreRol = roles.ContainsKey(u.RolId) ? roles[u.RolId] : "Desconocido";
-
-                        // Asignar texto de estado 
+ 
                         u.EstadoTexto = u.Activo ? "Activo" : "Inactivo";
                     }
 
@@ -142,7 +141,7 @@ namespace GGHardware.Views
                         contraseña = pbContrasena.Password,
                         fecha_Nacimiento = dpFechaNacimiento.SelectedDate,
                         RolId = int.Parse(cmbRol.SelectedValue.ToString()),
-                        Activo = true // 👈 nuevo: los usuarios se crean activos por defecto
+                        Activo = true 
                     };
 
                     context.Usuarios.Add(usuario);

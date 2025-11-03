@@ -55,7 +55,7 @@ namespace GGHardware.Views
         
         private void btnGuardar_Click(object sender, RoutedEventArgs e)
         {
-            // 🔹 Validaciones básicas
+            //Validaciones 
             if (string.IsNullOrWhiteSpace(txtNombre.Text))
             {
                 MessageBox.Show("El nombre del producto es obligatorio.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -107,8 +107,7 @@ namespace GGHardware.Views
                         codigo_barras = txtCodigoBarras.Text,
                         codigo_interno = txtCodigoInterno.Text,
                         id_categoria = (int)cmbCategoria.SelectedValue, 
-                        //fecha_creacion = DateTime.Now,
-                        //activo = true
+
                     };
 
                     context.Producto.Add(producto);

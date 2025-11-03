@@ -56,7 +56,7 @@ namespace GGHardware.Models
         }
 
 
-        public int id_categoria { get; set; }   // FK
+        public int id_categoria { get; set; }   
         [ForeignKey("id_categoria")]
         public Categoria Categoria { get; set; }
 
@@ -64,9 +64,6 @@ namespace GGHardware.Models
         {
             get { return Categoria?.nombre ?? "Sin categoría"; }
         }
-        //public DateTime fecha_creacion { get; set; } = DateTime.Now;
-
-        //public bool activo { get; set; } = true;
 
         // NUEVOS CAMPOS para búsqueda por código
         [MaxLength(50)]

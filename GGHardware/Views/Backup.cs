@@ -113,13 +113,13 @@ namespace GGHardware.Views
             }
         }
 
-        // Evento cuando cambia la instancia seleccionada
+        //cambia la instancia seleccionada
         private void cmbInstancia_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             CargarBasesDeDatos();
         }
 
-        // Cargar el historial de backups en el DataGrid
+        // Cargar el historial de backups 
         private void CargarHistorial()
         {
             using (var context = new ApplicationDbContext())
@@ -268,7 +268,6 @@ namespace GGHardware.Views
             }
         }
 
-        // Evento de doble click en solicitudes pendientes
         private void dgSolicitudesPendientes_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (dgSolicitudesPendientes.SelectedItem == null) return;
@@ -313,8 +312,6 @@ namespace GGHardware.Views
                     {
                         solicitud.estado = "EnRestauracion";
                         solicitud.fecha_aprobacion = DateTime.Now;
-                        // Aquí deberías obtener el ID del gerente actual logueado
-                        // solicitud.id_gerente = IdGerenteActual;
                         context.SaveChanges();
                     }
                 }
@@ -330,7 +327,7 @@ namespace GGHardware.Views
             }
             catch (Exception ex)
             {
-                // Marcar como fallida en caso de error
+                //caso de error
                 try
                 {
                     using (var context = new ApplicationDbContext())
@@ -387,8 +384,6 @@ namespace GGHardware.Views
                         solicitud.estado = "Rechazada";
                         solicitud.fecha_aprobacion = DateTime.Now;
                         solicitud.observaciones_gerente = observaciones;
-                        // Aquí deberías obtener el ID del gerente actual logueado
-                        // solicitud.id_gerente = IdGerenteActual;
                         context.SaveChanges();
                     }
                 }
@@ -404,8 +399,6 @@ namespace GGHardware.Views
             }
         }
 
-        // Método auxiliar para ejecutar la restauración
-        // Método auxiliar para ejecutar la restauración EN LA INSTANCIA SQLEXPRESS
         private void EjecutarRestauracion(string rutaBackup, int idSolicitud)
         {
             string databaseName = "GGHardware_Restored";
@@ -428,8 +421,6 @@ namespace GGHardware.Views
                 using (SqlConnection con = new SqlConnection(builder.ConnectionString))
                 {
                     con.Open();
-
-                    // 1. Verificar si la BD ya existe y eliminarla
                     string checkDbQuery = $@"
                 IF EXISTS (SELECT name FROM sys.databases WHERE name = N'{databaseName}')
                 BEGIN
@@ -444,7 +435,6 @@ namespace GGHardware.Views
                         cmd.ExecuteNonQuery();
                     }
 
-                    // 2. Restaurar con los nombres lógicos correctos
                     string restoreQuery = $@"
                 RESTORE DATABASE [{databaseName}] 
                 FROM DISK = N'{rutaBackup}' 
@@ -460,7 +450,6 @@ namespace GGHardware.Views
                     }
                 }
 
-                // Actualizar estado a Completada
                 using (var context = new ApplicationDbContext())
                 {
                     var solicitud = context.SolicitudRestauraciones.Find(idSolicitud);
@@ -485,7 +474,6 @@ namespace GGHardware.Views
             }
             catch (Exception ex)
             {
-                // Actualizar estado a Fallida
                 using (var context = new ApplicationDbContext())
                 {
                     var solicitud = context.SolicitudRestauraciones.Find(idSolicitud);

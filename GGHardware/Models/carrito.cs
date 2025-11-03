@@ -28,7 +28,7 @@ namespace GGHardware.Models
             }
         }
 
-        // NUEVO: Para manejar descuentos individuales
+        //Para manejar descuentos individuales
         private decimal? _precioConDescuento;
         public decimal? PrecioConDescuento
         {
@@ -64,7 +64,7 @@ namespace GGHardware.Models
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        // Método para aplicar descuento por porcentaje
+        // aplicar descuento por porcentaje
         public void AplicarDescuentoPorcentaje(double porcentaje)
         {
             if (porcentaje < 0 || porcentaje > 100) return;
@@ -72,7 +72,7 @@ namespace GGHardware.Models
             PrecioConDescuento = Precio - descuento;
         }
 
-        // Método para quitar descuento
+        // quitar descuento
         public void QuitarDescuento()
         {
             PrecioConDescuento = null;

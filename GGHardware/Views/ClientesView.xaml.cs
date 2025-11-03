@@ -23,7 +23,7 @@ namespace GGHardware.Views
         {
             if (e.Key == Key.Enter)
             {
-                // Si el foco está en el botón Limpiar, ejecutamos su acción en lugar de Guardar
+                
                 if (Keyboard.FocusedElement == btnLimpiar)
                 {
                     btnLimpiar_Click(btnLimpiar, null);
@@ -33,7 +33,7 @@ namespace GGHardware.Views
                     btnGuardar_Click(null, null);
                 }
 
-                e.Handled = true; // Para que no se propague más el Enter
+                e.Handled = true; 
             }
         }
 

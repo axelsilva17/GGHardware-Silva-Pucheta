@@ -86,7 +86,7 @@ namespace GGHardware.Views
             if (e.Key == Key.Enter)
             {
                 BtnInicioSesion_Click(null, null); // Llama al método que ya tenés
-                e.Handled = true; // Evita efectos no deseados
+                e.Handled = true; 
             }
         }
 

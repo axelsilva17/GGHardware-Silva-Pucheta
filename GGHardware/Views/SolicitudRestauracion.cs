@@ -22,7 +22,6 @@ namespace GGHardware.Views
             var viewModel = DataContext as SolicitudRestauracionViewModel;
             if (viewModel != null)
             {
-                // Ejecutar el comando, NO llamar al método directamente
                 viewModel.CargarMisSolicitudesCommand?.Execute(null);
             }
         }

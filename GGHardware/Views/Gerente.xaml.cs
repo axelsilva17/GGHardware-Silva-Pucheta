@@ -28,7 +28,7 @@ namespace GGHardware.Views
             fechaDesde = fechaHasta.Value.AddDays(-7);
             categoriaSeleccionada = "Todas";
 
-            // Cargar categorías desde la base de datos
+            // Cargar categorías 
             CargarCategorias();
 
             // Cargar datos iniciales
@@ -71,11 +71,10 @@ namespace GGHardware.Views
 
         private void cmbPeriodo_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // CRÍTICO: Verificar que los controles estén inicializados antes de usarlos
             if (pnlFechasPersonalizadas == null || dpFechaDesde == null || dpFechaHasta == null)
                 return;
 
-            if (cmbPeriodo.SelectedIndex == 3) // Personalizado
+            if (cmbPeriodo.SelectedIndex == 3) 
             {
                 pnlFechasPersonalizadas.Visibility = Visibility.Visible;
 

@@ -55,10 +55,10 @@ namespace GGHardware.Models
         [Column(TypeName = "date")]
        public DateTime? fecha_Nacimiento { get; set; } 
         
-       [NotMapped]  // No se guarda en la base de datos
+       [NotMapped]  
         public string NombreRol { get; set; } = string.Empty;
 
-        [NotMapped] // para que EF no intente guardarla en la DB
+        [NotMapped] 
         public string EstadoTexto { get; set; }
 
 

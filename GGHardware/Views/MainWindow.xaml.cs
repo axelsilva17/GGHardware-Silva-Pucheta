@@ -265,10 +265,9 @@ namespace GGHardware
                 var service = new GGHardware.Services.SolicitudRestauracionService(context);
                 var solicitudView = new GGHardware.Views.SolicitudRestauracionView();
 
-                // Usa UsuarioActual.id_usuario directamente
                 var viewModel = new GGHardware.ViewModels.SolicitudRestauracionViewModel(
                     service,
-                    UsuarioActual.id_usuario  // ← Aquí usas directamente la propiedad
+                    UsuarioActual.id_usuario  
                 );
 
                 solicitudView.DataContext = viewModel;

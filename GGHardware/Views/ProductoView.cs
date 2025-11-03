@@ -18,7 +18,6 @@ namespace GGHardware.Views
 
         private void btnAltaProducto_Click(object sender, RoutedEventArgs e)
         {
-            // Cambia el contenido del MainContentBorder a la vista de AltaProducto
             var mainWindow = Application.Current.MainWindow as MainWindow;
             if (mainWindow != null)
             {
@@ -33,7 +32,7 @@ namespace GGHardware.Views
                 using (var context = new ApplicationDbContext())
                 {
                     var productos = context.Producto.Include(p => p.Categoria).ToList();
-                    dgProductos.ItemsSource = productos; // <-- Asigna la lista de objetos 'Producto'
+                    dgProductos.ItemsSource = productos; 
                 }
             }
             catch (Exception ex)

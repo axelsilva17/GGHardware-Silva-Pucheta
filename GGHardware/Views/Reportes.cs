@@ -10,7 +10,7 @@ namespace GGHardware.Views
 {
     public partial class Reportes : UserControl
     {
-        private List<ReporteVentaDetalle> _todasLasVentas; // Guardar todas las ventas en memoria
+        private List<ReporteVentaDetalle> _todasLasVentas;
 
         public Reportes()
         {
@@ -168,7 +168,7 @@ namespace GGHardware.Views
                     FechaGeneracion = DateTime.Now,
                     FechaInicio = fechaInicio,
                     FechaFin = fechaFin,
-                    UsuarioID = 1, // TODO: Obtener del usuario logueado
+                    UsuarioID = 1, 
                     TotalVentas = resumen.VentasTotales,
                     TotalProductos = resumen.ProductosVendidos,
                     TotalRegistros = resumen.TotalRegistros,

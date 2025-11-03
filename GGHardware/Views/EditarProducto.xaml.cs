@@ -69,7 +69,7 @@ namespace GGHardware.Views
                     else
                     {
                         MessageBox.Show("Producto no encontrado.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        // Lógica para volver a la vista anterior si el producto no existe
+                        
                         var mainWindow = Window.GetWindow(this) as MainWindow;
                         if (mainWindow != null)
                         {
@@ -133,7 +133,7 @@ namespace GGHardware.Views
 
                         MessageBox.Show("✅ Producto actualizado con éxito.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                        // Opcional: Volver a la vista de productos después de guardar
+                        // Volver a la vista de productos después de guardar
                         var mainWindow = Window.GetWindow(this) as MainWindow;
                         if (mainWindow != null)
                         {

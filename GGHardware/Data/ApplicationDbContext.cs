@@ -64,7 +64,7 @@ namespace GGHardware.Data
             base.OnModelCreating(modelBuilder);
             base.OnModelCreating(modelBuilder);
 
-            // Configuración de relaciones si es necesario
+            // Configuración de relaciones 
             modelBuilder.Entity<Reporte>()
                 .HasOne(r => r.Usuario)
                 .WithMany()

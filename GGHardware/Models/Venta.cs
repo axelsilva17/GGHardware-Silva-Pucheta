@@ -18,7 +18,7 @@ namespace GGHardware.Models
         [Column(TypeName = "decimal(10,2)")]
         public decimal Monto { get; set; }
 
-        // Campos nuevos para comprobantes
+        // Campos para comprobantes
         [MaxLength(20)]
         public string? NumeroComprobante { get; set; }
 

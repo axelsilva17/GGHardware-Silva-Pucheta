@@ -16,7 +16,7 @@ namespace GGHardware.Models
 
         [Required]
         [MaxLength(200)]
-        public string nombre_producto { get; set; } // Guardamos el nombre para mantener histórico
+        public string nombre_producto { get; set; } 
 
         public int cantidad { get; set; }
 
@@ -26,7 +26,6 @@ namespace GGHardware.Models
         [Column(TypeName = "decimal(10,2)")]
         public decimal? precio_con_descuento { get; set; }
 
-        // ✅ NUEVAS PROPIEDADES
         [Required]
         [Column(TypeName = "date")]
         public DateTime Fecha { get; set; } = DateTime.Today;
