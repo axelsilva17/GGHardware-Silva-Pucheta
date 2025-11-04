@@ -1,4 +1,4 @@
-<UserControl x:Class="GGHardware.Views.Backup"
+﻿<UserControl x:Class="GGHardware.Views.Backup"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -8,14 +8,14 @@
              d:DesignHeight="600" d:DesignWidth="900">
 
     <Grid Background="{DynamicResource MaterialDesignPaper}">
-        <!-- Scroll vertical automatico -->
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <Border Padding="20">
+        <!-- Scroll vertical y horizontal automatico -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <Border Padding="20" MinWidth="800">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                     <!-- Titulo -->
@@ -36,7 +36,7 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="200"/>
                             </Grid.RowDefinitions>
 
                             <TextBlock Text="Realizar Backup"
@@ -47,7 +47,7 @@
                             <!-- Selector de Instancia -->
                             <StackPanel Grid.Row="1" Margin="0 0 0 15">
                                 <TextBlock Text="Instancia de SQL Server:" FontWeight="SemiBold" Margin="0 0 0 5"/>
-                                <ComboBox x:Name="cmbInstancia" Width="350" HorizontalAlignment="Left"
+                                <ComboBox x:Name="cmbInstancia" MaxWidth="350" HorizontalAlignment="Left"
                                          materialDesign:HintAssist.Hint="Seleccione la instancia"
                                          Height="40" Padding="10"
                                          SelectionChanged="cmbInstancia_SelectionChanged"/>
@@ -56,25 +56,29 @@
                             <!-- Selector de Base de Datos -->
                             <StackPanel Grid.Row="2" Margin="0 0 0 15">
                                 <TextBlock Text="Base de Datos:" FontWeight="SemiBold" Margin="0 0 0 5"/>
-                                <ComboBox x:Name="cmbBaseDatos" Width="350" HorizontalAlignment="Left"
+                                <ComboBox x:Name="cmbBaseDatos" MaxWidth="350" HorizontalAlignment="Left"
                                          materialDesign:HintAssist.Hint="Seleccione la base de datos"
                                          Height="40" Padding="10"/>
                             </StackPanel>
 
                             <!-- Ruta del Backup -->
-                            <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0 0 0 15">
-                                <TextBox x:Name="txtRuta" Width="350" Margin="0 0 10 0" IsReadOnly="True"
+                            <Grid Grid.Row="3" Margin="0 0 0 15">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" MaxWidth="350"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Name="txtRuta" Grid.Column="0" Margin="0 0 10 0" IsReadOnly="True"
                                          materialDesign:HintAssist.Hint="Seleccione una ubicacion para guardar"
                                          Height="40" Padding="10"/>
-                                <Button x:Name="btnSeleccionarRuta" Content="Buscar..." Width="100" Height="40"
+                                <Button x:Name="btnSeleccionarRuta" Grid.Column="1" Content="Buscar..." Width="100" Height="40"
                                         Style="{DynamicResource MaterialDesignRaisedButton}" 
                                         Click="btnSeleccionarRuta_Click"/>
-                            </StackPanel>
+                            </Grid>
 
                             <!-- Boton de Backup -->
                             <Button x:Name="btnBackup" Grid.Row="4" Content="Realizar Backup" Width="150" Height="40"
                                     Style="{DynamicResource MaterialDesignRaisedButton}" FontWeight="Bold"
-                                    Click="btnBackup_Click" Margin="0 0 0 15"
+                                    Click="btnBackup_Click" Margin="0 0 0 15" HorizontalAlignment="Left"
                                     Background="#2196F3" Foreground="White"/>
 
                             <!-- Estado del Backup -->
@@ -82,16 +86,21 @@
                                        FontSize="14" Foreground="{DynamicResource MaterialDesignBody}"
                                        TextWrapping="Wrap" Margin="0 0 0 15"/>
 
-                            <!-- DataGrid para historial -->
-                            <DataGrid Grid.Row="6" x:Name="dgBackups" AutoGenerateColumns="False" IsReadOnly="True" 
-                                      SelectionMode="Single">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="ID" Binding="{Binding id}" Width="Auto"/>
-                                    <DataGridTextColumn Header="Archivo" Binding="{Binding NombreArchivo}" Width="*"/>
-                                    <DataGridTextColumn Header="Fecha" Binding="{Binding Fecha, StringFormat=dd/MM/yyyy HH:mm}" Width="150"/>
-                                    <DataGridTextColumn Header="Ruta" Binding="{Binding RutaArchivo}" Width="*"/>
-                                </DataGrid.Columns>
-                            </DataGrid>
+                            <!-- DataGrid para historial con scroll -->
+                            <Border Grid.Row="6" BorderBrush="{DynamicResource MaterialDesignDivider}" 
+                                    BorderThickness="1">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                                    <DataGrid x:Name="dgBackups" AutoGenerateColumns="False" IsReadOnly="True" 
+                                              SelectionMode="Single" MinWidth="600">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="ID" Binding="{Binding id}" Width="50"/>
+                                            <DataGridTextColumn Header="Archivo" Binding="{Binding NombreArchivo}" Width="200"/>
+                                            <DataGridTextColumn Header="Fecha" Binding="{Binding Fecha, StringFormat=dd/MM/yyyy HH:mm}" Width="150"/>
+                                            <DataGridTextColumn Header="Ruta" Binding="{Binding RutaArchivo}" Width="*" MinWidth="200"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </ScrollViewer>
+                            </Border>
                         </Grid>
                     </Border>
 
@@ -102,7 +111,7 @@
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="300"/>
                             </Grid.RowDefinitions>
 
                             <TextBlock Text="Solicitudes de Restauracion Pendientes"
@@ -110,35 +119,60 @@
                                        Foreground="{DynamicResource MaterialDesignBody}"
                                        Margin="0 0 0 15"/>
 
-                            <DataGrid Grid.Row="1" x:Name="dgSolicitudesPendientes" 
-                                      AutoGenerateColumns="False" SelectionMode="Single"
-                                      MouseDoubleClick="dgSolicitudesPendientes_MouseDoubleClick">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="ID" Binding="{Binding id_solicitud}" Width="Auto"/>
-                                    <DataGridTextColumn Header="Supervisor" Binding="{Binding nombre_supervisor}" Width="150"/>
-                                    <DataGridTextColumn Header="Archivo Backup" Binding="{Binding nombre_archivo_backup}" Width="150"/>
-                                    <DataGridTextColumn Header="Fecha Backup" Binding="{Binding fecha_backup, StringFormat=dd/MM/yyyy}" Width="150"/>
-                                    <DataGridTextColumn Header="Fecha Solicitud" Binding="{Binding fecha_solicitud, StringFormat=dd/MM/yyyy HH:mm}" Width="150"/>
-                                    <DataGridTextColumn Header="Motivo" Binding="{Binding motivo_solicitud}" Width="200"/>
-                                    <DataGridTextColumn Header="Estado" Binding="{Binding estado}" Width="100"/>
-                                    <DataGridTemplateColumn Header="Acciones" Width="150">
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Button Content="Aprobar" Click="AprobarSolicitud_Click" 
-                                                            Margin="0 0 5 0" Padding="10,5"
-                                                            Background="#4CAF50" Foreground="White"
-                                                            FontSize="11"/>
-                                                    <Button Content="Rechazar" Click="RechazarSolicitud_Click"
-                                                            Padding="10,5"
-                                                            Background="#F44336" Foreground="White"
-                                                            FontSize="11"/>
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                </DataGrid.Columns>
-                            </DataGrid>
+                            <Border Grid.Row="1" BorderBrush="{DynamicResource MaterialDesignDivider}" 
+                                    BorderThickness="1">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                                    <DataGrid x:Name="dgSolicitudesPendientes" 
+                                              AutoGenerateColumns="False" 
+                                              SelectionMode="Single"
+                                              IsReadOnly="True"
+                                              MouseDoubleClick="dgSolicitudesPendientes_MouseDoubleClick"
+                                              RowHeight="70"
+                                              MinWidth="900">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="ID" Binding="{Binding id_solicitud, Mode=OneWay}" Width="50"/>
+                                            <DataGridTextColumn Header="Supervisor" Binding="{Binding nombre_supervisor, Mode=OneWay}" Width="100"/>
+                                            <DataGridTextColumn Header="Archivo" Binding="{Binding nombre_archivo_backup, Mode=OneWay}" Width="150"/>
+                                            <DataGridTextColumn Header="F. Backup" Binding="{Binding fecha_backup, StringFormat=dd/MM/yyyy, Mode=OneWay}" Width="100"/>
+                                            <DataGridTextColumn Header="F. Solicitud" Binding="{Binding fecha_solicitud, StringFormat=dd/MM/yyyy HH:mm, Mode=OneWay}" Width="140"/>
+                                            <DataGridTextColumn Header="Motivo" Binding="{Binding motivo_solicitud, Mode=OneWay}" Width="150"/>
+                                            <DataGridTextColumn Header="Estado" Binding="{Binding estado, Mode=OneWay}" Width="90"/>
+                                            <DataGridTemplateColumn Header="Acciones" Width="130">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel Orientation="Vertical" 
+                                                                    HorizontalAlignment="Center" 
+                                                                    VerticalAlignment="Center">
+                                                            <Button Content="✓ Aprobar" 
+                                                                    Click="AprobarSolicitud_Click" 
+                                                                    Margin="0 2" 
+                                                                    Padding="10,5" 
+                                                                    Width="110"
+                                                                    Height="26"
+                                                                    Background="#4CAF50" 
+                                                                    Foreground="White"
+                                                                    FontSize="11" 
+                                                                    FontWeight="SemiBold"
+                                                                    Cursor="Hand"/>
+                                                            <Button Content="✗ Rechazar" 
+                                                                    Click="RechazarSolicitud_Click"
+                                                                    Margin="0 2" 
+                                                                    Padding="10,5" 
+                                                                    Width="110"
+                                                                    Height="26"
+                                                                    Background="#F44336" 
+                                                                    Foreground="White"
+                                                                    FontSize="11" 
+                                                                    FontWeight="SemiBold"
+                                                                    Cursor="Hand"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </ScrollViewer>
+                            </Border>
                         </Grid>
                     </Border>
                 </Grid>
