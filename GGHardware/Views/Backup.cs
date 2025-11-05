@@ -142,16 +142,24 @@ namespace GGHardware.Views
                         .Include(s => s.Backup)
                         .Where(s => s.estado == "Pendiente")
                         .OrderByDescending(s => s.fecha_solicitud)
-                        .Select(s => new
+                        .AsEnumerable() // Traer a memoria primero
+                        .Select(s => new TuProyecto.ViewModels.SolicitudRestauracion
                         {
-                            s.id_solicitud,
-                            nombre_supervisor = s.Supervisor != null ? s.Supervisor.Nombre : "N/A",
-                            nombre_archivo_backup = s.Backup != null ? s.Backup.NombreArchivo : "N/A",
-                            ruta_archivo_backup = s.Backup != null ? s.Backup.RutaArchivo : "",
-                            s.fecha_backup,
-                            s.fecha_solicitud,
+                            id_solicitud = s.id_solicitud,
+                            id_supervisor = s.id_supervisor,
+                            nombre_supervisor = s.Supervisor?.Nombre ?? "N/A",
+                            id_gerente = s.id_gerente,
+                            nombre_gerente = s.Gerente?.Nombre ?? "",
+                            id_backup = s.id_backup,
+                            nombre_archivo_backup = s.Backup?.NombreArchivo ?? "N/A",
+                            fecha_backup = s.fecha_backup ?? DateTime.MinValue,
+                            ruta_archivo = s.Backup?.RutaArchivo ?? "",
+                            fecha_solicitud = s.fecha_solicitud ?? DateTime.Now,
+                            estado = s.estado ?? "Pendiente",
                             motivo_solicitud = s.motivo_solicitud ?? "",
-                            s.estado
+                            observaciones_gerente = s.observaciones_gerente ?? "",
+                            fecha_aprobacion = s.fecha_aprobacion,
+                            fecha_restauracion = s.fecha_restauracion
                         })
                         .ToList();
 
@@ -272,7 +280,8 @@ namespace GGHardware.Views
         {
             if (dgSolicitudesPendientes.SelectedItem == null) return;
 
-            dynamic solicitud = dgSolicitudesPendientes.SelectedItem;
+            var solicitud = dgSolicitudesPendientes.SelectedItem as TuProyecto.ViewModels.SolicitudRestauracion;
+            if (solicitud == null) return;
 
             string mensaje = $"Detalles de la Solicitud:\n\n" +
                            $"ID: {solicitud.id_solicitud}\n" +
@@ -286,16 +295,17 @@ namespace GGHardware.Views
             MessageBox.Show(mensaje, "Detalles de Solicitud",
                           MessageBoxButton.OK, MessageBoxImage.Information);
         }
-
         // Aprobar solicitud de restauración
         private void AprobarSolicitud_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
             if (button?.DataContext == null) return;
 
-            dynamic solicitudData = button.DataContext;
+            var solicitudData = button.DataContext as TuProyecto.ViewModels.SolicitudRestauracion;
+            if (solicitudData == null) return;
+
             int idSolicitud = solicitudData.id_solicitud;
-            string rutaBackup = solicitudData.ruta_archivo_backup;
+            string rutaBackup = solicitudData.ruta_archivo;
             string nombreArchivo = solicitudData.nombre_archivo_backup;
 
             if (MessageBox.Show($"¿Desea aprobar la solicitud de restauración del backup '{nombreArchivo}'?\n\n" +
@@ -316,7 +326,6 @@ namespace GGHardware.Views
                     }
                 }
 
-                // Ejecutar la restauración
                 EjecutarRestauracion(rutaBackup, idSolicitud);
 
                 MessageBox.Show("Solicitud aprobada y restauración ejecutada correctamente.",
@@ -327,7 +336,7 @@ namespace GGHardware.Views
             }
             catch (Exception ex)
             {
-                //caso de error
+                // Marcar como fallida en caso de error
                 try
                 {
                     using (var context = new ApplicationDbContext())
@@ -354,10 +363,11 @@ namespace GGHardware.Views
             var button = sender as Button;
             if (button?.DataContext == null) return;
 
-            dynamic solicitudData = button.DataContext;
+            var solicitudData = button.DataContext as TuProyecto.ViewModels.SolicitudRestauracion;
+            if (solicitudData == null) return;
+
             int idSolicitud = solicitudData.id_solicitud;
 
-            // Solicitar observaciones del rechazo
             var observaciones = Microsoft.VisualBasic.Interaction.InputBox(
                 "Ingrese el motivo del rechazo:",
                 "Rechazar Solicitud",
