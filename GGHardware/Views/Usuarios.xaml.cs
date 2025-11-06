@@ -59,7 +59,7 @@ namespace GGHardware.Views
             e.Handled = regex.IsMatch(e.Text);
         }
 
-       
+
         private void CargarUsuarios()
         {
             try
@@ -69,14 +69,14 @@ namespace GGHardware.Views
                     var roles = new Dictionary<int, string>
 {
                         {1, "Supervisor"},
-                        {2, "Usuario"}, 
+                        {2, "Usuario"},
                     };
                     var usuarios = context.Usuarios.ToList();
 
                     foreach (var u in usuarios)
                     {
                         u.NombreRol = roles.ContainsKey(u.RolId) ? roles[u.RolId] : "Desconocido";
- 
+
                         u.EstadoTexto = u.Activo ? "Activo" : "Inactivo";
                     }
 
@@ -128,6 +128,22 @@ namespace GGHardware.Views
                 return;
             }
 
+            // Validación de edad mayor de 18 años
+            DateTime fechaNacimiento = dpFechaNacimiento.SelectedDate.Value;
+            int edad = DateTime.Today.Year - fechaNacimiento.Year;
+
+            // Ajustar si aún no ha cumplido años este año
+            if (fechaNacimiento.Date > DateTime.Today.AddYears(-edad))
+            {
+                edad--;
+            }
+
+            if (edad < 18)
+            {
+                MessageBox.Show("El usuario debe ser mayor de 18 años.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             try
             {
                 using (var context = new ApplicationDbContext())
@@ -141,7 +157,7 @@ namespace GGHardware.Views
                         contraseña = pbContrasena.Password,
                         fecha_Nacimiento = dpFechaNacimiento.SelectedDate,
                         RolId = int.Parse(cmbRol.SelectedValue.ToString()),
-                        Activo = true 
+                        Activo = true
                     };
 
                     context.Usuarios.Add(usuario);
@@ -176,7 +192,7 @@ namespace GGHardware.Views
             txtDNI.Focus();
         }
 
-        
+
         private void btnActivarDesactivar_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;

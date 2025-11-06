@@ -379,9 +379,21 @@
                         <ComboBox x:Name="cmbTipoComprobante" 
                                   ItemsSource="{Binding TiposComprobante}"
                                   SelectedItem="{Binding TipoComprobanteSeleccionado}"
-                                  DisplayMemberPath="Nombre"
+                                  SelectedValuePath="id_tipo"
                                   Style="{StaticResource ModernComboBox}"
-                                  Margin="0,0,0,10"/>
+                                  Margin="0,0,0,10">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Nombre}" Margin="0"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                            <ComboBox.ItemContainerStyle>
+                                <Style TargetType="ComboBoxItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                </Style>
+                            </ComboBox.ItemContainerStyle>
+                        </ComboBox>
 
                         <TextBlock Text="Método de Pago:" 
                                    FontWeight="SemiBold" 
@@ -390,9 +402,21 @@
                         <ComboBox x:Name="cmbMetodoPago"
                                   ItemsSource="{Binding MetodosPago}"
                                   SelectedItem="{Binding MetodoPagoSeleccionado}"
-                                  DisplayMemberPath="nombre"
+                                  SelectedValuePath="id_metodo"
                                   Style="{StaticResource ModernComboBox}"
-                                  Margin="0,0,0,10"/>
+                                  Margin="0,0,0,10">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding nombre}" Margin="0"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                            <ComboBox.ItemContainerStyle>
+                                <Style TargetType="ComboBoxItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                </Style>
+                            </ComboBox.ItemContainerStyle>
+                        </ComboBox>
 
                         <StackPanel Visibility="{Binding MostrarCampoVuelto, Converter={StaticResource BoolToVisibilityConverter}}">
                             <TextBlock Text="Monto Recibido:" 

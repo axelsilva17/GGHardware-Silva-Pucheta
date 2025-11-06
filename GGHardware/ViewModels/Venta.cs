@@ -443,8 +443,8 @@ namespace GGHardware.ViewModels
                 var ventanaOpciones = new Window
                 {
                     Title = "Opciones de Comprobante",
-                    Width = 350,
-                    Height = 200,
+                    Width = 450,
+                    Height = 300,
                     WindowStartupLocation = WindowStartupLocation.CenterScreen,
                     ResizeMode = ResizeMode.NoResize
                 };
