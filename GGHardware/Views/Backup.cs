@@ -165,6 +165,17 @@ namespace GGHardware.Views
             }
         }
 
+        private void DetallesSolicitud_Click(object sender, RoutedEventArgs e)
+        {
+            var solicitud = ((FrameworkElement)sender).DataContext;
+
+            var ventanaDetalles = new DetallesSolicitudWindow(solicitud)
+            {
+                Owner = Window.GetWindow(this)
+            };
+            ventanaDetalles.ShowDialog();
+        }
+
         // Seleccionar ruta para guardar backup
         private void btnSeleccionarRuta_Click(object sender, RoutedEventArgs e)
         {

@@ -3,88 +3,168 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" 
-             Background="{DynamicResource MaterialDesignPaper}" 
-             d:DesignWidth="600" Height="779">
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+             d:DesignHeight="800" d:DesignWidth="600"
+             Background="{DynamicResource Background}">
 
-    <!-- Scroll para pantallas chicas -->
-    <ScrollViewer VerticalScrollBarVisibility="Auto"
-                  HorizontalScrollBarVisibility="Disabled">
+    <Border Background="{DynamicResource Surface}"
+            CornerRadius="12"
+            Margin="20"
+            Padding="30"
+            BorderBrush="{DynamicResource PrimaryBrush}"
+            BorderThickness="1">
+        <Border.Effect>
+            <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" Opacity="0.1" BlurRadius="10"/>
+        </Border.Effect>
 
-        <Grid Margin="20">
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- Titulo -->
-            <TextBlock Text="Alta de Producto"
-                       FontSize="20"
+            <!-- Título -->
+            <TextBlock Grid.Row="0"
+                       Text="Alta de Producto"
+                       FontSize="28"
                        FontWeight="Bold"
-                       Margin="0 0 0 20"
-                       HorizontalAlignment="Center"/>
+                       Foreground="{DynamicResource PrimaryBrush}"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,30"/>
 
-            <!-- Formulario -->
-            <StackPanel Margin="20" VerticalAlignment="Top" HorizontalAlignment="Center">
-                <TextBlock Text="Nombre:" Margin="0,0,0,5"/>
-                <TextBox x:Name="txtNombre" Height="30" Width="300" Margin="0,0,0,10"/>
+            <!-- Scroll del formulario -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="0 0 0 20">
 
-                <TextBlock Text="Precio Costo:" Margin="0,0,0,5"/>
-                <TextBox x:Name="txtPrecioCosto" Height="30" Width="300" Margin="0,0,0,10"/>
+                    <TextBlock Text="Nombre"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextPrimary}"
+                               Margin="0,10,0,5"/>
+                    <TextBox x:Name="txtNombre"
+                             Margin="0,0,0,15"
+                             materialDesign:HintAssist.Hint="Nombre del Producto"
+                             Style="{StaticResource MaterialDesignFilledTextBox}"/>
 
-                <TextBlock Text="Precio Venta:" Margin="0,0,0,5"/>
-                <TextBox x:Name="txtPrecioVenta" Height="30" Width="300" Margin="0,0,0,10"/>
+                    <TextBlock Text="Precio Costo"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextPrimary}"
+                               Margin="0,10,0,5"/>
+                    <TextBox x:Name="txtPrecioCosto"
+                             Margin="0,0,0,15"
+                             materialDesign:HintAssist.Hint="Precio de Costo"
+                             Style="{StaticResource MaterialDesignFilledTextBox}"/>
 
-                <TextBlock Text="Descripcion:" Margin="0,0,0,5"/>
-                <TextBox x:Name="txtDescripcion" Height="60" Width="300" Margin="0,0,0,10" AcceptsReturn="True"/>
+                    <TextBlock Text="Precio Venta"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextPrimary}"
+                               Margin="0,10,0,5"/>
+                    <TextBox x:Name="txtPrecioVenta"
+                             Margin="0,0,0,15"
+                             materialDesign:HintAssist.Hint="Precio de Venta"
+                             Style="{StaticResource MaterialDesignFilledTextBox}"/>
 
-                <TextBlock Text="Stock:" Margin="0,0,0,5"/>
-                <TextBox x:Name="txtStock" Height="30" Width="300" Margin="0,0,0,10"/>
+                    <TextBlock Text="Descripción"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextPrimary}"
+                               Margin="0,10,0,5"/>
+                    <TextBox x:Name="txtDescripcion"
+                             Margin="0,0,0,15"
+                             TextWrapping="Wrap"
+                             AcceptsReturn="True"
+                             materialDesign:HintAssist.Hint="Descripción del Producto"
+                             Style="{StaticResource MaterialDesignFilledTextBox}"
+                             Height="80"/>
 
-                <TextBlock Text="Stock Minimo:" Margin="0,0,0,5"/>
-                <TextBox x:Name="txtStockMin" Height="30" Width="300" Margin="0,0,0,10"/>
+                    <TextBlock Text="Stock"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextPrimary}"
+                               Margin="0,10,0,5"/>
+                    <TextBox x:Name="txtStock"
+                             Margin="0,0,0,15"
+                             materialDesign:HintAssist.Hint="Cantidad en Stock"
+                             Style="{StaticResource MaterialDesignFilledTextBox}"/>
 
-                <TextBlock Text="Codigo de Barras:" Margin="0,0,0,5"/>
-                <TextBox x:Name="txtCodigoBarras" Height="30" Width="300" Margin="0,0,0,10"/>
+                    <TextBlock Text="Stock Mínimo"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextPrimary}"
+                               Margin="0,10,0,5"/>
+                    <TextBox x:Name="txtStockMin"
+                             Margin="0,0,0,15"
+                             materialDesign:HintAssist.Hint="Stock Mínimo"
+                             Style="{StaticResource MaterialDesignFilledTextBox}"/>
 
-                <TextBlock Text="Codigo Interno:" Margin="0,0,0,5"/>
-                <TextBox x:Name="txtCodigoInterno" Height="30" Width="300" Margin="0,0,0,10"/>
+                    <TextBlock Text="Código de Barras"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextPrimary}"
+                               Margin="0,10,0,5"/>
+                    <TextBox x:Name="txtCodigoBarras"
+                             Margin="0,0,0,15"
+                             materialDesign:HintAssist.Hint="Código de Barras"
+                             Style="{StaticResource MaterialDesignFilledTextBox}"/>
 
-                <TextBlock Text="Categoria:" Margin="0,0,0,5"/>
-                <ComboBox x:Name="cmbCategoria"
-                          DisplayMemberPath="nombre"
-                          SelectedValuePath="id_categoria"
-                          Height="30" Width="300" Margin="0,0,0,20"/>
+                    <TextBlock Text="Código Interno"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextPrimary}"
+                               Margin="0,10,0,5"/>
+                    <TextBox x:Name="txtCodigoInterno"
+                             Margin="0,0,0,15"
+                             materialDesign:HintAssist.Hint="Código Interno"
+                             Style="{StaticResource MaterialDesignFilledTextBox}"/>
 
-                <TextBlock Text="Proveedor:" Margin="0,0,0,5"/>
-                <ComboBox x:Name="cmbProveedor"
-                          DisplayMemberPath="nombre"
-                          SelectedValuePath="NombreProveedor"
-                          Height="30" Width="300" Margin="0,0,0,10"/>
-            </StackPanel>
+                    <TextBlock Text="Categoría"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextPrimary}"
+                               Margin="0,10,0,5"/>
+                    <ComboBox x:Name="cmbCategoria"
+                              materialDesign:HintAssist.Hint="Selecciona una Categoría"
+                              Margin="0,0,0,25"
+                              Style="{StaticResource MaterialDesignFilledComboBox}"/>
+
+                    <TextBlock Text="Proveedor"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextPrimary}"
+                               Margin="0,10,0,5"/>
+                    <ComboBox x:Name="cmbProveedor"
+                              materialDesign:HintAssist.Hint="Selecciona un Proveedor"
+                              Margin="0,0,0,25"
+                              Style="{StaticResource MaterialDesignFilledComboBox}"/>
+
+                </StackPanel>
+            </ScrollViewer>
 
             <!-- Botones -->
-            <UniformGrid Grid.Row="2"
-                         Rows="1"
-                         Columns="3"
-                         HorizontalAlignment="Center"
-                         Margin="0,10,0,0"
-                         RenderTransformOrigin="0.386,0.604">
-                <Button x:Name="btnVolver"
-                        Content="Volver"
-                        Width="100"
-                        Click="btnVolver_Click"/>
+            <StackPanel Grid.Row="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        Margin="0,10,0,0">
                 <Button x:Name="btnGuardar"
                         Content="Guardar"
-                        Width="100"
-                        Margin="5,0,5,0"
-                        Click="btnGuardar_Click"/>
+                        Width="130"
+                        Height="40"
+                        Margin="5"
+                        Click="btnGuardar_Click"
+                        Background="{DynamicResource PrimaryBrush}"
+                        Foreground="{DynamicResource PrimaryForegroundBrush}"
+                        Style="{StaticResource MaterialDesignRaisedButton}"/>
+
                 <Button x:Name="btnLimpiar"
                         Content="Limpiar"
                         Width="100"
-                        Click="btnLimpiar_Click"/>
-            </UniformGrid>
+                        Height="40"
+                        Margin="5"
+                        Click="btnLimpiar_Click"
+                        Style="{StaticResource MaterialDesignOutlinedButton}"/>
+
+                <Button x:Name="btnVolver"
+                        Content="Volver"
+                        Width="100"
+                        Height="40"
+                        Margin="5"
+                        Click="btnVolver_Click"
+                        Style="{StaticResource MaterialDesignOutlinedButton}"/>
+            </StackPanel>
         </Grid>
-    </ScrollViewer>
+    </Border>
 </UserControl>

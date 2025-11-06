@@ -5,8 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:GGHardware.Converters"
              mc:Ignorable="d"
-             Background="{DynamicResource Background}"
-             MinHeight="600" MinWidth="1200">
+             Background="{DynamicResource Background}">
 
     <UserControl.Resources>
         <!-- Convertidores -->
@@ -33,274 +32,288 @@
         </Style>
     </UserControl.Resources>
 
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <!-- ScrollViewer principal para pantallas pequeñas -->
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <Grid Margin="20" MinWidth="1000">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <!-- Titulo con botón de volver -->
-        <Grid Grid.Row="0" Margin="0,0,0,20">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
+            <!-- Titulo con botón de volver -->
+            <Grid Grid.Row="0" Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0"
-                       Text="Historial de Ventas"
-                       FontSize="24"
-                       FontWeight="Bold"
-                       Foreground="{DynamicResource TextPrimary}"
-                       VerticalAlignment="Center"/>
-
-            <Button Grid.Column="1"
-                    Content="← Volver a Ventas"
-                    Click="VolverAVentas_Click"
-                    Background="{DynamicResource PrimaryBrush}"
-                    Foreground="{DynamicResource PrimaryForegroundBrush}"
-                    Padding="15,8"
-                    BorderThickness="0"
-                    FontWeight="SemiBold"
-                    Cursor="Hand">
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="Button">
-                                    <Border Background="{TemplateBinding Background}"
-                                            CornerRadius="4"
-                                            Padding="{TemplateBinding Padding}">
-                                        <ContentPresenter HorizontalAlignment="Center"
-                                                        VerticalAlignment="Center"/>
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Opacity" Value="0.85"/>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </Button.Style>
-            </Button>
-        </Grid>
-
-        <!-- Filtros -->
-        <Border Grid.Row="1" Style="{StaticResource CardStyle}">
-            <StackPanel>
-                <TextBlock Text="Filtros de Busqueda"
-                           FontSize="16"
-                           FontWeight="SemiBold"
+                <TextBlock Grid.Column="0"
+                           Text="Historial de Ventas"
+                           FontSize="24"
+                           FontWeight="Bold"
                            Foreground="{DynamicResource TextPrimary}"
-                           Margin="0,0,0,15"/>
+                           VerticalAlignment="Center"/>
 
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="200"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="200"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="200"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+                <Button Grid.Column="1"
+                        Content="← Volver a Ventas"
+                        Click="VolverAVentas_Click"
+                        Background="{DynamicResource PrimaryBrush}"
+                        Foreground="{DynamicResource PrimaryForegroundBrush}"
+                        Padding="15,8"
+                        BorderThickness="0"
+                        FontWeight="SemiBold"
+                        Cursor="Hand">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                CornerRadius="4"
+                                                Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Opacity" Value="0.85"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Grid>
 
-                    <TextBlock Grid.Column="0" Text="Desde:" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                    <DatePicker Grid.Column="1" SelectedDate="{Binding FechaDesde}" Margin="0,0,20,0"/>
-
-                    <TextBlock Grid.Column="2" Text="Hasta:" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                    <DatePicker Grid.Column="3" SelectedDate="{Binding FechaHasta}" Margin="0,0,20,0"/>
-                    <TextBlock Grid.Column="4" Text="Cliente:" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                    <Grid Grid.Column="5" Margin="0,0,20,0">
-                        <TextBox x:Name="txtBuscarCliente"
-             Background="{DynamicResource Background}"
-             BorderBrush="{DynamicResource PrimaryBrush}"
-             BorderThickness="2"
-             Padding="8"
-             Height="32"
-             VerticalContentAlignment="Center"
-             TextChanged="txtBuscarCliente_TextChanged"
-             GotFocus="TxtBuscarCliente_GotFocus"
-             LostFocus="TxtBuscarCliente_LostFocus"/>
-
-                        <Popup x:Name="popupSugerencias"
-           PlacementTarget="{Binding ElementName=txtBuscarCliente}"
-           Placement="Bottom"
-           IsOpen="False"
-           StaysOpen="False"
-           AllowsTransparency="True"
-           Width="{Binding ElementName=txtBuscarCliente, Path=ActualWidth}">
-                            <Border Background="{DynamicResource Surface}"
-                BorderBrush="{DynamicResource PrimaryBrush}"
-                BorderThickness="1"
-                CornerRadius="4"
-                Effect="{StaticResource MaterialDesignElevationShadow4}">
-                                <ListBox x:Name="lstClientesSugerencias"
-                     Background="Transparent"
-                     BorderThickness="0"
-                     MaxHeight="150"
-                     SelectionChanged="LstClientesSugerencias_SelectionChanged"/>
-                            </Border>
-                        </Popup>
-                    </Grid>
-                    <Button Grid.Column="7"
-                            Content="Buscar"
-                            Style="{StaticResource PrimaryButton}"
-                            Click="BuscarVentas_Click"
-                            Width="100"/>
-                </Grid>
-            </StackPanel>
-        </Border>
-
-        <!-- Contenido principal -->
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <!-- Lista de ventas -->
-            <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,10,0">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
-                    <TextBlock Grid.Row="0"
-                               Text="Ventas Registradas"
+            <!-- Filtros con diseño más compacto -->
+            <Border Grid.Row="1" Style="{StaticResource CardStyle}">
+                <StackPanel>
+                    <TextBlock Text="Filtros de Busqueda"
                                FontSize="16"
                                FontWeight="SemiBold"
                                Foreground="{DynamicResource TextPrimary}"
                                Margin="0,0,0,15"/>
 
-                    <DataGrid Grid.Row="1"
-                              x:Name="dgVentas"
-                              ItemsSource="{Binding Ventas}"
-                              SelectedItem="{Binding VentaSeleccionada}"
-                              AutoGenerateColumns="False"
-                              IsReadOnly="True"
-                              SelectionMode="Single"
-                              Background="{DynamicResource Surface}"
-                              Foreground="{DynamicResource TextPrimary}"
-                              BorderThickness="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*" MinWidth="150"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
 
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID" Binding="{Binding id_venta}" Width="60"/>
-                            <DataGridTextColumn Header="Fecha" Binding="{Binding Fecha, StringFormat='dd/MM/yyyy HH:mm'}" Width="140"/>
-                            <DataGridTextColumn Header="Cliente" Binding="{Binding ClienteNombre}" Width="*"/>
-                            <DataGridTextColumn Header="Total" Binding="{Binding Monto, StringFormat=C}" Width="100"/>
-                            <DataGridTextColumn Header="Comprobante" Binding="{Binding TipoComprobanteNombre}" Width="120"/>
-                            <DataGridTextColumn Header="Estado" Binding="{Binding Estado}" Width="100"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </Grid>
+                        <TextBlock Grid.Column="0" Text="Desde:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <DatePicker Grid.Column="1" SelectedDate="{Binding FechaDesde}" Margin="0,0,15,0"/>
+
+                        <TextBlock Grid.Column="2" Text="Hasta:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <DatePicker Grid.Column="3" SelectedDate="{Binding FechaHasta}" Margin="0,0,15,0"/>
+
+                        <TextBlock Grid.Column="4" Text="Cliente:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <Grid Grid.Column="5" Margin="0,0,15,0">
+                            <TextBox x:Name="txtBuscarCliente"
+                                     Background="{DynamicResource Background}"
+                                     BorderBrush="{DynamicResource PrimaryBrush}"
+                                     BorderThickness="2"
+                                     Padding="8"
+                                     Height="32"
+                                     VerticalContentAlignment="Center"
+                                     TextChanged="txtBuscarCliente_TextChanged"
+                                     GotFocus="TxtBuscarCliente_GotFocus"
+                                     LostFocus="TxtBuscarCliente_LostFocus"/>
+
+                            <Popup x:Name="popupSugerencias"
+                                   PlacementTarget="{Binding ElementName=txtBuscarCliente}"
+                                   Placement="Bottom"
+                                   IsOpen="False"
+                                   StaysOpen="False"
+                                   AllowsTransparency="True"
+                                   Width="{Binding ElementName=txtBuscarCliente, Path=ActualWidth}">
+                                <Border Background="{DynamicResource Surface}"
+                                        BorderBrush="{DynamicResource PrimaryBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="4"
+                                        Effect="{StaticResource MaterialDesignElevationShadow4}">
+                                    <ListBox x:Name="lstClientesSugerencias"
+                                             Background="Transparent"
+                                             BorderThickness="0"
+                                             MaxHeight="150"
+                                             SelectionChanged="LstClientesSugerencias_SelectionChanged"/>
+                                </Border>
+                            </Popup>
+                        </Grid>
+
+                        <Button Grid.Column="6"
+                                Content="Buscar"
+                                Style="{StaticResource PrimaryButton}"
+                                Click="BuscarVentas_Click"
+                                Width="90"/>
+                    </Grid>
+                </StackPanel>
             </Border>
 
-            <!-- Detalle de venta -->
-            <Border Grid.Column="1" Style="{StaticResource CardStyle}" Margin="10,0,0,0">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+            <!-- Contenido principal -->
+            <Grid Grid.Row="2" MinHeight="400">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" MinWidth="500"/>
+                    <ColumnDefinition Width="*" MinWidth="300"/>
+                </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Row="0"
-                               Text="Detalle de Venta"
-                               FontSize="16"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource TextPrimary}"
-                               Margin="0,0,0,15"/>
+                <!-- Lista de ventas -->
+                <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,10,0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
 
-                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                        <StackPanel>
-                            <!-- Informacion de la venta -->
-                            <StackPanel Visibility="{Binding VentaSeleccionada, Converter={StaticResource NullToVisibilityConverter}}">
-                                <TextBlock Text="{Binding VentaSeleccionada.ClienteNombre, Mode=OneWay, StringFormat='Cliente: {0}'}"
-                                           Margin="0,0,0,5"/>
-                                <TextBlock Text="{Binding VentaSeleccionada.Fecha, Mode=OneWay, StringFormat='Fecha: {0:dd/MM/yyyy HH:mm}'}"
-                                           Margin="0,0,0,5"/>
-                                <TextBlock Text="{Binding VentaSeleccionada.Usuario.Nombre, Mode=OneWay, StringFormat='Vendedor: {0}'}"
-                                           Margin="0,0,0,5"/>
-                                <TextBlock Text="{Binding VentaSeleccionada.MetodoPago, Mode=OneWay, StringFormat='Metodo: {0}'}"
-                                           Margin="0,0,0,5"/>
-                                <Separator Margin="0,10"/>
+                        <TextBlock Grid.Row="0"
+                                   Text="Ventas Registradas"
+                                   FontSize="16"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextPrimary}"
+                                   Margin="0,0,0,15"/>
 
-                                <!-- Productos -->
-                                <TextBlock Text="Productos:" FontWeight="SemiBold" Margin="0,10,0,5"/>
-                                <ListBox ItemsSource="{Binding DetallesVenta}"
-                                         BorderThickness="0"
-                                         Background="Transparent">
-                                    <ListBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Margin="0,5">
-                                                <TextBlock Text="{Binding nombre_producto, Mode=OneWay}" FontWeight="SemiBold"/>
-                                                <TextBlock>
-                                                    <Run Text="{Binding cantidad, Mode=OneWay, StringFormat='Cant: {0}'}"/>
-                                                    <Run Text=" x "/>
-                                                    <Run Text="{Binding precio_unitario, Mode=OneWay, StringFormat={}{0:C}}"/>
-                                                    <Run Text=" = "/>
-                                                    <Run Text="{Binding Subtotal, Mode=OneWay, StringFormat={}{0:C}}" FontWeight="Bold"/>
-                                                </TextBlock>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </ListBox.ItemTemplate>
-                                </ListBox>
+                        <ScrollViewer Grid.Row="1" 
+                                      HorizontalScrollBarVisibility="Auto" 
+                                      VerticalScrollBarVisibility="Auto">
+                            <DataGrid x:Name="dgVentas"
+                                      ItemsSource="{Binding Ventas}"
+                                      SelectedItem="{Binding VentaSeleccionada}"
+                                      AutoGenerateColumns="False"
+                                      IsReadOnly="True"
+                                      SelectionMode="Single"
+                                      Background="{DynamicResource Surface}"
+                                      Foreground="{DynamicResource TextPrimary}"
+                                      BorderThickness="0"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Disabled">
 
-                                <Separator Margin="0,10"/>
-                                <TextBlock Text="{Binding VentaSeleccionada.Monto, Mode=OneWay, StringFormat='TOTAL: {0:C}'}"
-                                           FontSize="18"
-                                           FontWeight="Bold"
-                                           Foreground="{DynamicResource PrimaryBrush}"/>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="ID" Binding="{Binding id_venta}" Width="50"/>
+                                    <DataGridTextColumn Header="Fecha" Binding="{Binding Fecha, StringFormat='dd/MM/yyyy HH:mm'}" Width="130"/>
+                                    <DataGridTextColumn Header="Cliente" Binding="{Binding ClienteNombre}" Width="150"/>
+                                    <DataGridTextColumn Header="Total" Binding="{Binding Monto, StringFormat=C}" Width="100"/>
+                                    <DataGridTextColumn Header="Comprobante" Binding="{Binding TipoComprobanteNombre}" Width="120"/>
+                                    <DataGridTextColumn Header="Estado" Binding="{Binding Estado}" Width="100"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+
+                <!-- Detalle de venta -->
+                <Border Grid.Column="1" Style="{StaticResource CardStyle}" Margin="10,0,0,0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0"
+                                   Text="Detalle de Venta"
+                                   FontSize="16"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextPrimary}"
+                                   Margin="0,0,0,15"/>
+
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                            <StackPanel>
+                                <!-- Informacion de la venta -->
+                                <StackPanel Visibility="{Binding VentaSeleccionada, Converter={StaticResource NullToVisibilityConverter}}">
+                                    <TextBlock Text="{Binding VentaSeleccionada.ClienteNombre, Mode=OneWay, StringFormat='Cliente: {0}'}"
+                                               Margin="0,0,0,5"
+                                               TextWrapping="Wrap"/>
+                                    <TextBlock Text="{Binding VentaSeleccionada.Fecha, Mode=OneWay, StringFormat='Fecha: {0:dd/MM/yyyy HH:mm}'}"
+                                               Margin="0,0,0,5"/>
+                                    <TextBlock Text="{Binding VentaSeleccionada.Usuario.Nombre, Mode=OneWay, StringFormat='Vendedor: {0}'}"
+                                               Margin="0,0,0,5"
+                                               TextWrapping="Wrap"/>
+                                    <TextBlock Text="{Binding VentaSeleccionada.MetodoPago, Mode=OneWay, StringFormat='Metodo: {0}'}"
+                                               Margin="0,0,0,5"/>
+                                    <Separator Margin="0,10"/>
+
+                                    <!-- Productos -->
+                                    <TextBlock Text="Productos:" FontWeight="SemiBold" Margin="0,10,0,5"/>
+                                    <ListBox ItemsSource="{Binding DetallesVenta}"
+                                             BorderThickness="0"
+                                             Background="Transparent">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Margin="0,5">
+                                                    <TextBlock Text="{Binding nombre_producto, Mode=OneWay}" 
+                                                               FontWeight="SemiBold"
+                                                               TextWrapping="Wrap"/>
+                                                    <TextBlock TextWrapping="Wrap">
+                                                        <Run Text="{Binding cantidad, Mode=OneWay, StringFormat='Cant: {0}'}"/>
+                                                        <Run Text=" x "/>
+                                                        <Run Text="{Binding precio_unitario, Mode=OneWay, StringFormat={}{0:C}}"/>
+                                                        <Run Text=" = "/>
+                                                        <Run Text="{Binding Subtotal, Mode=OneWay, StringFormat={}{0:C}}" FontWeight="Bold"/>
+                                                    </TextBlock>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+
+                                    <Separator Margin="0,10"/>
+                                    <TextBlock Text="{Binding VentaSeleccionada.Monto, Mode=OneWay, StringFormat='TOTAL: {0:C}'}"
+                                               FontSize="18"
+                                               FontWeight="Bold"
+                                               Foreground="{DynamicResource PrimaryBrush}"/>
+                                </StackPanel>
+
+                                <!-- Mensaje cuando no hay venta seleccionada -->
+                                <TextBlock Text="Seleccione una venta para ver los detalles"
+                                           TextAlignment="Center"
+                                           Foreground="Gray"
+                                           Margin="0,50,0,0"
+                                           TextWrapping="Wrap"
+                                           Visibility="{Binding VentaSeleccionada, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=Inverse}"/>
                             </StackPanel>
+                        </ScrollViewer>
 
-                            <!-- Mensaje cuando no hay venta seleccionada -->
-                            <TextBlock Text="Seleccione una venta para ver los detalles"
-                                       TextAlignment="Center"
-                                       Foreground="Gray"
-                                       Margin="0,50,0,0"
-                                       Visibility="{Binding VentaSeleccionada, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=Inverse}"/>
+                        <!-- Botones de accion -->
+                        <StackPanel Grid.Row="2" Margin="0,15,0,0">
+                            <Button Content="Imprimir Comprobante"
+                                    Style="{StaticResource PrimaryButton}"
+                                    Click="ReimprimirComprobante_Click"
+                                    Margin="0,0,0,10"
+                                    IsEnabled="{Binding VentaSeleccionada, Converter={StaticResource NullToBooleanConverter}}"/>
+                            <Button Content="Anular Venta"
+                                    Background="#D32F2F"
+                                    Foreground="White"
+                                    Padding="12,6"
+                                    BorderThickness="0"
+                                    FontWeight="SemiBold"
+                                    Cursor="Hand"
+                                    Click="AnularVenta_Click"
+                                    IsEnabled="{Binding VentaSeleccionada, Converter={StaticResource NullToBooleanConverter}}"/>
                         </StackPanel>
-                    </ScrollViewer>
+                    </Grid>
+                </Border>
+            </Grid>
 
-                    <!-- Botones de accion -->
-                    <StackPanel Grid.Row="2" Margin="0,15,0,0">
-                        <Button Content="Imprimir Comprobante"
-                                Style="{StaticResource PrimaryButton}"
-                                Click="ReimprimirComprobante_Click"
-                                Margin="0,0,0,10"
-                                IsEnabled="{Binding VentaSeleccionada, Converter={StaticResource NullToBooleanConverter}}"/>
-                        <Button Content="Anular Venta"
-                                Background="#D32F2F"
-                                Foreground="White"
-                                Padding="12,6"
-                                BorderThickness="0"
-                                FontWeight="SemiBold"
-                                Cursor="Hand"
-                                Click="AnularVenta_Click"
-                                IsEnabled="{Binding VentaSeleccionada, Converter={StaticResource NullToBooleanConverter}}"/>
-                    </StackPanel>
-                </Grid>
+            <!-- Resumen -->
+            <Border Grid.Row="3" Style="{StaticResource CardStyle}" Margin="0,10,0,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock Text="Total ventas mostradas: " FontWeight="SemiBold" Margin="0,0,10,0"/>
+                    <TextBlock Text="{Binding Ventas.Count}" FontWeight="Bold" Margin="0,0,30,0"/>
+                    <TextBlock Text="Monto total: " FontWeight="SemiBold" Margin="0,0,10,0"/>
+                    <TextBlock FontWeight="Bold" Foreground="{DynamicResource PrimaryBrush}">
+                        <TextBlock.Text>
+                            <Binding Path="MontoTotal" StringFormat="{}{0:C}"/>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </StackPanel>
             </Border>
         </Grid>
-
-        <!-- Resumen -->
-        <Border Grid.Row="3" Style="{StaticResource CardStyle}" Margin="0,10,0,0">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <TextBlock Text="Total ventas mostradas: " FontWeight="SemiBold" Margin="0,0,10,0"/>
-                <TextBlock Text="{Binding Ventas.Count}" FontWeight="Bold" Margin="0,0,30,0"/>
-                <TextBlock Text="Monto total: " FontWeight="SemiBold" Margin="0,0,10,0"/>
-                <TextBlock FontWeight="Bold" Foreground="{DynamicResource PrimaryBrush}">
-                    <TextBlock.Text>
-                        <Binding Path="MontoTotal" StringFormat="{}{0:C}"/>
-                    </TextBlock.Text>
-                </TextBlock>
-            </StackPanel>
-        </Border>
-    </Grid>
+    </ScrollViewer>
 </UserControl>

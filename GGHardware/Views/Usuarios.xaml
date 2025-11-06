@@ -73,8 +73,8 @@
                 </Grid>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
-                    <Button x:Name="btnLimpiar" Content="Limpiar" Width="80" Margin="0,0,10,0" Click="btnLimpiar_Click" TabIndex="7"/>
-                    <Button x:Name="btnGuardar" Content="Guardar" Width="80" Click="btnGuardar_Click" TabIndex="8"/>
+                    <Button x:Name="btnLimpiar" Content="Limpiar" Width="100" Margin="0,0,10,0" Click="btnLimpiar_Click" TabIndex="7"/>
+                    <Button x:Name="btnGuardar" Content="Guardar" Width="100" Click="btnGuardar_Click" TabIndex="8"/>
                 </StackPanel>
             </StackPanel>
         </Border>
