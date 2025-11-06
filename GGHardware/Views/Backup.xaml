@@ -107,73 +107,62 @@
                     <!-- Seccion de Solicitudes de Restauracion (Gerente) -->
                     <Border Grid.Row="2" BorderBrush="{DynamicResource MaterialDesignDivider}" 
                             BorderThickness="1" CornerRadius="8" Padding="20"
-                            Background="{DynamicResource MaterialDesignCardBackground}">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="300"/>
-                            </Grid.RowDefinitions>
-
+                            Background="{DynamicResource MaterialDesignCardBackground}"
+                            Margin="0 0 0 10" MaxWidth="1100" >
+                        <StackPanel>
                             <TextBlock Text="Solicitudes de Restauracion Pendientes"
                                        FontSize="18" FontWeight="Bold"
                                        Foreground="{DynamicResource MaterialDesignBody}"
                                        Margin="0 0 0 15"/>
 
-                            <Border Grid.Row="1" BorderBrush="{DynamicResource MaterialDesignDivider}" 
-                                    BorderThickness="1">
-                                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                                    <DataGrid x:Name="dgSolicitudesPendientes" 
-                                              AutoGenerateColumns="False" 
-                                              SelectionMode="Single"
-                                              IsReadOnly="True"
-                                              MouseDoubleClick="dgSolicitudesPendientes_MouseDoubleClick"
-                                              RowHeight="70"
-                                              MinWidth="900">
-                                        <DataGrid.Columns>
-                                            <DataGridTextColumn Header="ID" Binding="{Binding id_solicitud, Mode=OneWay}" Width="50"/>
-                                            <DataGridTextColumn Header="Supervisor" Binding="{Binding nombre_supervisor, Mode=OneWay}" Width="100"/>
-                                            <DataGridTextColumn Header="Archivo" Binding="{Binding nombre_archivo_backup, Mode=OneWay}" Width="150"/>
-                                            <DataGridTextColumn Header="F. Backup" Binding="{Binding fecha_backup, StringFormat=dd/MM/yyyy, Mode=OneWay}" Width="100"/>
-                                            <DataGridTextColumn Header="F. Solicitud" Binding="{Binding fecha_solicitud, StringFormat=dd/MM/yyyy HH:mm, Mode=OneWay}" Width="140"/>
-                                            <DataGridTextColumn Header="Motivo" Binding="{Binding motivo_solicitud, Mode=OneWay}" Width="150"/>
-                                            <DataGridTextColumn Header="Estado" Binding="{Binding estado, Mode=OneWay}" Width="90"/>
-                                            <DataGridTemplateColumn Header="Acciones" Width="130">
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <StackPanel Orientation="Vertical" 
-                                                                    HorizontalAlignment="Center" 
-                                                                    VerticalAlignment="Center">
-                                                            <Button Content="✓ Aprobar" 
-                                                                    Click="AprobarSolicitud_Click" 
-                                                                    Margin="0 2" 
-                                                                    Padding="10,5" 
-                                                                    Width="110"
-                                                                    Height="26"
-                                                                    Background="#4CAF50" 
-                                                                    Foreground="White"
-                                                                    FontSize="11" 
-                                                                    FontWeight="SemiBold"
-                                                                    Cursor="Hand"/>
-                                                            <Button Content="✗ Rechazar" 
-                                                                    Click="RechazarSolicitud_Click"
-                                                                    Margin="0 2" 
-                                                                    Padding="10,5" 
-                                                                    Width="110"
-                                                                    Height="26"
-                                                                    Background="#F44336" 
-                                                                    Foreground="White"
-                                                                    FontSize="11" 
-                                                                    FontWeight="SemiBold"
-                                                                    Cursor="Hand"/>
-                                                        </StackPanel>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
-                                        </DataGrid.Columns>
-                                    </DataGrid>
-                                </ScrollViewer>
-                            </Border>
-                        </Grid>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                          HorizontalScrollBarVisibility="Disabled"
+                                          MaxHeight="250">
+                                <DataGrid x:Name="dgSolicitudesPendientes"
+                                          AutoGenerateColumns="False"
+                                          SelectionMode="Single"
+                                          IsReadOnly="True"
+                                          MouseDoubleClick="dgSolicitudesPendientes_MouseDoubleClick"
+                                          HeadersVisibility="Column"
+                                          CanUserAddRows="False">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="ID" Binding="{Binding id_solicitud}" Width="Auto"/>
+                                        <DataGridTextColumn Header="Supervisor" Binding="{Binding nombre_supervisor}" Width="150"/>
+                                        <DataGridTextColumn Header="Fecha Solicitud" Binding="{Binding fecha_solicitud, StringFormat=dd/MM/yyyy HH:mm}" Width="150"/>
+                                        <DataGridTextColumn Header="Estado" Binding="{Binding estado}" Width="100"/>
+
+                                        <DataGridTemplateColumn Header="Acciones" Width="350">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Button Content="Detalles"
+                                                                Click="DetallesSolicitud_Click"
+                                                                Margin="0 5 5 0"
+                                                                Padding="10,5"
+                                                                Background="#2196F3"
+                                                                Foreground="White"
+                                                                FontSize="11"/>
+                                                        <Button Content="Aprobar"
+                                                                Click="AprobarSolicitud_Click"
+                                                                Margin="0 5 5 0"
+                                                                Padding="10,5"
+                                                                Background="#4CAF50"
+                                                                Foreground="White"
+                                                                FontSize="11"/>
+                                                        <Button Content="Rechazar"
+                                                                Click="RechazarSolicitud_Click"
+                                                                Padding="10,5"
+                                                                Background="#F44336"
+                                                                Foreground="White"
+                                                                FontSize="11"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </ScrollViewer>
+                        </StackPanel>
                     </Border>
                 </Grid>
             </Border>

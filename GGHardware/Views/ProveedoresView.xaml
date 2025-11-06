@@ -6,205 +6,154 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              Background="{DynamicResource MaterialDesignBackground}">
-<ScrollViewer VerticalScrollBarVisibility="Auto"
-                  HorizontalScrollBarVisibility="Auto">
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Margin="20" MaxWidth="1200">
+            <!-- 🔹 límite de ancho máximo -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0"
-                   Text="Gestión de Proveedores"
-                   FontSize="24"
-                   FontWeight="SemiBold"
-                   Foreground="{DynamicResource MaterialDesignBodyMediumBrush}"
-                   Margin="0,0,0,20"/>
+            <TextBlock Grid.Row="0"
+                       Text="Gestión de Proveedores"
+                       FontSize="24"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource MaterialDesignBodyMediumBrush}"
+                       Margin="0,0,0,20"/>
 
-        <Border Grid.Row="1"
-                Background="{DynamicResource MaterialDesignCardBackground}"
-                Padding="20"
-                Margin="0,0,0,20">
-            <StackPanel>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+            <Border Grid.Row="1"
+                    Background="{DynamicResource MaterialDesignCardBackground}"
+                    Padding="20"
+                    Margin="0,0,0,20">
+                <StackPanel>
+                    <!-- 🔹 FORMULARIO ADAPTABLE -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                    <!-- Fila 1 -->
-                    <materialDesign:PackIcon Grid.Row="0" Grid.Column="0" 
-                                           Kind="Store" 
-                                           VerticalAlignment="Center" 
-                                           Margin="0,0,10,10"/>
-                    <TextBox x:Name="txtRazonSocial" 
-                           Grid.Row="0" Grid.Column="1" 
-                           materialDesign:HintAssist.Hint="Razón Social *" 
-                           TabIndex="0"/>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
-                    <materialDesign:PackIcon Grid.Row="0" Grid.Column="2" 
-                                           Kind="Account" 
-                                           VerticalAlignment="Center" 
-                                           Margin="20,0,10,10"/>
-                    <TextBox x:Name="txtNombreContacto" 
-                           Grid.Row="0" Grid.Column="3" 
-                           materialDesign:HintAssist.Hint="Nombre de Contacto" 
-                           TabIndex="1"/>
+                        <!-- Fila 1 -->
+                        <materialDesign:PackIcon Grid.Row="0" Grid.Column="0" Kind="Store" VerticalAlignment="Center" Margin="0,0,10,10"/>
+                        <TextBox x:Name="txtRazonSocial" Grid.Row="0" Grid.Column="1"
+                                 materialDesign:HintAssist.Hint="Razón Social *" TabIndex="0"/>
 
-                    <!-- Fila 2 -->
-                    <materialDesign:PackIcon Grid.Row="1" Grid.Column="0" 
-                                           Kind="CardAccountDetails" 
-                                           VerticalAlignment="Center" 
-                                           Margin="0,0,10,10"/>
-                    <TextBox x:Name="txtCuit" 
-                           Grid.Row="1" Grid.Column="1" 
-                           materialDesign:HintAssist.Hint="CUIT (sin guiones)" 
-                           MaxLength="11"
-                           PreviewTextInput="txtNumeros_PreviewTextInput"
-                           TabIndex="2"/>
+                        <materialDesign:PackIcon Grid.Row="0" Grid.Column="2" Kind="Account" VerticalAlignment="Center" Margin="10,0,10,10"/>
+                        <TextBox x:Name="txtNombreContacto" Grid.Row="0" Grid.Column="3"
+                                 materialDesign:HintAssist.Hint="Nombre de Contacto" TabIndex="1"/>
 
-                    <materialDesign:PackIcon Grid.Row="1" Grid.Column="2" 
-                                           Kind="Phone" 
-                                           VerticalAlignment="Center" 
-                                           Margin="20,0,10,10"/>
-                    <TextBox x:Name="txtTelefono" 
-                           Grid.Row="1" Grid.Column="3" 
-                           materialDesign:HintAssist.Hint="Teléfono" 
-                           TabIndex="3"/>
+                        <!-- Fila 2 -->
+                        <materialDesign:PackIcon Grid.Row="1" Grid.Column="0" Kind="CardAccountDetails" VerticalAlignment="Center" Margin="0,0,10,10"/>
+                        <TextBox x:Name="txtCuit" Grid.Row="1" Grid.Column="1" materialDesign:HintAssist.Hint="CUIT (sin guiones)"
+                                 MaxLength="11" PreviewTextInput="txtNumeros_PreviewTextInput" TabIndex="2"/>
 
-                    <!-- Fila 3 -->
-                    <materialDesign:PackIcon Grid.Row="2" Grid.Column="0" 
-                                           Kind="Email" 
-                                           VerticalAlignment="Center" 
-                                           Margin="0,0,10,10"/>
-                    <TextBox x:Name="txtEmail" 
-                           Grid.Row="2" Grid.Column="1" 
-                           materialDesign:HintAssist.Hint="Email" 
-                           TabIndex="4"/>
+                        <materialDesign:PackIcon Grid.Row="1" Grid.Column="2" Kind="Phone" VerticalAlignment="Center" Margin="10,0,10,10"/>
+                        <TextBox x:Name="txtTelefono" Grid.Row="1" Grid.Column="3" materialDesign:HintAssist.Hint="Teléfono" TabIndex="3"/>
 
-                    <materialDesign:PackIcon Grid.Row="2" Grid.Column="2" 
-                                           Kind="MapMarker" 
-                                           VerticalAlignment="Center" 
-                                           Margin="20,0,10,10"/>
-                    <TextBox x:Name="txtDireccion" 
-                           Grid.Row="2" Grid.Column="3" 
-                           materialDesign:HintAssist.Hint="Dirección" 
-                           TabIndex="5"/>
+                        <!-- Fila 3 -->
+                        <materialDesign:PackIcon Grid.Row="2" Grid.Column="0" Kind="Email" VerticalAlignment="Center" Margin="0,0,10,10"/>
+                        <TextBox x:Name="txtEmail" Grid.Row="2" Grid.Column="1" materialDesign:HintAssist.Hint="Email" TabIndex="4"/>
 
-                    <!-- Fila 4 -->
-                    <materialDesign:PackIcon Grid.Row="3" Grid.Column="0" 
-                                           Kind="Mailbox" 
-                                           VerticalAlignment="Center" 
-                                           Margin="0,0,10,10"/>
-                    <TextBox x:Name="txtCodigoPostal" 
-                           Grid.Row="3" Grid.Column="1" 
-                           materialDesign:HintAssist.Hint="Código Postal" 
-                           MaxLength="10"
-                           TabIndex="6"/>
+                        <materialDesign:PackIcon Grid.Row="2" Grid.Column="2" Kind="MapMarker" VerticalAlignment="Center" Margin="10,0,10,10"/>
+                        <TextBox x:Name="txtDireccion" Grid.Row="2" Grid.Column="3" materialDesign:HintAssist.Hint="Dirección" TabIndex="5"/>
 
-                </Grid>
+                        <!-- Fila 4 -->
+                        <materialDesign:PackIcon Grid.Row="3" Grid.Column="0" Kind="Mailbox" VerticalAlignment="Center" Margin="0,0,10,10"/>
+                        <TextBox x:Name="txtCodigoPostal" Grid.Row="3" Grid.Column="1" materialDesign:HintAssist.Hint="Código Postal"
+                                 MaxLength="10" TabIndex="6"/>
+                    </Grid>
 
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
-                    <Button x:Name="btnLimpiar" 
-                          Content="Limpiar" 
-                          Width="80" 
-                          Margin="0,0,10,0" 
-                          Click="btnLimpiar_Click" 
-                          TabIndex="7"/>
-                    <Button x:Name="btnGuardar" 
-                          Content="Guardar" 
-                          Width="80" 
-                          Click="btnGuardar_Click" 
-                          TabIndex="8"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                        <Button x:Name="btnLimpiar" Content="Limpiar" Width="80" Margin="0,0,10,0"
+                                Click="btnLimpiar_Click" TabIndex="7"/>
+                        <Button x:Name="btnGuardar" Content="Guardar" Width="80"
+                                Click="btnGuardar_Click" TabIndex="8"/>
+                    </StackPanel>
                 </StackPanel>
-            </StackPanel>
-        </Border>
+            </Border>
 
-        <Border Grid.Row="2"
-                Background="{DynamicResource MaterialDesignCardBackground}"
-                Padding="10">
-            <DataGrid x:Name="dgProveedores"
-                      AutoGenerateColumns="False"
-                      IsReadOnly="True"
-                      HeadersVisibility="Column"
-                      GridLinesVisibility="None"
-                      Style="{DynamicResource MaterialDesignDataGrid}">
+            <Border Grid.Row="2" Background="{DynamicResource MaterialDesignCardBackground}" Padding="10">
+                <DataGrid x:Name="dgProveedores" AutoGenerateColumns="False" IsReadOnly="True"
+                          HeadersVisibility="Column" GridLinesVisibility="None"
+                          Style="{DynamicResource MaterialDesignDataGrid}" 
+                          CanUserResizeColumns="False" 
+                          ColumnWidth="*">
+                    <!-- 🔹 columnas autoajustables -->
 
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID" Binding="{Binding id_proveedor}" Width="60"/>
-                    <DataGridTextColumn Header="Razón Social" Binding="{Binding razon_social}" Width="200"/>
-                    <DataGridTextColumn Header="CUIT" Binding="{Binding cuit}" Width="120"/>
-                    <DataGridTextColumn Header="Contacto" Binding="{Binding nombre_contacto}" Width="150"/>
-                    <DataGridTextColumn Header="Teléfono" Binding="{Binding telefono}" Width="120"/>
-                    <DataGridTextColumn Header="Email" Binding="{Binding email}" Width="180"/>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding id_proveedor}" Width="60"/>
+                        <DataGridTextColumn Header="Razón Social" Binding="{Binding razon_social}" Width="2*"/>
+                        <DataGridTextColumn Header="CUIT" Binding="{Binding cuit}" Width="*"/>
+                        <DataGridTextColumn Header="Contacto" Binding="{Binding nombre_contacto}" Width="*"/>
+                        <DataGridTextColumn Header="Teléfono" Binding="{Binding telefono}" Width="*"/>
+                        <DataGridTextColumn Header="Email" Binding="{Binding email}" Width="2*"/>
 
-                    <DataGridTemplateColumn Header="Estado" Width="100">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <Ellipse Width="10" Height="10" Margin="0,0,5,0">
-                                        <Ellipse.Style>
-                                            <Style TargetType="Ellipse">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding activo}" Value="True">
-                                                        <Setter Property="Fill" Value="#4CAF50"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding activo}" Value="False">
-                                                        <Setter Property="Fill" Value="#F44336"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Ellipse.Style>
-                                    </Ellipse>
-                                    <TextBlock>
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding activo}" Value="True">
-                                                        <Setter Property="Text" Value="Activo"/>
-                                                        <Setter Property="Foreground" Value="#4CAF50"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding activo}" Value="False">
-                                                        <Setter Property="Text" Value="Inactivo"/>
-                                                        <Setter Property="Foreground" Value="#F44336"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                </StackPanel>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Estado" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Ellipse Width="10" Height="10" Margin="0,0,5,0">
+                                            <Ellipse.Style>
+                                                <Style TargetType="Ellipse">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding activo}" Value="True">
+                                                            <Setter Property="Fill" Value="#4CAF50"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding activo}" Value="False">
+                                                            <Setter Property="Fill" Value="#F44336"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Ellipse.Style>
+                                        </Ellipse>
+                                        <TextBlock>
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding activo}" Value="True">
+                                                            <Setter Property="Text" Value="Activo"/>
+                                                            <Setter Property="Foreground" Value="#4CAF50"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding activo}" Value="False">
+                                                            <Setter Property="Text" Value="Inactivo"/>
+                                                            <Setter Property="Foreground" Value="#F44336"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
-                    <DataGridTemplateColumn Header="Acciones" Width="150">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <Button ToolTip="Editar" Click="btnEditar_Click">
-                                        <materialDesign:PackIcon Kind="Pencil" 
-                                                               Foreground="{DynamicResource MaterialDesignBodyMediumBrush}"/>
-                                    </Button>
-                                    <Button ToolTip="Activar/Desactivar" Click="btnActivarDesactivar_Click">
-                                        <materialDesign:PackIcon Kind="Power" 
-                                                               Foreground="{DynamicResource MaterialDesignBodyMediumBrush}"/>
-                                    </Button>
-                                </StackPanel>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
-        </Border>
-    </Grid>
+                        <DataGridTemplateColumn Header="Acciones" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button ToolTip="Editar" Click="btnEditar_Click" Margin="0,0,5,0">
+                                            <materialDesign:PackIcon Kind="Pencil" Foreground="{DynamicResource MaterialDesignBodyMediumBrush}"/>
+                                        </Button>
+                                        <Button ToolTip="Activar/Desactivar" Click="btnActivarDesactivar_Click">
+                                            <materialDesign:PackIcon Kind="Power" Foreground="{DynamicResource MaterialDesignBodyMediumBrush}"/>
+                                        </Button>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+        </Grid>
     </ScrollViewer>
 </UserControl>

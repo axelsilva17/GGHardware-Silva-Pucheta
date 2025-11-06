@@ -135,7 +135,6 @@
                                     <DataGridTextColumn Header="Archivo Backup" Binding="{Binding nombre_archivo_backup}" Width="*"/>
                                     <DataGridTextColumn Header="Fecha Solicitud" Binding="{Binding fecha_solicitud, StringFormat=dd/MM/yyyy HH:mm}" Width="150"/>
                                     <DataGridTextColumn Header="Estado" Binding="{Binding estado}" Width="100"/>
-                                    <DataGridTextColumn Header="Gerente Asignado" Binding="{Binding nombre_gerente}" Width="150"/>
                                     <DataGridTextColumn Header="Observaciones" Binding="{Binding observaciones_gerente}" Width="200"/>
                                 </DataGrid.Columns>
                             </DataGrid>
