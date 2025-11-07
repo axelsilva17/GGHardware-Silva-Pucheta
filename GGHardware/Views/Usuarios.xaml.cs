@@ -38,14 +38,7 @@ namespace GGHardware.Views
                 }
             }
         }
-        private void btnVolver_Click(object sender, RoutedEventArgs e)
-        {
-            var mainWindow = Window.GetWindow(this) as MainWindow;
-            if (mainWindow != null)
-            {
-                mainWindow.MainContentBorder.Child = new RegistroView(mainWindow);
-            }
-        }
+
 
         private void txtDNI_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {

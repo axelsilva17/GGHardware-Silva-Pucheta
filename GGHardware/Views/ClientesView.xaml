@@ -16,35 +16,7 @@
 
         <!-- Encabezado -->
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,20">
-            <Button x:Name="btnVolver" ToolTip="Volver a la vista de Registro" Click="btnVolver_Click"
-                    Background="{DynamicResource PrimaryBrush}"
-                    Foreground="{DynamicResource PrimaryForegroundBrush}"
-                    BorderThickness="0"
-                    Padding="8"
-                    Cursor="Hand">
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="Button">
-                                    <Border Background="{TemplateBinding Background}"
-                                            CornerRadius="4"
-                                            Padding="{TemplateBinding Padding}">
-                                        <ContentPresenter HorizontalAlignment="Center"
-                                                        VerticalAlignment="Center"/>
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Opacity" Value="0.8"/>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </Button.Style>
-                <materialDesign:PackIcon Kind="ArrowLeft" />
-            </Button>
+      
             <TextBlock Text="Gestión de Clientes"
                        FontSize="24"
                        FontWeight="SemiBold"

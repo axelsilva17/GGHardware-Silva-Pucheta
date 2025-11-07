@@ -15,9 +15,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="0,0,0,20">
-            <Button x:Name="btnVolver" ToolTip="Volver a la vista de Registro" Click="btnVolver_Click">
-                <materialDesign:PackIcon Kind="ArrowLeft"/>
-            </Button>
+            
             <TextBlock Text="Gestión de Usuarios"
                        FontSize="24"
                        FontWeight="SemiBold"

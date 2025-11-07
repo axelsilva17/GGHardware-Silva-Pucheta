@@ -103,9 +103,24 @@ namespace GGHardware
         private void BtnRegistro_Click(object sender, RoutedEventArgs e)
         {
             MainContentBorder.Child = null;
-            RegistroView registroView = new RegistroView(this);
-            MainContentBorder.Child = registroView;
+
+            switch (UsuarioActual.RolId)
+            {
+                case 1: // Supervisor → vista de usuarios
+                    MainContentBorder.Child = new Usuarios();
+                    break;
+
+                case 2: // Vendedor → vista de clientes
+                    MainContentBorder.Child = new ClientesView();
+                    break;
+
+                default:
+                    MessageBox.Show("No tiene permisos para acceder a esta sección.",
+                                    "Acceso denegado", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    break;
+            }
         }
+
 
         private void btnVentas_Click(object sender, RoutedEventArgs e)
         {

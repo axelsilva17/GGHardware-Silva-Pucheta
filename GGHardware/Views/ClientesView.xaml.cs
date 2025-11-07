@@ -37,15 +37,6 @@ namespace GGHardware.Views
             }
         }
 
-        private void btnVolver_Click(object sender, RoutedEventArgs e)
-        {
-            var mainWindow = Window.GetWindow(this) as MainWindow;
-
-            if (mainWindow != null)
-            {
-                mainWindow.MainContentBorder.Child = new RegistroView(mainWindow);
-            }
-        }
 
         /// <summary>
         /// Valida la entrada de texto para permitir solo letras y espacios.
@@ -71,7 +62,7 @@ namespace GGHardware.Views
         private bool ValidarEmail(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
-                return true; // Email opcional
+                return true; 
 
             string patron = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
             return Regex.IsMatch(email, patron);
