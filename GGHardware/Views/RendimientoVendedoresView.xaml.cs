@@ -143,6 +143,11 @@ namespace GGHardware.Views
         }
     }
 
+    private void Actualizar_Click(object sender, RoutedEventArgs e)
+        {
+            CargarDatos();
+        }
+
     // Clase auxiliar para el binding
     public class RendimientoVendedor
     {
