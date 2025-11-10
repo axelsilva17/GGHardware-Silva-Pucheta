@@ -110,7 +110,31 @@
                             </Style>
                         </TextBox.Style>
                     </TextBox>
-
+                    <!-- Email -->
+                    <TextBlock Text="Email"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextPrimary}"
+                               Margin="0,10,0,5"/>
+                    <TextBox x:Name="txtEmail"
+                             Margin="0,0,0,15"
+                             materialDesign:HintAssist.Hint="Email"
+                             Background="{DynamicResource Surface}"
+                             Foreground="{DynamicResource TextPrimary}"
+                             BorderBrush="{DynamicResource PrimaryBrush}"
+                             BorderThickness="2"
+                             Padding="12,8"
+                             FontSize="14">
+                        <TextBox.Style>
+                            <Style TargetType="TextBox">
+                                <Style.Triggers>
+                                    <Trigger Property="IsFocused" Value="True">
+                                        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}"/>
+                                        <Setter Property="BorderThickness" Value="2"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
                     <!-- Teléfono -->
                     <TextBlock Text="Teléfono"
                                FontWeight="SemiBold"

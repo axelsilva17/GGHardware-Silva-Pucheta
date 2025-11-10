@@ -250,6 +250,11 @@
                             Style="{StaticResource SecondaryButton}"
                             Click="VerHistorial_Click"
                             ToolTip="Ver historial de ventas"/>
+                    <Button
+                        Content="Nuevo Cliente"
+                        Style="{StaticResource SecondaryButton}"
+                        Click="NuevoCliente_Click"
+                        ToolTip="Cargar neuvo cliente" Margin="343,0,0,0"/>
                 </Grid>
 
                 <!--  Panel de búsqueda por código -->

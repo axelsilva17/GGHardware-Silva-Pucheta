@@ -27,6 +27,7 @@ namespace GGHardware.Views
                 txtCuit.Text = cliente.cuit.ToString();
                 txtNombre.Text = cliente.nombre;
                 txtApellido.Text = cliente.apellido;
+                txtEmail.Text = cliente.email;
                 txtTelefono.Text = cliente.telefono.ToString();
                 txtDireccion.Text = cliente.direccion;
                 txtProvincia.Text = cliente.provincia;
@@ -43,6 +44,7 @@ namespace GGHardware.Views
                 cliente.cuit = txtCuit.Text;
                 cliente.nombre = txtNombre.Text;
                 cliente.apellido = txtApellido.Text;
+                cliente.email = txtEmail.Text;
                 cliente.telefono = txtTelefono.Text;
                 cliente.direccion = txtDireccion.Text;
                 cliente.provincia = txtProvincia.Text;

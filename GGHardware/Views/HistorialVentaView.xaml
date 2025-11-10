@@ -34,7 +34,7 @@
 
     <!-- ScrollViewer principal para pantallas pequeñas -->
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-        <Grid Margin="20" MinWidth="1000">
+        <Grid Margin="20" MinWidth="800">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>

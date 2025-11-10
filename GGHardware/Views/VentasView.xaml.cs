@@ -289,6 +289,12 @@ namespace GGHardware.Views
                 mainWindow.MainContentBorder.Child = new HistorialVentasView();
             }
         }
-  
+        private void NuevoCliente_Click (Object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Window.GetWindow(this) as MainWindow;
+            mainWindow.MainContentBorder.Child = null;
+            mainWindow.MainContentBorder.Child = new ClientesView();
+
+        }
     }
 }
