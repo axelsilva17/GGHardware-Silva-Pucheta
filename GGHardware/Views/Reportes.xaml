@@ -21,6 +21,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -57,6 +58,48 @@
                                VerticalAlignment="Center"/>
                 </StackPanel>
             </Border>
+
+            <!-- Botón Exportar Excel -->
+            <Button Grid.Column="2"
+                    x:Name="btnExportarExcel"
+                    Click="btnExportarExcel_Click"
+                    Background="#217346"
+                    BorderThickness="0"
+                    Padding="15,8"
+                    Cursor="Hand"
+                    VerticalAlignment="Center">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}"
+                                            CornerRadius="4"
+                                            Padding="{TemplateBinding Padding}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="MicrosoftExcel"
+                                                                     Width="20"
+                                                                     Height="20"
+                                                                     Foreground="White"
+                                                                     VerticalAlignment="Center"
+                                                                     Margin="0,0,8,0"/>
+                                            <TextBlock Text="Exportar a Excel"
+                                                       Foreground="White"
+                                                       FontWeight="Medium"
+                                                       VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Opacity" Value="0.85"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
         </Grid>
 
         <!-- Tarjetas de Resumen -->
