@@ -52,6 +52,7 @@ namespace GGHardware
                     break;
 
                 case 2: // Usuario/Vendedor
+                    btnInicio.Visibility = Visibility.Visible;
                     btnVentas.Visibility = Visibility.Visible;
                     btnRegistro.Visibility = Visibility.Visible;
                     break;
@@ -139,8 +140,16 @@ namespace GGHardware
                         MainContentBorder.Child = new Gerente();
                         break;
 
-                    default:
+                    case 1: // Supervisor
+                        MainContentBorder.Child = new ProductoView();
+                        break;
+
+                    case 2: // Usuario/Vendedor
                         MainContentBorder.Child = new DashboardView();
+                        break;
+
+                    default:
+                        MainContentBorder.Child = new InicioView();
                         break;
                 }
             }
@@ -150,6 +159,7 @@ namespace GGHardware
                 MainContentBorder.Child = new InicioView();
             }
         }
+
 
         private void btnInicio_Click(object sender, RoutedEventArgs e)
         {
@@ -181,8 +191,16 @@ namespace GGHardware
                 case 4: // gerente
                     MainContentBorder.Child = new Gerente(); 
                     break;
+                case 1: // Supervisor
+                    MainContentBorder.Child = new ProductoView();
+                    break;
+
+                case 2: // Vendedor
+                    MainContentBorder.Child = new DashboardView(); // solo los vendedores ven el dashboard
+                    break;
+
                 default:
-                    MainContentBorder.Child = new DashboardView(); 
+                    MainContentBorder.Child = new InicioView(); // cualquier otro no autorizado
                     break;
             }
         }

@@ -1,8 +1,10 @@
-﻿using System;
+﻿using GGHardware.Data;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using GGHardware.Data;
 
 namespace GGHardware.Views
 {
@@ -30,28 +32,63 @@ namespace GGHardware.Views
         {
             try
             {
+                // Asegurarnos que las fechas no tengan horas que corten resultados:
+                var inicio = _fechaInicio.Date;
+                // Hacemos _fechaFin al final del día para incluir todas las ventas del día seleccionado
+                var fin = _fechaFin.Date.AddDays(1).AddTicks(-1);
+
                 using (var context = new ApplicationDbContext())
                 {
-                    // Obtener rendimiento por vendedor
-                    var rendimiento = context.Usuarios
-                        .Where(u => u.Activo && u.RolId == 2) // Solo vendedores activos (ajusta el RolId)
-                        .Select(u => new RendimientoVendedor
+                    // Verificación rápida: cuántas ventas totales hay en el rango (debug)
+                    var ventasTotalesEnRango = context.Venta
+                        .AsNoTracking()
+                        .Count(v => v.Fecha >= inicio && v.Fecha <= fin && v.Estado != "Anulada");
+                    Debug.WriteLine($"Ventas totales en rango {inicio} - {fin}: {ventasTotalesEnRango}");
+
+                    // Hacemos una consulta basada en JOIN/GROUP BY desde ventas (más fiable)
+                    var ventasPorVendedor = context.Venta
+                        .AsNoTracking()
+                        .Where(v => v.Fecha >= inicio && v.Fecha <= fin && v.Estado != "Anulada")
+                        .GroupBy(v => v.id_Usuario)
+                        .Select(g => new
                         {
-                            NombreVendedor = u.Nombre + " " + u.apellido,
-                            CantidadVentas = context.Venta
-                                .Count(v => v.id_Usuario == u.id_usuario
-                                         && v.Estado != "Anulada"
-                                         && v.Fecha >= _fechaInicio
-                                         && v.Fecha <= _fechaFin),
-                            MontoTotal = context.Venta
-                                .Where(v => v.id_Usuario == u.id_usuario
-                                         && v.Estado != "Anulada"
-                                         && v.Fecha >= _fechaInicio
-                                         && v.Fecha <= _fechaFin)
-                                .Sum(v => (decimal?)v.Monto) ?? 0
+                            IdUsuario = g.Key,
+                            Cantidad = g.Count(),
+                            Monto = g.Sum(x => (decimal?)x.Monto) ?? 0
+                        })
+                        .ToList();
+
+                    // Ahora traemos los vendedores activos y combinamos con los resultados anteriores
+                    var vendedores = context.Usuarios
+                        .AsNoTracking()
+                        .Where(u => u.Activo && u.RolId == 2)
+                        .Select(u => new
+                        {
+                            u.id_usuario,
+                            NombreCompleto = u.Nombre + " " + u.apellido
+                        })
+                        .ToList();
+
+                    // Construimos la lista final
+                    var rendimiento = vendedores
+                        .Select(v =>
+                        {
+                            var datos = ventasPorVendedor.FirstOrDefault(x => x.IdUsuario == v.id_usuario);
+                            return new RendimientoVendedor
+                            {
+                                NombreVendedor = v.NombreCompleto,
+                                CantidadVentas = datos?.Cantidad ?? 0,
+                                MontoTotal = datos?.Monto ?? 0
+                            };
                         })
                         .OrderByDescending(r => r.MontoTotal)
                         .ToList();
+
+                    // Debug: mostrar en salida el detalle de cada vendedor
+                    foreach (var r in rendimiento)
+                    {
+                        Debug.WriteLine($"Vendedor: {r.NombreVendedor}, Cant: {r.CantidadVentas}, Monto: {r.MontoTotal}");
+                    }
 
                     dgVendedores.ItemsSource = rendimiento;
 
@@ -141,7 +178,7 @@ namespace GGHardware.Views
                 mainWindow.MainContentBorder.Child = new Gerente();
             }
         }
-    }
+    
 
     private void Actualizar_Click(object sender, RoutedEventArgs e)
         {
@@ -156,4 +193,5 @@ namespace GGHardware.Views
         public decimal MontoTotal { get; set; }
         public decimal PromedioVenta => CantidadVentas > 0 ? MontoTotal / CantidadVentas : 0;
     }
+}
 }
